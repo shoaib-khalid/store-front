@@ -7,7 +7,7 @@
     </div>
 </div>
 
-<div class="container">
+<div class="container" id="stepper-section">
     <div class="row">
         <div class="col text-center">
             <h3>Stepper</h3>
@@ -20,36 +20,35 @@
     </div>
 </div>
 
-<div class="container">
+<!-- <div malihu-scrollbar [scrollbarOptions]="scrollbarOptions">
+    Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua...
+ </div> -->
+<!-- test -->
+<div class="container" id="category-section">
     <div class="row">
-        <div class="col text-center">
-            <div class="scrollmenu">
-                <div style="
-                    display: inline-block;
-                    color: white;
-                    text-align: center;
-                    padding: 14px;
-                    text-decoration: none;
-                ">
-                    test
+        <drag-scroll
+        drag-scroll-y-disabled="true"
+        (dsInitialized)="onDragScrollInitialized()"
+        (indexChanged)="onIndexChanged($event)"
+        (reachesLeftBound)="leftBoundStat($event)"
+        (reachesRightBound)="rightBoundStat($event)"
+        (snapAnimationFinished)="onSnapAnimationFinished()"
+        (dragStart)="onDragStart()"
+        (dragEnd)="onDragEnd()" 
+        class="hide-scroll"
+        #nav>
+            <div drag-scroll-item id="test" style="padding: 5px;" *ngFor="let item of categories; let i = index;">
+                <div class="card" style="border: none;">
+                    <div class="card-body category shadow-sm" style="margin: 0px; border-radius: 10px;" [ngStyle]="{'background-image': 'url(/assets/image/' + item.img + ')'}">
+                    <span style="margin: 35px;"></span>
+                    </div>
+                    <span class="text-center" style="margin: 5px;">{{ item.category }}</span>
                 </div>
-                <a href="#home">Home</a>
-                <a href="#news">News</a>
-                <a href="#contact">Contact</a>
-                <a href="#about">About</a>
-                <a href="#support">Support</a>
-                <a href="#home">Home</a>
-                <a href="#news">News</a>
-                <a href="#contact">Contact</a>
-                <a href="#about">About</a>
-                <a href="#support">Support</a>
-                <a href="#home">Home</a>
-                <a href="#news">News</a>
-                <a href="#contact">Contact</a>
-                <a href="#about">About</a>
-                <a href="#support">Support</a>
-            </div>
-        </div>
+                
+            </div>        
+        </drag-scroll>
     </div>
 </div>
+
+
 

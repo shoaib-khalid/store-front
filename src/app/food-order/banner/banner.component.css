@@ -4,46 +4,76 @@
     -moz-background-size: cover;
     background-size: cover;
     -o-background-size: cover;
-    height: 200px;
+    height: 150px;
     background-image: url('/assets/image/banner-sample4.jpg');
 }
 
 
 /* stepper */
-
+.color-block {
+    width: 100px;
+    height: 20px;
+    margin: 0 6px 20px;
+  }
 
 /* slider */
-div.scrollmenu {
+.demo-border {
+    padding: 10px 10px 10px 10px;
+    box-sizing: border-box;
+    border: 1px solid;
+    border-color: #CFCFCF;
+    margin-bottom: 20px;
+  }
+
+#category-section{
+    padding-top: 40px;
+}
+
+.category{
+    width: 150px;
+    /* background-color: #f9f9f9; */
+    color: #333;
+    font-weight: bold;
     
-    overflow: auto;
-    white-space: nowrap;
-    max-width: 500px;
-    margin:10px auto;
-    
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;  /* Firefox */
+    background: no-repeat center center scroll;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    background-size: cover;
+    -o-background-size: cover;
+    /* background-image: url('/assets/image/banner-sample4.jpg'); */
 }
 
-div.scrollmenu a {
-    display: inline-block;
-    color: white;
-    text-align: center;
-    padding: 14px;
-    text-decoration: none;
+/* div#test div:first-child {margin-left: 50px;} */
 
-    background-color: #333;
-    margin: 10px;
-    padding: 10px;
+/* .category > div:first-child {
+    margin-right: 50px;
+  } */
+
+.category:hover{
+    background-color: #cccccc;
+    background-blend-mode: multiply;
+    cursor: pointer;
 }
 
-
-div.scrollmenu a:hover {
-    background-color: #777;
+drag-scroll-item{
+    -ms-overflow-style: none !important; 
+    scrollbar-width: none !important;
+    overflow-x: hidden !important;
 }
 
-div.scrollmenu::-webkit-scrollbar {
-    display: none;
+drag-scroll-item::-webkit-scrollbar {
+    /* display: none !important; */
+    width: 2px !important;
 }
 
+drag-scroll-item::-webkit-scrollbar-track {
+    background: orange;
+  }
 
+/*Mobile Section*/
+@media (max-width: 767px) {
+    .bg-image-full {
+        height: 100px;
+    }
 
+}
