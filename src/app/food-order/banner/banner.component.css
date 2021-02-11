@@ -1,0 +1,49 @@
+.bg-image-full {
+    background: no-repeat center center scroll;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    background-size: cover;
+    -o-background-size: cover;
+    height: 200px;
+    background-image: url('/assets/image/banner-sample4.jpg');
+}
+
+
+/* stepper */
+
+
+/* slider */
+div.scrollmenu {
+    
+    overflow: auto;
+    white-space: nowrap;
+    max-width: 500px;
+    margin:10px auto;
+    
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+
+div.scrollmenu a {
+    display: inline-block;
+    color: white;
+    text-align: center;
+    padding: 14px;
+    text-decoration: none;
+
+    background-color: #333;
+    margin: 10px;
+    padding: 10px;
+}
+
+
+div.scrollmenu a:hover {
+    background-color: #777;
+}
+
+div.scrollmenu::-webkit-scrollbar {
+    display: none;
+}
+
+
+
