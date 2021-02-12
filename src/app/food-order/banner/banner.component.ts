@@ -23,7 +23,7 @@ export class BannerComponent implements OnInit {
       {
         category: 'Food',
         available: true,
-        img: 'banner-sample3.jpg' 
+        img: 'banner-sample5.jpg' 
       },
       {
         category: 'Beverages',
@@ -38,7 +38,7 @@ export class BannerComponent implements OnInit {
       {
         category: "All Category",
         available: true,
-        img: 'banner-sample2.jpg' 
+        img: 'banner-sample6.jpg' 
       },
       {
         category: "All Category",
@@ -53,7 +53,7 @@ export class BannerComponent implements OnInit {
       {
         category: "All Category",
         available: true,
-        img: 'banner-sample4.jpg' 
+        img: 'banner-sample7.jpg' 
       },
       {
         category: 'Food',
@@ -68,7 +68,7 @@ export class BannerComponent implements OnInit {
       {
         category: 'Special',
         available: false,
-        img: 'banner-sample3.jpg' 
+        img: 'banner-sample5.jpg' 
       },
       {
         category: 'Addon',
@@ -78,7 +78,7 @@ export class BannerComponent implements OnInit {
       {
         category: 'Ala Carte',
         available: true,
-        img: 'banner-sample2.jpg' 
+        img: 'banner-sample7.jpg' 
       }
     ]
   }

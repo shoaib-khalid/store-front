@@ -7,18 +7,38 @@
     </div>
 </div>
 
-<div class="container" id="stepper-section">
+<!-- <div class="container" id="stepper-section">
     <div class="row">
         <div class="col text-center">
             <h3>Stepper</h3>
         </div>
     </div>
     <div class="row">
-        <div class="col text-center bg-primary">hello</div>
-        <div class="col text-center bg-success">two</div>
-        <div class="col text-center bg-danger">three</div>
+        <div class="col text-center" style="padding-left: 10%;">
+            <img src="./assets/image/banner-sample5.jpg" alt="..." class="rounded-circle img-fluid h-25 w-25">
+        </div>
+        <div class="col text-center">
+            <img src="./assets/image/banner-sample6.jpg" alt="..." class="rounded-circle img-fluid h-25 w-25">
+        </div>
+        <div class="col text-center" style="padding-right: 10%;">
+            <img src="./assets/image/banner-sample7.jpg" alt="..." class="rounded-circle img-fluid h-25 w-25">
+        </div>
+    </div>
+</div> -->
+
+<!-- test stepper  -->
+<div class="container">
+    <div class="row">
+        <div class="col text-center">
+            <div class="breadcrumbs">
+                <a class="active" href="#" style="font-size: 12px; font-weight: bold;">ORDER</a>
+                <a href="#" style="font-size: 12px; font-weight: bold;">CHECKOUT</a>
+                <a href="#" style="font-size: 12px; font-weight: bold;">DONE</a>
+            </div>
+        </div>
     </div>
 </div>
+
 
 <!-- <div malihu-scrollbar [scrollbarOptions]="scrollbarOptions">
     Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua...
@@ -27,7 +47,8 @@
 <div class="container" id="category-section">
     <div class="row">
         <drag-scroll
-        drag-scroll-y-disabled="true"
+        drag-scroll-y-disabled="false"
+        scroll-x-wheel-enabled="true"
         (dsInitialized)="onDragScrollInitialized()"
         (indexChanged)="onIndexChanged($event)"
         (reachesLeftBound)="leftBoundStat($event)"
@@ -42,7 +63,7 @@
                     <div class="card-body category shadow-sm" style="margin: 0px; border-radius: 10px;" [ngStyle]="{'background-image': 'url(/assets/image/' + item.img + ')'}">
                     <span style="margin: 35px;"></span>
                     </div>
-                    <span class="text-center" style="margin: 5px;">{{ item.category }}</span>
+                    <span class="text-center" style="margin: 5px; font-size: 13px;">{{ item.category }}</span>
                 </div>
                 
             </div>        
