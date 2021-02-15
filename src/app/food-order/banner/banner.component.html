@@ -30,10 +30,8 @@
 <div class="container">
     <div class="row">
         <div class="col text-center">
-            <div class="breadcrumbs">
-                <a class="active" href="#" style="font-size: 12px; font-weight: bold;">ORDER</a>
-                <a href="#" style="font-size: 12px; font-weight: bold;">CHECKOUT</a>
-                <a href="#" style="font-size: 12px; font-weight: bold;">DONE</a>
+            <div class="breadcrumbs" style="border-top-left-radius: 5px; border-bottom-left-radius: 5px;">
+                <a *ngFor="let step of stepper" class="{{ (step.status ? 'active' : '') }}" style="font-size: 12px; font-weight: bold; border-top-left-radius: 5px; border-bottom-left-radius: 5px;">{{step.name | uppercase }}</a>
             </div>
         </div>
     </div>
@@ -44,7 +42,7 @@
     Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua...
  </div> -->
 <!-- test -->
-<div class="container" id="category-section">
+<div class="container" id="category-section" style="padding-top: 50px;">
     <div class="row">
         <drag-scroll
         drag-scroll-y-disabled="false"
@@ -56,18 +54,397 @@
         (snapAnimationFinished)="onSnapAnimationFinished()"
         (dragStart)="onDragStart()"
         (dragEnd)="onDragEnd()" 
-        class="hide-scroll"
-        #nav>
-            <div drag-scroll-item id="test" style="padding: 5px;" *ngFor="let item of categories; let i = index;">
-                <div class="card" style="border: none;">
+        class="hide-scroll">
+            <div drag-scroll-item id="test" style="padding: 10px;" *ngFor="let item of categories; let i = index;">
+                <div class="card" style="border: none; background-color: transparent;">
                     <div class="card-body category shadow-sm" style="margin: 0px; border-radius: 10px;" [ngStyle]="{'background-image': 'url(/assets/image/' + item.img + ')'}">
                     <span style="margin: 35px;"></span>
                     </div>
                     <span class="text-center" style="margin: 5px; font-size: 13px;">{{ item.category }}</span>
                 </div>
-                
             </div>        
         </drag-scroll>
+    </div>
+</div>
+
+
+<div class="container" style="padding-top: 20px;">
+    <div class="row">
+        <div class="col-lg-9 col-sm-12 col-md-12 col-xs-12">
+            <h3>PRODUCT LIST</h3>
+        </div>
+        <div class="col-lg-3 col-sm-12 col-md-12 col-xs-12">
+            <input type="text" class="form-control" style="border-radius: 10px;" placeholder="search">
+        </div>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-sm-4">
+            <div class="card" style="border-radius: 10px; margin-bottom: 15px;">
+                <div class="card-body" style="font-size: 13px;">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <img class="card-img-top" src="./assets/image/food-sample1.jpg" alt="Card image cap" style="border-radius: 5px; border-radius: 5px; min-width: 82px; min-height: 82px;">
+                        </div>
+                        <div class="col-sm-8">
+                            <h5 class="card-title">Ayam Goreng</h5>
+                            <h5>RM 10.00</h5>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col" style="text-align: center;">
+                            <a href="#" class="btn btn-sm btn-warning" style="min-width: 125px;">Add to cart</a>
+                        </div>
+                        <div class="col" style="text-align: center;">
+                            <a href="#" class="btn btn-sm btn-success" style="min-width: 125px;">See more</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="card" style="border-radius: 10px; margin-bottom: 15px;">
+                <div class="card-body" style="font-size: 13px;">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <img class="card-img-top" src="./assets/image/food-sample2.jpg" alt="Card image cap" style="border-radius: 5px; border-radius: 5px; min-width: 82px; min-height: 82px;">
+                        </div>
+                        <div class="col-sm-8">
+                            <h5 class="card-title">Burger Ayam</h5>
+                            <h5>RM 7.50</h5>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col" style="text-align: center;">
+                            <a href="#" class="btn btn-sm btn-warning" style="min-width: 125px;">Add to cart</a>
+                        </div>
+                        <div class="col" style="text-align: center;">
+                            <a href="#" class="btn btn-sm btn-success" style="min-width: 125px;">See more</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="card" style="border-radius: 10px; margin-bottom: 15px;">
+                <div class="card-body" style="font-size: 13px;">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <img class="card-img-top" src="./assets/image/food-sample3.jpg" alt="Card image cap" style="border-radius: 5px; min-width: 82px; min-height: 82px;">
+                        </div>
+                        <div class="col-sm-8">
+                            <h5 class="card-title">Sushi</h5>
+                            <h5>RM 15.00</h5>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col" style="text-align: center;">
+                            <a href="#" class="btn btn-sm btn-warning" style="min-width: 125px;">Add to cart</a>
+                        </div>
+                        <div class="col" style="text-align: center;">
+                            <a href="#" class="btn btn-sm btn-success" style="min-width: 125px;">See more</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-4">
+            <div class="card" style="border-radius: 10px; margin-bottom: 15px;">
+                <div class="card-body" style="font-size: 13px;">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <img class="card-img-top" src="./assets/image/food-sample1.jpg" alt="Card image cap" style="border-radius: 5px; border-radius: 5px; min-width: 82px; min-height: 82px;">
+                        </div>
+                        <div class="col-sm-8">
+                            <h5 class="card-title">Ayam Goreng</h5>
+                            <h5>RM 10.00</h5>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col" style="text-align: center;">
+                            <a href="#" class="btn btn-sm btn-warning" style="min-width: 125px;">Add to cart</a>
+                        </div>
+                        <div class="col" style="text-align: center;">
+                            <a href="#" class="btn btn-sm btn-success" style="min-width: 125px;">See more</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="card" style="border-radius: 10px; margin-bottom: 15px;">
+                <div class="card-body" style="font-size: 13px;">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <img class="card-img-top" src="./assets/image/food-sample2.jpg" alt="Card image cap" style="border-radius: 5px; border-radius: 5px; min-width: 82px; min-height: 82px;">
+                        </div>
+                        <div class="col-sm-8">
+                            <h5 class="card-title">Burger Ayam</h5>
+                            <h5>RM 7.50</h5>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col" style="text-align: center;">
+                            <a href="#" class="btn btn-sm btn-warning" style="min-width: 125px;">Add to cart</a>
+                        </div>
+                        <div class="col" style="text-align: center;">
+                            <a href="#" class="btn btn-sm btn-success" style="min-width: 125px;">See more</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="card" style="border-radius: 10px; margin-bottom: 15px;">
+                <div class="card-body" style="font-size: 13px;">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <img class="card-img-top" src="./assets/image/food-sample3.jpg" alt="Card image cap" style="border-radius: 5px; min-width: 82px; min-height: 82px;">
+                        </div>
+                        <div class="col-sm-8">
+                            <h5 class="card-title">Sushi</h5>
+                            <h5>RM 15.00</h5>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col" style="text-align: center;">
+                            <a href="#" class="btn btn-sm btn-warning" style="min-width: 125px;">Add to cart</a>
+                        </div>
+                        <div class="col" style="text-align: center;">
+                            <a href="#" class="btn btn-sm btn-success" style="min-width: 125px;">See more</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-4">
+            <div class="card" style="border-radius: 10px; margin-bottom: 15px;">
+                <div class="card-body" style="font-size: 13px;">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <img class="card-img-top" src="./assets/image/food-sample1.jpg" alt="Card image cap" style="border-radius: 5px; border-radius: 5px; min-width: 82px; min-height: 82px;">
+                        </div>
+                        <div class="col-sm-8">
+                            <h5 class="card-title">Ayam Goreng</h5>
+                            <h5>RM 10.00</h5>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col" style="text-align: center;">
+                            <a href="#" class="btn btn-sm btn-warning" style="min-width: 125px;">Add to cart</a>
+                        </div>
+                        <div class="col" style="text-align: center;">
+                            <a href="#" class="btn btn-sm btn-success" style="min-width: 125px;">See more</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="card" style="border-radius: 10px; margin-bottom: 15px;">
+                <div class="card-body" style="font-size: 13px;">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <img class="card-img-top" src="./assets/image/food-sample2.jpg" alt="Card image cap" style="border-radius: 5px; border-radius: 5px; min-width: 82px; min-height: 82px;">
+                        </div>
+                        <div class="col-sm-8">
+                            <h5 class="card-title">Burger Ayam</h5>
+                            <h5>RM 7.50</h5>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col" style="text-align: center;">
+                            <a href="#" class="btn btn-sm btn-warning" style="min-width: 125px;">Add to cart</a>
+                        </div>
+                        <div class="col" style="text-align: center;">
+                            <a href="#" class="btn btn-sm btn-success" style="min-width: 125px;">See more</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="card" style="border-radius: 10px; margin-bottom: 15px;">
+                <div class="card-body" style="font-size: 13px;">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <img class="card-img-top" src="./assets/image/food-sample3.jpg" alt="Card image cap" style="border-radius: 5px; min-width: 82px; min-height: 82px;">
+                        </div>
+                        <div class="col-sm-8">
+                            <h5 class="card-title">Sushi</h5>
+                            <h5>RM 15.00</h5>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col" style="text-align: center;">
+                            <a href="#" class="btn btn-sm btn-warning" style="min-width: 125px;">Add to cart</a>
+                        </div>
+                        <div class="col" style="text-align: center;">
+                            <a href="#" class="btn btn-sm btn-success" style="min-width: 125px;">See more</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-4">
+            <div class="card" style="border-radius: 10px; margin-bottom: 15px;">
+                <div class="card-body" style="font-size: 13px;">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <img class="card-img-top" src="./assets/image/food-sample1.jpg" alt="Card image cap" style="border-radius: 5px; border-radius: 5px; min-width: 82px; min-height: 82px;">
+                        </div>
+                        <div class="col-sm-8">
+                            <h5 class="card-title">Ayam Goreng</h5>
+                            <h5>RM 10.00</h5>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col" style="text-align: center;">
+                            <a href="#" class="btn btn-sm btn-warning" style="min-width: 125px;">Add to cart</a>
+                        </div>
+                        <div class="col" style="text-align: center;">
+                            <a href="#" class="btn btn-sm btn-success" style="min-width: 125px;">See more</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="card" style="border-radius: 10px; margin-bottom: 15px;">
+                <div class="card-body" style="font-size: 13px;">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <img class="card-img-top" src="./assets/image/food-sample2.jpg" alt="Card image cap" style="border-radius: 5px; border-radius: 5px; min-width: 82px; min-height: 82px;">
+                        </div>
+                        <div class="col-sm-8">
+                            <h5 class="card-title">Burger Ayam</h5>
+                            <h5>RM 7.50</h5>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col" style="text-align: center;">
+                            <a href="#" class="btn btn-sm btn-warning" style="min-width: 125px;">Add to cart</a>
+                        </div>
+                        <div class="col" style="text-align: center;">
+                            <a href="#" class="btn btn-sm btn-success" style="min-width: 125px;">See more</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="card" style="border-radius: 10px; margin-bottom: 15px;">
+                <div class="card-body" style="font-size: 13px;">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <img class="card-img-top" src="./assets/image/food-sample3.jpg" alt="Card image cap" style="border-radius: 5px; min-width: 82px; min-height: 82px;">
+                        </div>
+                        <div class="col-sm-8">
+                            <h5 class="card-title">Sushi</h5>
+                            <h5>RM 15.00</h5>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col" style="text-align: center;">
+                            <a href="#" class="btn btn-sm btn-warning" style="min-width: 125px;">Add to cart</a>
+                        </div>
+                        <div class="col" style="text-align: center;">
+                            <a href="#" class="btn btn-sm btn-success" style="min-width: 125px;">See more</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-4">
+            <div class="card" style="border-radius: 10px; margin-bottom: 15px;">
+                <div class="card-body" style="font-size: 13px;">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <img class="card-img-top" src="./assets/image/food-sample1.jpg" alt="Card image cap" style="border-radius: 5px; border-radius: 5px; min-width: 82px; min-height: 82px;">
+                        </div>
+                        <div class="col-sm-8">
+                            <h5 class="card-title">Ayam Goreng</h5>
+                            <h5>RM 10.00</h5>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col" style="text-align: center;">
+                            <a href="#" class="btn btn-sm btn-warning" style="min-width: 125px;">Add to cart</a>
+                        </div>
+                        <div class="col" style="text-align: center;">
+                            <a href="#" class="btn btn-sm btn-success" style="min-width: 125px;">See more</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="card" style="border-radius: 10px; margin-bottom: 15px;">
+                <div class="card-body" style="font-size: 13px;">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <img class="card-img-top" src="./assets/image/food-sample2.jpg" alt="Card image cap" style="border-radius: 5px; border-radius: 5px; min-width: 82px; min-height: 82px;">
+                        </div>
+                        <div class="col-sm-8">
+                            <h5 class="card-title">Burger Ayam</h5>
+                            <h5>RM 7.50</h5>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col" style="text-align: center;">
+                            <a href="#" class="btn btn-sm btn-warning" style="min-width: 125px;">Add to cart</a>
+                        </div>
+                        <div class="col" style="text-align: center;">
+                            <a href="#" class="btn btn-sm btn-success" style="min-width: 125px;">See more</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="card" style="border-radius: 10px; margin-bottom: 15px;">
+                <div class="card-body" style="font-size: 13px;">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <img class="card-img-top" src="./assets/image/food-sample3.jpg" alt="Card image cap" style="border-radius: 5px; min-width: 82px; min-height: 82px;">
+                        </div>
+                        <div class="col-sm-8">
+                            <h5 class="card-title">Sushi</h5>
+                            <h5>RM 15.00</h5>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col" style="text-align: center;">
+                            <a href="#" class="btn btn-sm btn-warning" style="min-width: 125px;">Add to cart</a>
+                        </div>
+                        <div class="col" style="text-align: center;">
+                            <a href="#" class="btn btn-sm btn-success" style="min-width: 125px;">See more</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        
     </div>
 </div>
 

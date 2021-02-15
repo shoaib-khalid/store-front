@@ -1,6 +1,10 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import {Category } from './food-order/../../models/Category';
-import { DragScrollComponent } from './../../../../projects/ngx-drag-scroll/src/lib/ngx-drag-scroll.component';
+
+// import classes
+import { Category } from './food-order/../../models/Category';
+import { Stepper } from './food-order/../../models/Stepper';
+
+// import { DragScrollComponent } from './../../../../projects/ngx-drag-scroll/src/lib/ngx-drag-scroll.component';
 
 @Component({
   selector: 'food-app-banner',
@@ -10,6 +14,7 @@ import { DragScrollComponent } from './../../../../projects/ngx-drag-scroll/src/
 export class BannerComponent implements OnInit {
 
   categories:Category[];
+  stepper:Stepper[];
   leftNavDisabled = false;
   rightNavDisabled = false;
   idx = 0;
@@ -19,6 +24,25 @@ export class BannerComponent implements OnInit {
   constructor() { }
   
   ngOnInit(): void {
+    this.stepper = [
+      {
+        id: 1,
+        name: 'Order',
+        status: true
+      },
+      {
+        id: 2,
+        name: 'Checkout',
+        status: false
+      },
+      {
+        id: 3,
+        name: 'Done',
+        status: false
+      }
+
+    ]
+
     this.categories = [
       {
         category: 'Food',
@@ -83,7 +107,7 @@ export class BannerComponent implements OnInit {
     ]
   }
 
-  @ViewChild('nav', { read: DragScrollComponent, static: true }) ds: DragScrollComponent;
+  // @ViewChild('nav', { read: DragScrollComponent, static: true }) ds: DragScrollComponent;
 
   onIndexChanged(idx) {
     this.idx = idx;
