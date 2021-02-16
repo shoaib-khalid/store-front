@@ -1,0 +1,64 @@
+/* stepper */
+.breadcrumbs {
+    display: inline-block;
+    /* margin: 150px 0; */
+    counter-reset: flag;
+    color: black;
+    box-shadow: 0 0 2px #aaa;
+}
+
+.breadcrumbs a {
+    position: relative;
+    float: left;
+    padding-left: 60px;
+    padding-right: 10px;
+    text-decoration: none;
+    line-height: 36px;
+    color: black;
+    background: white;
+    transition: all 0.5s;
+}
+
+.breadcrumbs a::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: -18px;
+    z-index: 1;
+    width: 36px;
+    height: 36px;
+    background: white;
+    box-shadow: 1px 1px 0 1px #ddd;
+    border-radius: 50px 0 0 0;
+    transform: rotate(-45deg) scale(0.73);
+    transition: all 0.5s;
+}
+
+/* .breadcrumbs a:hover, */
+/* .breadcrumbs a:hover::after, */
+.breadcrumbs a.active,
+.breadcrumbs a.active::after{
+    background: #f1c40f;
+}
+
+.breadcrumbs a::before {
+    content: counter(flag);
+    counter-increment: flag;
+    position: absolute;
+    top: 8px;
+    left: 30px;
+    line-height: 20px;
+    box-shadow: 0 0 2px #ccc;
+    width: 20px;
+    height: 20px;
+    background: #fff;
+    border-radius: 50%;
+}
+
+.breadcrumbs a:first-child {
+    padding-left: 46px;
+}
+
+.breadcrumbs a:first-child::before {
+    left: 14px;
+}

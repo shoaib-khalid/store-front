@@ -1,0 +1,68 @@
+<!-- category slider -->
+<div class="container" id="category-section" style="padding-top: 50px;">
+    <div class="row">
+        <drag-scroll
+        drag-scroll-y-disabled="false"
+        scroll-x-wheel-enabled="true"
+        (dsInitialized)="onDragScrollInitialized()"
+        (indexChanged)="onIndexChanged($event)"
+        (reachesLeftBound)="leftBoundStat($event)"
+        (reachesRightBound)="rightBoundStat($event)"
+        (snapAnimationFinished)="onSnapAnimationFinished()"
+        (dragStart)="onDragStart()"
+        (dragEnd)="onDragEnd()" 
+        class="hide-scroll">
+            <div drag-scroll-item id="test" style="padding: 10px;" *ngFor="let item of categories; let i = index;">
+                <div class="card" style="border: none; background-color: transparent;">
+                    <div class="card-body category shadow-sm" style="margin: 0px; border-radius: 10px;" [ngStyle]="{'background-image': 'url(/assets/image/' + item.img + ')'}">
+                    <span style="margin: 35px;"></span>
+                    </div>
+                    <span class="text-center" style="margin: 5px; font-size: 13px;">{{ item.category }}</span>
+                </div>
+            </div>        
+        </drag-scroll>
+    </div>
+</div>
+
+
+<div class="container" style="padding-top: 20px; padding-bottom: 100px;">
+    <div class="row">
+        <div class="col-lg-9 col-sm-12 col-md-12 col-xs-12">
+            <h4>PRODUCT LIST</h4>
+        </div>
+        <div class="col-lg-3 col-sm-12 col-md-12 col-xs-12">
+            <input type="text" class="form-control search-bar" style="border-radius: 10px;" placeholder="search">
+        </div>
+    </div>
+    <hr>
+    <div class="row">
+
+        <div class="col-sm-4" *ngFor="let item of product">
+            <div class="card shadow-sm" style="border-radius: 10px; margin-bottom: 15px;">
+                <div class="card-body" style="font-size: 13px;">
+                    <div class="row">
+                        <div class="col-4">
+                            <img class="card-img-top img-icon" src="./assets/image/food-sample1.jpg" alt="Card image cap">
+                        </div>
+                        <div class="col-8 text-right">
+                            <h5 class="card-title">{{ item.title }}</h5>
+                            <h5>RM {{ item.price | number : '1.2'}}</h5>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col" style="text-align: center;">
+                            <a href="#" class="btn btn-sm btn-warning" style="min-width: 125px;">Add to cart &nbsp;<fa-icon [icon]="iconCart"></fa-icon></a>
+                        </div>
+                        <div class="col" style="text-align: center;">
+                            <a href="#" class="btn btn-sm btn-success" style="min-width: 125px;">See more &nbsp;<fa-icon [icon]="iconEye"></fa-icon></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- footer -->
+<div class="footer"></div>

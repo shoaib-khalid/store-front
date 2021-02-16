@@ -1,7 +1,9 @@
 export class Product {
     productid: number;
     title: string;
-    image: boolean;
+    price: number;
+    image: string;
+    status: boolean;
 }
 
 // later include into component

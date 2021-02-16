@@ -1,0 +1,10 @@
+<!-- stepper  -->
+<div class="container">
+    <div class="row">
+        <div class="col text-center">
+            <div class="breadcrumbs" style="border-top-left-radius: 5px; border-bottom-left-radius: 5px;">
+                <a *ngFor="let step of stepper" class="{{ (step.status ? 'active' : '') }}" style="font-size: 12px; font-weight: bold; border-top-left-radius: 5px; border-bottom-left-radius: 5px;">{{step.name | uppercase }}</a>
+            </div>
+        </div>
+    </div>
+</div>
