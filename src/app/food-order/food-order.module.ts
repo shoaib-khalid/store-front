@@ -1,21 +1,29 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { BaseLayoutComponent } from './base-layout/base-layout.component';
-import { BannerComponent } from './banner/banner.component';
-import { StepperComponent } from './stepper/stepper.component';
-
 import { DragScrollModule } from 'ngx-drag-scroll';
 import { MalihuScrollbarModule } from 'ngx-malihu-scrollbar';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+
+import { StepperComponent } from './stepper/stepper.component';
 import { CatalogueComponent } from './catalogue/catalogue.component';
+import { BannerComponent } from './banner/banner.component';
+import { StepCheckoutComponent } from './layout-checkout/step-checkout.component';
+import { StepCatalogueComponent } from './layout-catalogue/step-catalogue.component';
+
+import { DataBindService } from './databind.service';
+import { ModalCheckoutComponent } from './modal-checkout/modal-checkout.component';
+import { ModalProductComponent } from './modal-product/modal-product.component';
 
 
 @NgModule({
   declarations: [
-    BaseLayoutComponent,
     BannerComponent,
     StepperComponent,
-    CatalogueComponent
+    CatalogueComponent,
+    StepCheckoutComponent,
+    StepCatalogueComponent,
+    ModalCheckoutComponent,
+    ModalProductComponent
   ],
   imports: [
     CommonModule,
@@ -24,10 +32,12 @@ import { CatalogueComponent } from './catalogue/catalogue.component';
     FontAwesomeModule
   ],
   exports: [
-    BaseLayoutComponent,
+    StepCheckoutComponent,
+    StepCatalogueComponent,
     DragScrollModule,
     MalihuScrollbarModule,
     FontAwesomeModule
-  ]
+  ],
+  providers: [DataBindService]
 })
 export class FoodOrderModule { }

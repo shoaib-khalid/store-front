@@ -52,10 +52,14 @@
                     <br>
                     <div class="row">
                         <div class="col" style="text-align: center;">
-                            <a href="#" class="btn btn-sm btn-warning" style="min-width: 125px;">Add to cart &nbsp;<fa-icon [icon]="iconCart"></fa-icon></a>
+                            <a href="#" class="btn btn-sm btn-warning" style="min-width: 125px;">
+                                Add to cart &nbsp;<fa-icon [icon]="iconCart"></fa-icon>
+                            </a>
                         </div>
                         <div class="col" style="text-align: center;">
-                            <a href="#" class="btn btn-sm btn-success" style="min-width: 125px;">See more &nbsp;<fa-icon [icon]="iconEye"></fa-icon></a>
+                            <a class="btn btn-sm btn-success" style="min-width: 125px;" (click)="onGetDetails(item.productid)" data-toggle="modal" data-target="#modalProduct">
+                                See more &nbsp;<fa-icon [icon]="iconEye"></fa-icon>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -64,5 +68,8 @@
     </div>
 </div>
 
+<app-modal-product 
+[details]="details"
+></app-modal-product>
 <!-- footer -->
 <div class="footer"></div>
