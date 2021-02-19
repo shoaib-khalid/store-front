@@ -1,5 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 
+import { faShoppingCart } from '@fortawesome/free-solid-svg-icons';
+
 @Component({
   selector: 'app-modal-product',
   templateUrl: './modal-product.component.html',
@@ -8,7 +10,10 @@ import { Component, OnInit, Input } from '@angular/core';
 export class ModalProductComponent implements OnInit {
   @Input() details: any;
 
-  constructor() { }
+  iconCart = faShoppingCart;
+
+  constructor() {
+   }
 
   ngOnInit(): void {
 
