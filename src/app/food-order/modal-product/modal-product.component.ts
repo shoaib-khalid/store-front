@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 
-import { faShoppingCart } from '@fortawesome/free-solid-svg-icons';
+import { faShoppingCart, faArrowCircleLeft } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-modal-product',
@@ -11,6 +11,7 @@ export class ModalProductComponent implements OnInit {
   @Input() details: any;
 
   iconCart = faShoppingCart;
+  iconBack = faArrowCircleLeft;
 
   constructor() {
    }

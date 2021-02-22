@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { Category } from './food-order/../../models/Category';
 import { Product } from './food-order/../../models/Product';
 
-import { faEye, faShoppingCart } from '@fortawesome/free-solid-svg-icons';
+import { faEye, faShoppingCart, faShoppingBag } from '@fortawesome/free-solid-svg-icons';
 
 import { DataBindService } from './../databind.service';
 
@@ -16,6 +16,7 @@ export class CatalogueComponent implements OnInit {
 
   iconEye = faEye;
   iconCart = faShoppingCart;
+  iconBag = faShoppingBag;
 
   categories:Category[];
   product:Product[];
