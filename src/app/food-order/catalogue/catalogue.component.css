@@ -52,14 +52,6 @@ drag-scroll-item::-webkit-scrollbar-track {
     background: orange;
   }
 
-/*Mobile Section*/
-@media (max-width: 767px) {
-    .bg-image-full {
-        height: 100px;
-    }
-
-}
-
 .img-icon{
     border-radius: 5px; 
     border-radius: 5px; 
@@ -82,7 +74,12 @@ drag-scroll-item::-webkit-scrollbar-track {
 
 /*Mobile Section*/
 @media (max-width: 767px) {
+    .bg-image-full {
+        height: 100px;
+    }
+
     .search-bar{
         margin-top: 20px;
     }
+
 }

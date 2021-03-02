@@ -1,5 +1,8 @@
 
 <!-- Modal -->
+
+<!-- Desktop & Tablet view -->
+
 <div class="modal fade" id="modalProduct" tabindex="-1" role="dialog" aria-labelledby="modalProduct" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -10,14 +13,47 @@
                 </button>
             </div>
             <div class="modal-body">
-                <div class="row">
-                    <div class="col-4 text-center">
-                        <img class="card-img-top img-icon" src="./assets/image/food-sample1.jpg" alt="Card image cap">
-                    </div>
-                    <div class="col-8 text-center">
-                        <p>{{ details.desc }} </p>
+
+                <!-- Destop/Tablet Layout -->
+                <div class="d-none d-sm-none d-md-block d-lg-block d-xl-block">
+                    <div class="row">
+                        <div class="col-6 text-center">
+                            <ngx-gallery [options]="galleryOptions" [images]="galleryImages"></ngx-gallery>
+                        </div>
+                        <div class="col-6 text-center">
+                            <p>{{ details.desc }} </p>
+                            <div style="padding-top: 70px;">
+                                <h5>PRICE : {{ price }}</h5>
+                                <ng-number-picker [(value)]="value" [min]="0" [max]="100" [postfix]="'unit'" [size]="'sm'"></ng-number-picker>
+                            </div>
+                        </div>
                     </div>
                 </div>
+
+                <!-- Mobile Layout -->
+                <div class="d-block d-sm-block d-md-none d-lg-none d-xl-none">
+                    <div class="row">
+                        <div class="col text-center">
+                            <ngx-gallery [options]="galleryOptions" [images]="galleryImages"></ngx-gallery>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col text-center" style="padding-top: 20px;">
+                            <p>{{ details.desc }} </p>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col text-center">
+                            <div style="padding-top: 20px;">
+                                <h5>PRICE : {{ price }}</h5>
+                                <ng-number-picker [(value)]="value" [min]="0" [max]="100" [postfix]="'unit'" [size]="'sm'"></ng-number-picker>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-danger" data-dismiss="modal"><fa-icon [icon]="iconBack"></fa-icon>&nbsp;Close</button>
@@ -26,3 +62,6 @@
         </div>
     </div>
 </div>
+
+
+

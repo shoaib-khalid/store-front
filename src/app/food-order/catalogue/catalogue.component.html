@@ -42,7 +42,7 @@
                 <div class="card-body" style="font-size: 13px;">
                     <div class="row">
                         <div class="col-4">
-                            <img class="card-img-top img-icon" src="./assets/image/food-sample1.jpg" alt="Card image cap">
+                            <img class="card-img-top img-icon" src="assets/image/{{ item.image }}" alt="Card image cap">
                         </div>
                         <div class="col-8 text-right">
                             <h5 class="card-title">{{ item.title }}</h5>
@@ -71,6 +71,7 @@
 <app-modal-product 
 [details]="details"
 ></app-modal-product>
+
 <!-- footer desktop-->
 <div class="footer">
     <div class="container-fluid">
