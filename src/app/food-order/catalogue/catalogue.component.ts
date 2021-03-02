@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 import { Category } from './food-order/../../models/Category';
 import { Product } from './food-order/../../models/Product';
@@ -30,7 +31,8 @@ export class CatalogueComponent implements OnInit {
   modalDataTest:any = []
 
   constructor(
-    private _databindService: DataBindService 
+    private _databindService: DataBindService, 
+    private route: Router
   ) { }
 
   ngOnInit(): void {
@@ -52,10 +54,7 @@ export class CatalogueComponent implements OnInit {
         // console.log(details);
       }
     })
-
-    
   }
-
 
   onIndexChanged(idx) {
     this.idx = idx;
@@ -85,5 +84,11 @@ export class CatalogueComponent implements OnInit {
   onDragEnd() {
     // console.log('drag end');
   }
+
+  goTo(event){
+    // console.log('ditekan mengenai');
+    this.route.navigate(['checkout']);
+  }
+
 
 }

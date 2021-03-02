@@ -32,7 +32,7 @@ export class ModalProductComponent implements OnInit {
             thumbnailsColumns: 3,
             imageAnimation: NgxGalleryAnimation.Zoom,
             thumbnailsArrows: true,
-            previewDownload: true,
+            // previewDownload: true,
             imageArrowsAutoHide: true, 
             thumbnailsArrowsAutoHide: true
         },
