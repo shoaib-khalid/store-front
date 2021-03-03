@@ -1,7 +1,8 @@
 import { Component, OnInit, Input } from '@angular/core';
 
 import { faShoppingCart, faArrowCircleLeft } from '@fortawesome/free-solid-svg-icons';
-import { NgxGalleryOptions, NgxGalleryImage, NgxGalleryAnimation } from 'ngx-gallery';
+import { NgxGalleryOptions, NgxGalleryImage, NgxGalleryAnimation } from 'ngx-gallery-9';
+// using ngx-gallery-9
 
 @Component({
   selector: 'app-modal-product',

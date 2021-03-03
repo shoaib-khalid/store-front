@@ -173,4 +173,46 @@ export class DataBindService {
       }
     ]
   }
+
+
+  getCartList(){
+    return [
+        {
+            productid: 1,
+            title: 'Ayam Goreng',
+            quantity: 5,
+            unitprice: 7.5
+        },
+        {
+            productid: 2,
+            title: 'Burger King',
+            quantity: 2,
+            unitprice: 10.5
+        },
+        {
+            productid: 3,
+            title: 'Sushi King',
+            quantity: 7,
+            unitprice: 2
+        },
+        {
+            productid: 4,
+            title: 'Kambing Bakar',
+            quantity: 2,
+            unitprice: 15.5
+        },
+        {
+            productid: 5,
+            title: 'Fresh Orange',
+            quantity: 5,
+            unitprice: 4.5
+        },
+        {
+            productid: 6,
+            title: 'Coconut Milk',
+            quantity: 1,
+            unitprice: 1.5
+        }
+    ]
+  }
 }

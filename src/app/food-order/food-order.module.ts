@@ -18,6 +18,7 @@ import { DataBindService } from './databind.service';
 import { ModalCheckoutComponent } from './modal-checkout/modal-checkout.component';
 import { ModalProductComponent } from './modal-product/modal-product.component';
 import { CheckoutDetailsComponent } from './checkout-details/checkout-details.component';
+import { ModalCartComponent } from './modal-cart/modal-cart.component';
 
 
 @NgModule({
@@ -29,7 +30,8 @@ import { CheckoutDetailsComponent } from './checkout-details/checkout-details.co
     StepCatalogueComponent,
     ModalCheckoutComponent,
     ModalProductComponent,
-    CheckoutDetailsComponent
+    CheckoutDetailsComponent,
+    ModalCartComponent
   ],
   imports: [
     CommonModule,

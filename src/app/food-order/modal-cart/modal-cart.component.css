@@ -1,0 +1,22 @@
+
+.iconStyle{
+    font-size: 15px; color: red;
+}
+
+.qtyIcon{
+    color: #6c757d;
+}
+
+.qtyIcon:hover{
+    color: #343a40;
+    cursor: pointer;
+
+}
+
+
+/* for mobile */
+@media (min-width: 992px) {
+    .modal-dialog {
+        max-width: 50%;
+    }
+}

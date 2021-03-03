@@ -36,7 +36,6 @@
     </div>
     <hr>
     <div class="row">
-
         <div class="col-sm-4" *ngFor="let item of product">
             <div class="card shadow-sm" style="border-radius: 10px; margin-bottom: 15px;">
                 <div class="card-body" style="font-size: 13px;">
@@ -72,6 +71,9 @@
 [details]="details"
 ></app-modal-product>
 
+<!-- cart modal -->
+<app-modal-cart></app-modal-cart>
+
 <!-- footer desktop-->
 <div class="footer">
     <div class="container-fluid">
@@ -84,7 +86,7 @@
             <div class="col"></div>
             <div class="col">
                 <button (click)="goTo($event)" class="btn-success btn btn-lg" style="float: right; margin: 5px; border: 1px solid black; width: 150px;">NEXT&nbsp;<fa-icon [icon]="iconBag"></fa-icon></button>
-                <button class="btn btn-warning btn-lg" style="float: right; margin: 5px; border: 1px solid black;">CART LIST (0)</button>
+                <button class="btn btn-warning btn-lg" style="float: right; margin: 5px; border: 1px solid black;" data-toggle="modal" data-target="#modalCart">CART LIST (0)</button>
             </div>
         </div>
     </div>

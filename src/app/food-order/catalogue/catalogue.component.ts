@@ -7,6 +7,7 @@ import { Product } from './food-order/../../models/Product';
 import { faEye, faShoppingCart, faShoppingBag } from '@fortawesome/free-solid-svg-icons';
 
 import { DataBindService } from './../databind.service';
+import { MalihuScrollbarService } from 'ngx-malihu-scrollbar';
 
 @Component({
   selector: 'food-app-catalogue',
@@ -32,13 +33,15 @@ export class CatalogueComponent implements OnInit {
 
   constructor(
     private _databindService: DataBindService, 
-    private route: Router
+    private route: Router,
+    private mScrollbarService: MalihuScrollbarService
   ) { }
 
   ngOnInit(): void {
     this.product = this._databindService.getProduct();
     this.categories = this._databindService.getCategories();
     this.modalDataTest = this._databindService.getProduct();
+    this.mScrollbarService.initScrollbar(document.body, { axis: 'y', theme: 'minimal-dark', scrollButtons: { enable: true } });
   }
 
   onGetDetails(productid){
