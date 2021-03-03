@@ -60,7 +60,7 @@ drag-scroll-item::-webkit-scrollbar-track {
 }
 
 .footer {
-    background: orange;
+    background: #ffb347;
     position: fixed;
     left: 0;
     right: 0;

@@ -5,6 +5,7 @@ import { faTrashAlt, faMinusCircle, faPlusCircle } from '@fortawesome/free-solid
 import { CartList } from './food-order/../../models/CartList';
 // services
 import { DataBindService } from './../databind.service';
+
 import { MalihuScrollbarService } from 'ngx-malihu-scrollbar';
 
 @Component({
@@ -27,7 +28,7 @@ export class ModalCartComponent implements OnInit {
 
     ngOnInit(): void {
         this.cartList = this._databindService.getCartList();
-        this.mScrollbarService.initScrollbar('#scrollable', { axis: 'y', theme: 'dark', scrollButtons: { enable: true } });
+        this.mScrollbarService.initScrollbar('#scrollable', { axis: 'y', theme: 'dark-3', scrollButtons: { enable: true } });
     }
 
 }

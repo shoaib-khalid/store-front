@@ -41,7 +41,7 @@ export class CatalogueComponent implements OnInit {
     this.product = this._databindService.getProduct();
     this.categories = this._databindService.getCategories();
     this.modalDataTest = this._databindService.getProduct();
-    this.mScrollbarService.initScrollbar(document.body, { axis: 'y', theme: 'minimal-dark', scrollButtons: { enable: true } });
+    this.mScrollbarService.initScrollbar(document.body, { axis: 'y', theme: 'dark-3', scrollButtons: { enable: true } });
   }
 
   onGetDetails(productid){

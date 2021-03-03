@@ -1,0 +1,26 @@
+select, textarea, input[type=email], [type=password], [type=text] {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    box-sizing: border-box;
+    background: transparent;
+    border: 0;
+    border-bottom:1px solid #212529;
+    color: #212529;
+    text-align: center;
+}
+
+input::placeholder, textarea::placeholder, select::placeholder {
+    /* color: #ff9d15; */
+    text-align: center;
+}
+
+input[type=email]:focus, [type=password]:focus, [type=text]:focus, textarea:focus, select:focus{
+    border: none;
+    outline: none;
+    border:2px solid #212529;
+    color: #212529;
+    text-align: center;
+    border-radius: 5px;
+}
+
