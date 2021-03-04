@@ -7,7 +7,7 @@
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLongTitle">Cart Modal</h5>
+                <h5 class="modal-title" id="exampleModalLongTitle">Cart List</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
                 </button>
@@ -23,7 +23,7 @@
                                     <span>{{ i + 1 }}.&nbsp;</span>
                                 </div>
                                 <div class="col-4 text-left">
-                                    <span style="font-weight: bold;">{{item.title | uppercase }}</span>
+                                    <span style="font-weight: bold; font-size: 13px;">{{item.title | uppercase }}</span>
                                 </div>
                                 <div class="col-3 text-center">
                                     <span>
@@ -35,7 +35,7 @@
                                     </span>
                                 </div>
                                 <div class="col-3 text-center">
-                                    <span><b>RM {{item.quantity*item.unitprice | number : '1.2'}}</b></span>
+                                    <span id="price">RM {{item.quantity*item.unitprice | number : '1.2'}}</span>
                                 </div>
                                 <div class="col-1 text-right">
                                     <button type="button" class="close" aria-label="Close">

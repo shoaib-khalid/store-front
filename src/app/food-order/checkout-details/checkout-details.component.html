@@ -1,10 +1,60 @@
 <div class="container">
-    <div class="card" style="margin-top: 50px; margin-bottom: 50px; padding: 25px;">
+    <div class="card border-0" style="margin-top: 25px; margin-bottom: 50px; background-color: #f9f9f9;">
         <div class="card-body">
             <div class="row">
-                <div class="col text-center" style="padding: 10px;">
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 text-center border" style="background-color: white;">
+                    <div class="card" style="border-radius: 0px; border: 0;">
+                        <div class="card-body">
+                            <div class="row" style="padding-bottom: 30px;">
+                                <div class="col text-center">
+                                    <span style="color: #ffb347;" id="price">CART SUMMARY</span>
+                                    <!-- <hr class="dotted"> -->
+                                </div>
+                            </div>
+                            <div class="row" *ngFor="let item of cartList; let i = index;">
+                                <div class="col">
+                                    <div class="row">
+                                        <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12"></div>
+                                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 text-left">
+                                            <span id="price" class="quantity" style="font-size: 13px;">{{item.quantity}}&nbsp;&nbsp;x&nbsp;&nbsp;</span>
+                                            <span style="font-size: 13px;">{{item.title}}</span>
+                                        </div>
+                                        <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 text-right">
+                                            <span id="price" class="unitprice">{{item.unitprice * item.quantity | number: '1.2'}}</span>
+                                        </div>
+                                    </div>
+                                    <hr class="nondotted">
+                                </div>
+                            </div>
+
+                            <div class="row" style="padding-top: 20px;">
+                                <div class="col">
+                                    <div class="col text-left">
+                                        <span class="subtotal">SUB-TOTAL</span>
+                                        <span id="price" style="float: right; padding-right: 38px;">RM {{subtotal | number: '1.2'}}</span>
+                                        <!-- <hr class="dotted"> -->
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <div class="col text-left">
+                                        <span class="subtotal">FEE</span>
+                                        <span id="price" style="float: right; padding-right: 38px;">RM {{feetotal | number: '1.2-2'}}</span>
+                                        <hr class="dotted">
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-1 col-md-1"></div>
+                <div class="col-lg-5 col-md-5 col-sm-12 col-xs-12 text-center border" id="mobilespacer" style="padding: 10px; background-color: white;">
                     <!-- Now Its Working! -->
-                    <h5>DELIVERY DETAILS</h5>
+                    <div style="padding: 10px; background-color: #ffb347;">
+                        <span style="font-weight: bold;">DELIVERY DETAILS</span>
+                    </div>
                     <form style="color: white; text-align: center; padding: 20px;">
                         <input type="text" id="name" name="name" placeholder="Full name">
                         <br>
@@ -19,7 +69,7 @@
                         <div class="row">
                             <div class="col-lg-6 col-md-6 col-xs-12 col-sm-12">
                                 <select name="state" id="state">
-                                    <option selected="true" disabled="">Choose States</option>
+                                    <option selected="true" disabled="">States</option>
                                     <option value="Selangor">Selangor</option>
                                     <option value="Perak">Perak</option>
                                     <option value="Kelantan">Kelantan</option>
@@ -27,7 +77,7 @@
                             </div>
                             <div class="col-lg-6 col-md-6 col-xs-12 col-sm-12">
                                 <select name="countries" id="countries">
-                                    <option selected="true" disabled="">Choose Countries</option>
+                                    <option selected="true" disabled="">Countries</option>
                                     <option value="Selangor">Malaysia</option>
                                     <option value="Perak">Pakistan</option>
                                     <option value="Kelantan">Thailand</option>
@@ -35,15 +85,11 @@
                             </div>
                         </div>
  
-                        <!-- <button type="button" class="btn" style="margin-bottom: 50px;">Daftar</button> -->
+                        <br>
+                        <br>
+                        <!-- <button type="button" class="btn btn-danger" style="margin-bottom: 50px;">Daftar</button> -->
+                        <button class="btn btn-md col-6" style="background-color: tomato; border-radius: 0;">PAY NOW</button>
                     </form>
-                </div>
-                <div class="col text-center">
-                    <div class="card">
-                        <div class="card-body">
-                          This is some text within a card body.
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>

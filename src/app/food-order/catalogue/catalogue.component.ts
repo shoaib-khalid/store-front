@@ -8,6 +8,7 @@ import { faEye, faShoppingCart, faShoppingBag } from '@fortawesome/free-solid-sv
 
 import { DataBindService } from './../databind.service';
 import { MalihuScrollbarService } from 'ngx-malihu-scrollbar';
+import { ViewportScroller } from '@angular/common';
 
 @Component({
   selector: 'food-app-catalogue',
@@ -22,12 +23,10 @@ export class CatalogueComponent implements OnInit {
 
   categories:Category[];
   product:Product[];
-
   leftNavDisabled = false;
   rightNavDisabled = false;
   idx = 0;
   details: any[] = [];
-
   // modalDataTest:Product[];
   modalDataTest:any = []
 
@@ -41,7 +40,8 @@ export class CatalogueComponent implements OnInit {
     this.product = this._databindService.getProduct();
     this.categories = this._databindService.getCategories();
     this.modalDataTest = this._databindService.getProduct();
-    this.mScrollbarService.initScrollbar(document.body, { axis: 'y', theme: 'dark-3', scrollButtons: { enable: true } });
+    // malihu scrollbar affecting View scroller, therefore please put it in specific id or class tag instead of body tag.
+    // this.mScrollbarService.initScrollbar(document.body, { axis: 'y', theme: 'dark-3', scrollButtons: { enable: true } });
   }
 
   onGetDetails(productid){

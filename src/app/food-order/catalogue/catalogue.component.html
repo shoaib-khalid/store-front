@@ -45,7 +45,7 @@
                         </div>
                         <div class="col-8 text-right">
                             <h5 class="card-title">{{ item.title }}</h5>
-                            <h5>RM {{ item.price | number : '1.2'}}</h5>
+                            <h5 id="price">RM {{ item.price | number : '1.2'}}</h5>
                         </div>
                     </div>
                     <br>
@@ -80,13 +80,13 @@
         <div class="row">
             <div class="col">
                 <div style="margin-top: 15px;">
-                    <h4>TOTAL: <span>MYR 0.00</span></h4>
+                    <h5 id="price">TOTAL: <span>MYR 0.00</span></h5>
                 </div>
             </div>
             <div class="col"></div>
             <div class="col">
-                <button (click)="goTo($event)" class="btn-success btn btn-lg" style="float: right; margin: 5px; border: 1px solid black; width: 150px;">NEXT&nbsp;<fa-icon [icon]="iconBag"></fa-icon></button>
-                <button class="btn btn-warning btn-lg" style="float: right; margin: 5px; border: 1px solid black;" data-toggle="modal" data-target="#modalCart">CART LIST (0)</button>
+                <button (click)="goTo($event)" class="btn-success btn btn-lg" style="float: right; margin: 5px; border: 1px solid black; width: 150px; border-radius: 0;">NEXT&nbsp;<fa-icon [icon]="iconBag"></fa-icon></button>
+                <button class="btn btn-warning btn-lg" style="float: right; margin: 5px; border: 1px solid black; border-radius: 0;" data-toggle="modal" data-target="#modalCart">CART LIST - <span id="price">0</span></button>
             </div>
         </div>
     </div>

@@ -24,3 +24,53 @@ input[type=email]:focus, [type=password]:focus, [type=text]:focus, textarea:focu
     border-radius: 5px;
 }
 
+
+.dotted {
+    border:none;
+    border-top:1px dashed black;
+    color:#fff;
+    background-color:#fff;
+    height:1px;
+    width:100%;
+}
+
+
+.nondotted {
+    border:none;
+    border-top:1px solid rgba(0,0,0,.1);
+    color:#fff;
+    background-color:#fff;
+    height:1px;
+    width:80%;
+}
+
+.unitprice{
+    font-size: 13px; 
+    padding-right: 55px;
+}
+
+.subtotal{
+    font-size: 13px; 
+    margin-left: 65px;
+}
+
+
+/*Mobile Section*/
+@media (max-width: 767px) {
+    #mobilespacer{
+        margin-top: 20px;
+    }
+
+    .unitprice{
+        padding-right: 30px;
+    }
+
+    .quantity{
+        padding-left: 30px;
+    }
+
+    .subtotal{
+        /* font-size: 13px;  */
+        margin-left: 20px;
+    }
+}

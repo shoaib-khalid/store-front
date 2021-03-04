@@ -1,4 +1,11 @@
 /* You can add global styles to this file, and also import other style files */
 body{
     background-color: #f9f9f9;
+    font-family: 'Open Sans';
+}
+
+#price{
+    /* font-family: 'Fredoka One', cursive !important; */
+    font-weight: bold;
+    font-family: 'Open Sans';
 }
