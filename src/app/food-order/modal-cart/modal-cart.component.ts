@@ -28,7 +28,7 @@ export class ModalCartComponent implements OnInit {
 
     ngOnInit(): void {
         this.cartList = this._databindService.getCartList();
-        this.mScrollbarService.initScrollbar('#scrollable', { axis: 'y', theme: 'dark-3', scrollButtons: { enable: true } });
+        this.mScrollbarService.initScrollbar('#scrollable3', { axis: 'y', theme: 'dark', scrollButtons: { enable: true } });
     }
 
 }

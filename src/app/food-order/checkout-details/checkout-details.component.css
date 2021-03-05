@@ -45,15 +45,26 @@ input[type=email]:focus, [type=password]:focus, [type=text]:focus, textarea:focu
 }
 
 .unitprice{
-    font-size: 13px; 
+    font-size: 12px; 
     padding-right: 55px;
 }
 
 .subtotal{
-    font-size: 13px; 
+    font-size: 12px; 
     margin-left: 65px;
 }
 
+
+/* scrollbar */
+#scrollable4::-webkit-scrollbar {
+    display: none;
+}
+  
+#scrollable4 {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+    padding-bottom: 20px;
+}   
 
 /*Mobile Section*/
 @media (max-width: 767px) {
