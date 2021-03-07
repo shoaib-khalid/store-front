@@ -4,7 +4,7 @@ import { DragScrollModule } from 'ngx-drag-scroll';
 import { MalihuScrollbarModule } from 'ngx-malihu-scrollbar';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgxGalleryModule } from 'ngx-gallery-9';
-import 'hammerjs';
+// import 'hammerjs';
 // important node: ngx-gallery-9 library
 import {NumberPickerModule} from 'ng-number-picker';
 
