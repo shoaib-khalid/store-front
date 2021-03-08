@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
 // model 
 import { CartList } from './food-order/../../models/CartList';
 // services
@@ -13,7 +13,7 @@ import { MalihuScrollbarService } from 'ngx-malihu-scrollbar';
   templateUrl: './checkout-details.component.html',
   styleUrls: ['./checkout-details.component.css']
 })
-export class CheckoutDetailsComponent implements OnInit {
+export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
 
     cartList:CartList[];
     subtotal:number = 0;
@@ -28,10 +28,8 @@ export class CheckoutDetailsComponent implements OnInit {
     ) { }
 
     ngOnInit(): void {
-
         console.log('ngOnInit');
         this.cartList = this._databindService.getCartList();
-
         this.countPrice(this.cartList);
     }
 
@@ -39,6 +37,12 @@ export class CheckoutDetailsComponent implements OnInit {
         console.log("after view init");
         this.mScrollbarService.initScrollbar(document.body, { axis: 'y', theme: 'dark-3', scrollButtons: { enable: true } });
         this.mScrollbarService.initScrollbar('#scrollable4', { axis: 'y', theme: 'dark', scrollButtons: { enable: true } });
+    }
+
+    ngOnDestroy() {
+        // custom cleanup
+        this.mScrollbarService.destroy(document.body);
+        this.mScrollbarService.destroy('#scrollable4');
     }
 
     countPrice(list:any){

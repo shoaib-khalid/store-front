@@ -7,7 +7,7 @@
         <div class="scrollmenu" id="scrollable2">
             <div id="test" *ngFor="let item of categories; let i = index;">
                 <div class="card" style="border: none; background-color: transparent;">
-                    <div class="card-body category shadow-sm" style="margin: 0px; border-radius: 10px;" [ngStyle]="{'background-image': 'url(/assets/image/' + item.img + ')'}">
+                    <div class="card-body category shadow-sm" style="margin: 0px; border-radius: 5px;" [ngStyle]="{'background-image': 'url(/assets/image/' + item.img + ')'}">
                     <span style="margin: 35px;"></span>
                     </div>
                     <span class="text-center" style="margin: 5px; font-size: 13px; color: black;">{{ item.category }}</span>
@@ -16,6 +16,7 @@
         </div>
     </div>
 </div>
+
 
 
 <!-- category slider using plugin-->
@@ -51,13 +52,13 @@
             <h4>PRODUCT LIST</h4>
         </div>
         <div class="col-lg-3 col-sm-12 col-md-12 col-xs-12">
-            <input type="text" class="form-control search-bar" style="border-radius: 10px;" placeholder="search">
+            <input type="text" class="form-control search-bar" style="border-radius: 5px;" placeholder="search">
         </div>
     </div>
     <hr>
     <div class="row">
         <div class="col-sm-4" *ngFor="let item of product">
-            <div class="card shadow-sm" style="border-radius: 10px; margin-bottom: 15px;">
+            <div class="card shadow-sm chapter" style="border-radius: 5px; margin-bottom: 15px; transition: 800ms;">
                 <div class="card-body" style="font-size: 13px;">
                     <div class="row">
                         <div class="col-4">
@@ -96,19 +97,41 @@
 <!-- cart modal -->
 <app-modal-cart></app-modal-cart>
 
-<!-- footer desktop-->
-<div class="footer">
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col">
-                <div style="margin-top: 15px;">
-                    <h5 id="price">TOTAL: <span>MYR 0.00</span></h5>
+<!-- footer desktop -->
+<div class="d-none d-sm-none d-md-block d-lg-block d-xl-block">
+    <div class="footer">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col">
+                    <div style="margin-top: 15px;">
+                        <h5 id="price">TOTAL: <span>MYR 0.00</span></h5>
+                    </div>
+                </div>
+                <div class="col"></div>
+                <div class="col">
+                    <button (click)="goTo($event)" class="btn-success btn btn-lg" style="float: right; margin: 5px; border: 1px solid black; width: 150px; border-radius: 0;">NEXT&nbsp;<fa-icon [icon]="iconBag"></fa-icon></button>
+                    <button class="btn btn-warning btn-lg" style="float: right; margin: 5px; border: 1px solid black; border-radius: 0;" data-toggle="modal" data-target="#modalCart">CART LIST - <span id="price">0</span></button>
                 </div>
             </div>
-            <div class="col"></div>
-            <div class="col">
-                <button (click)="goTo($event)" class="btn-success btn btn-lg" style="float: right; margin: 5px; border: 1px solid black; width: 150px; border-radius: 0;">NEXT&nbsp;<fa-icon [icon]="iconBag"></fa-icon></button>
-                <button class="btn btn-warning btn-lg" style="float: right; margin: 5px; border: 1px solid black; border-radius: 0;" data-toggle="modal" data-target="#modalCart">CART LIST - <span id="price">0</span></button>
+        </div>
+    </div>
+</div>
+
+<!-- footer mobile-->
+<div class="d-block d-sm-block d-md-none d-lg-none d-xl-none">
+    <div class="footer">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col">
+                    <div style="margin-top: 15px;">
+                        <span id="price" style="font-size: medium;">TOTAL: <span>MYR 0.00</span></span>
+                    </div>
+                </div>
+                <!-- <div class="col"></div> -->
+                <div class="col" style="padding-top: 15px;">
+                    <button class="btn btn-warning btn-sm" style="border: 1px solid black; border-radius: 0; margin-right: 10px;" data-toggle="modal" data-target="#modalCart">CART LIST - <span id="price">0</span></button>
+                    <button (click)="goTo($event)" class="btn-success btn btn-sm" style="border: 1px solid black; border-radius: 0;">NEXT&nbsp;<fa-icon [icon]="iconBag"></fa-icon></button>
+                </div>
             </div>
         </div>
     </div>

@@ -105,4 +105,23 @@ drag-scroll-item::-webkit-scrollbar-track {
   .scrollmenu{
       height: 85% !important;
   }
+
+   .chapter{
+    border: 1px solid #ffe259;
+   }
+
+  .chapter:hover{
+	color: black;
+	/* background-color: rgba(209, 53, 49, .8); */
+	cursor: pointer;
+
+	background: url('/assets/image/vector2.jpg'), linear-gradient(#ffce9c, #FFF8D6);
+	/*background: url('../img/quran.png'), linear-gradient(#eb01a5, #d13531);*/
+  	background-position: center center;
+  	background-repeat: no-repeat;
+  	background-size: cover;
+  	opacity: 1;
+
+  	background-blend-mode: multiply;
+}
   

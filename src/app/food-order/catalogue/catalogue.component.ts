@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { Category } from './food-order/../../models/Category';
@@ -15,7 +15,7 @@ import { MalihuScrollbarService } from 'ngx-malihu-scrollbar';
   templateUrl: './catalogue.component.html',
   styleUrls: ['./catalogue.component.css']
 })
-export class CatalogueComponent implements OnInit {
+export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
 
   iconEye = faEye;
   iconCart = faShoppingCart;
@@ -40,10 +40,18 @@ export class CatalogueComponent implements OnInit {
     this.product = this._databindService.getProduct();
     this.categories = this._databindService.getCategories();
     this.modalDataTest = this._databindService.getProduct();
-    // malihu scrollbar affecting View scroller, therefore please put it in specific id or class tag instead of body tag.
-    this.mScrollbarService.initScrollbar(document.body, { axis: 'y', theme: 'dark-3', scrollButtons: { enable: true } });
-    this.mScrollbarService.initScrollbar('#scrollable2', { axis: 'x', theme: 'dark-thin', scrollButtons: { enable: true } });
   }
+
+    ngAfterViewInit(){
+        this.mScrollbarService.initScrollbar(document.body, { axis: 'y', theme: 'dark-3', scrollButtons: { enable: true } });
+        this.mScrollbarService.initScrollbar('#scrollable2', { axis: 'x', theme: 'dark-thin', scrollButtons: { enable: true } });
+    }
+
+    ngOnDestroy() {
+        // custom cleanup
+        this.mScrollbarService.destroy(document.body);
+        this.mScrollbarService.destroy('#scrollable2');
+    }
 
   onGetDetails(productid){
     console.log(productid)
