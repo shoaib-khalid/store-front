@@ -20,6 +20,9 @@ import { ModalProductComponent } from './modal-product/modal-product.component';
 import { CheckoutDetailsComponent } from './checkout-details/checkout-details.component';
 import { ModalCartComponent } from './modal-cart/modal-cart.component';
 
+// HTTP Client 
+import { HttpClientModule } from '@angular/common/http';
+
 
 @NgModule({
   declarations: [
@@ -39,7 +42,8 @@ import { ModalCartComponent } from './modal-cart/modal-cart.component';
     MalihuScrollbarModule.forRoot(),
     FontAwesomeModule,
     NgxGalleryModule,
-    NumberPickerModule
+    NumberPickerModule,
+    HttpClientModule
   ],
   exports: [
     StepCheckoutComponent,
@@ -48,7 +52,8 @@ import { ModalCartComponent } from './modal-cart/modal-cart.component';
     MalihuScrollbarModule,
     FontAwesomeModule,
     NgxGalleryModule,
-    NumberPickerModule
+    NumberPickerModule,
+    HttpClientModule
   ],
   providers: [
       DataBindService
