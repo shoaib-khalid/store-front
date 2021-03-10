@@ -104,7 +104,7 @@ export class DataBindService {
         title: 'Ayam Goreng',
         desc: 'Ayam Goreng Rangup lah di masak bersama ais krim',
         price: 10,
-        image: 'food-sample1.jpg',
+        image: 'assets/image/food-sample1.jpg',
         status: true
       },
       {
@@ -112,7 +112,7 @@ export class DataBindService {
         title: 'Burger King',
         desc: 'Ayam Goreng Rangup lah di masak bersama ais krim',
         price: 7.5,
-        image: 'food-sample2.jpg',
+        image: 'assets/image/food-sample2.jpg',
         status: true
       },
       {
@@ -120,7 +120,7 @@ export class DataBindService {
         title: 'Sushi Empire',
         desc: 'Ayam Goreng Rangup lah di masak bersama ais krim',
         price: 25,
-        image: 'food-sample3.jpg',
+        image: 'assets/image/food-sample3.jpg',
         status: true
       },
       {
@@ -128,7 +128,7 @@ export class DataBindService {
         title: 'Ayam Goreng',
         desc: 'Ayam Goreng Rangup lah di masak bersama ais krim',
         price: 10,
-        image: 'food-sample1.jpg',
+        image: 'assets/image/food-sample1.jpg',
         status: true
       },
       {
@@ -136,7 +136,7 @@ export class DataBindService {
         title: 'Burger King',
         desc: 'Ayam Goreng Rangup lah di masak bersama ais krim',
         price: 7.5,
-        image: 'food-sample2.jpg',
+        image: 'assets/image/food-sample2.jpg',
         status: true
       },
       {
@@ -144,7 +144,7 @@ export class DataBindService {
         title: 'Sushi Empire',
         desc: 'Ayam Goreng Rangup lah di masak bersama ais krim',
         price: 12.5,
-        image: 'food-sample3.jpg',
+        image: 'assets/image/food-sample3.jpg',
         status: true
       },
       {
@@ -152,7 +152,7 @@ export class DataBindService {
         title: 'Ayam Goreng',
         desc: 'Ayam Goreng Rangup lah di masak bersama ais krim',
         price: 10,
-        image: 'food-sample1.jpg',
+        image: 'assets/image/food-sample1.jpg',
         status: true
       },
       {
@@ -160,7 +160,7 @@ export class DataBindService {
         title: 'Burger King',
         desc: 'Ayam Goreng Rangup lah di masak bersama ais krim',
         price: 7.5,
-        image: 'food-sample2.jpg',
+        image: 'assets/image/food-sample2.jpg',
         status: true
       },
       {
@@ -168,7 +168,7 @@ export class DataBindService {
         title: 'Sushi Empire',
         desc: 'Ayam Goreng Rangup lah di masak bersama ais krim',
         price: 12.5,
-        image: 'food-sample3.jpg',
+        image: 'https://p7.hiclipart.com/preview/230/838/351/hyderabadi-biryani-indian-cuisine-hyderabadi-cuisine-barbecue-barbecue-thumbnail.jpg',
         status: true
       }
     ]

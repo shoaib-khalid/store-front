@@ -8,7 +8,7 @@ const routes: Routes = [
 
     { path: "", redirectTo: "/catalogue", pathMatch: "full" },
     { path: "catalogue", component: StepCatalogueComponent },
-    { path: "catalogue/:store_id", component: StepCatalogueComponent, pathMatch: "full"},
+    { path: "catalogue/:store_id", component: StepCatalogueComponent },
     { path: "checkout", component: StepCheckoutComponent },
 
     { path: "**", redirectTo: "/catalogue" }

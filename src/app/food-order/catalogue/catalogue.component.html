@@ -57,16 +57,23 @@
     </div>
     <hr>
     <div class="row">
-        <div class="col-sm-4" *ngFor="let item of product">
+        <div class="col-sm-4" *ngFor="let item of product; let i = index;">
             <div class="card shadow-sm chapter" style="border-radius: 5px; margin-bottom: 15px; transition: 800ms;">
                 <div class="card-body" style="font-size: 13px;">
                     <div class="row">
                         <div class="col-4">
-                            <img class="card-img-top img-icon" src="assets/image/{{ item.image }}" alt="Card image cap">
+                            <div *ngIf="item.thumbnailUrl; else noImage">
+                                <img class="card-img-top img-icon" src="{{ item.thumbnailUrl }}" alt="Card image cap">
+                            </div>
+                            <ng-template #noImage>
+                                <img class="card-img-top img-icon" src="assets/image/noimage.jpg" alt="Card image cap">
+                            </ng-template>
                         </div>
                         <div class="col-8 text-right">
-                            <h5 class="card-title">{{ item.title }}</h5>
-                            <h5 id="price">RM {{ item.price | number : '1.2'}}</h5>
+                            <h5 class="card-title">{{ item.name }}</h5>
+                            <div *ngFor="let data of priceObj">
+                                <h5 *ngIf="item.id == data.product_id; else noPrice" id="price">{{ data.minPrice === 0 ? "N/A" : "RM " + data.minPrice }}</h5>
+                            </div>
                         </div>
                     </div>
                     <br>

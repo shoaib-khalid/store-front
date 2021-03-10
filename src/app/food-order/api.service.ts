@@ -13,7 +13,7 @@ export class ApiService {
     // endpointBaseURL: any;
     productServiceURL: any;
     userServiceURL: any;
-    token:any = 'W0JAMWU1N2VhZTY=';
+    token:any = 'W0JANjA4NThmYjM=';
 
     constructor(
         private http: HttpClient,

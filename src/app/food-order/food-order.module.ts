@@ -22,6 +22,7 @@ import { ModalCartComponent } from './modal-cart/modal-cart.component';
 
 // HTTP Client 
 import { HttpClientModule } from '@angular/common/http';
+import { NgPipesModule } from 'ngx-pipes';
 
 
 @NgModule({
@@ -43,7 +44,8 @@ import { HttpClientModule } from '@angular/common/http';
     FontAwesomeModule,
     NgxGalleryModule,
     NumberPickerModule,
-    HttpClientModule
+    HttpClientModule,
+    NgPipesModule
   ],
   exports: [
     StepCheckoutComponent,
@@ -53,7 +55,8 @@ import { HttpClientModule } from '@angular/common/http';
     FontAwesomeModule,
     NgxGalleryModule,
     NumberPickerModule,
-    HttpClientModule
+    HttpClientModule,
+    NgPipesModule
   ],
   providers: [
       DataBindService
