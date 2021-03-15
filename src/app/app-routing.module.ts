@@ -6,7 +6,7 @@ import { StepCheckoutComponent } from './food-order/layout-checkout/step-checkou
 
 const routes: Routes = [
 
-    { path: "", redirectTo: "/catalogue", pathMatch: "full" },
+    { path: "", redirectTo: "catalogue", pathMatch: "full" },
     { path: "catalogue", component: StepCatalogueComponent },
     { path: "catalogue/:store_id", component: StepCatalogueComponent },
     { path: "checkout", component: StepCheckoutComponent },

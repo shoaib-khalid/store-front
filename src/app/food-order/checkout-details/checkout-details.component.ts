@@ -85,22 +85,19 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
             "paymentAmount": 1
         }
 
-        // alert(data)
-        // return false;
-
         this.apiService.postPaymentLink(data).subscribe((res: any) => {
-            console.log('raw resp:', res)
+            console.log('raw resp:', res.data.paymentLink)
             if (res.message) {
-                window.open("https://ecom.mobiversa.com/UMEzyway/ezylink?sl=8NU6C0D565UeE", "_blank");
+
+                let paymentLink = res.data.paymentLink;
+                // window.open(paymentLink, "_blank");
+                window.location.href = paymentLink;
             } else {
                 // condition if required for different type of response message 
             }
         }, error => {
             console.log(error)
         }) 
-
-        // window.open("https://ecom.mobiversa.com/UMEzyway/ezylink?sl=8NU6C0D565UeE", "_blank");
-        // window.open("https://ecom.mobiversa.com/UMEzyway/ezylink?sl=8NU6C0D565UeE");
     }
 
 }

@@ -69,6 +69,18 @@ export class ApiService {
         return this.http.get(this.productServiceURL + url, header);
     }
 
+    getCategoryByStoreID(storeID){
+        const header = {
+            headers: new HttpHeaders().set("Authorization", `Bearer ${this.token}`),
+        };
+        const url =
+            "store-categories?page=0" +
+            "&pageSize=20" +
+            "&storeId=" +
+            storeID;
+            return this.http.get(this.productServiceURL + url, header);
+    }
+
     postPaymentLink(data):Observable<any> {
 
         const httpOptions = {

@@ -10,7 +10,7 @@
                     <div class="card-body category shadow-sm" style="margin: 0px; border-radius: 5px;" [ngStyle]="{'background-image': 'url(/assets/image/' + item.img + ')'}">
                     <span style="margin: 35px;"></span>
                     </div>
-                    <span class="text-center" style="margin: 5px; font-size: 13px; color: black;">{{ item.category }}</span>
+                    <span class="text-center" style="margin: 5px; font-size: 13px; color: black;">{{ item.name }}</span>
                 </div>
             </div> 
         </div>
@@ -90,6 +90,12 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+
+        <div class="col" *ngIf="product.length < 1">
+            <div class="alert alert-warning" role="alert">
+                Product Not Found!
             </div>
         </div>
     </div>

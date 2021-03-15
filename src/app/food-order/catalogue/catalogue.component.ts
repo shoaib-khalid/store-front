@@ -23,8 +23,9 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
     iconCart = faShoppingCart;
     iconBag = faShoppingBag;
 
-    categories:Category[];
+    // categories:Category[];
     //   product:Product[];
+    categories:any;
     product:any;
     leftNavDisabled = false;
     rightNavDisabled = false;
@@ -60,10 +61,11 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
 
     ngOnInit(): void {
         // this.product = this._databindService.getProduct();
-        this.categories = this._databindService.getCategories();
+        // this.categories = this._databindService.getCategories();
         this.modalDataTest = this._databindService.getProduct();
         
         this.getProduct();
+        this.getCategory();
     }
   
 
@@ -81,6 +83,23 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
     goTo(event){
         // console.log('ditekan mengenai');
         this.route.navigate(['checkout']);   
+    }
+
+    getCategory(){
+        this.apiService.getCategoryByStoreID(this.storeID).subscribe((res: any) => {
+
+            // console.log('category obj: ', res)
+            if (res.message){
+                this.categories = res.data.content;
+
+                console.log('category obj: ', this.categories);
+            }else{
+
+            }
+
+        }, error => {
+            console.log(error)
+        }) 
     }
 
     getProduct(){
