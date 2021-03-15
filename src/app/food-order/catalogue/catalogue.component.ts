@@ -71,13 +71,13 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   
     ngAfterViewInit(){
-        this.mScrollbarService.initScrollbar(document.body, { axis: 'y', theme: 'dark-3', scrollButtons: { enable: true } });
+        // this.mScrollbarService.initScrollbar(document.body, { axis: 'y', theme: 'dark-3', scrollButtons: { enable: true } });
         this.mScrollbarService.initScrollbar('#scrollable2', { axis: 'x', theme: 'dark-thin', scrollButtons: { enable: true } });
     }
 
     ngOnDestroy() {
         // custom cleanup
-        this.mScrollbarService.destroy(document.body);
+        // this.mScrollbarService.destroy(document.body);
         this.mScrollbarService.destroy('#scrollable2');
     }
 
