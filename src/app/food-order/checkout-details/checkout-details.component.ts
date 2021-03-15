@@ -82,7 +82,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
             "productCode": "document",
             "systemTransactionId": this.trxid,
             "transactionId": this.trxid,	
-            "paymentAmount": 1
+            "paymentAmount": 3
         }
 
         this.apiService.postPaymentLink(data).subscribe((res: any) => {
