@@ -79,7 +79,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
         let data = {
             "customerId": 1,
             "customerName": "Nazrul",
-            "productCode": "testing",
+            "productCode": "document",
             "systemTransactionId": this.trxid,
             "transactionId": this.trxid,	
             "paymentAmount": 1
@@ -91,19 +91,16 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
         this.apiService.postPaymentLink(data).subscribe((res: any) => {
             console.log('raw resp:', res)
             if (res.message) {
-                
-
+                window.open("https://ecom.mobiversa.com/UMEzyway/ezylink?sl=8NU6C0D565UeE", "_blank");
             } else {
                 // condition if required for different type of response message 
             }
-
-            
         }, error => {
             console.log(error)
         }) 
 
         // window.open("https://ecom.mobiversa.com/UMEzyway/ezylink?sl=8NU6C0D565UeE", "_blank");
-        window.open("https://ecom.mobiversa.com/UMEzyway/ezylink?sl=8NU6C0D565UeE");
+        // window.open("https://ecom.mobiversa.com/UMEzyway/ezylink?sl=8NU6C0D565UeE");
     }
 
 }
