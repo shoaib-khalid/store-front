@@ -26,6 +26,8 @@ export class ModalProductComponent implements OnInit {
 
   ngOnInit(): void {
 
+    // console.log('modal details: ', this.details);
+
     this.galleryOptions = [
         {
             width: '200px',

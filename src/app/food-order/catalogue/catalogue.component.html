@@ -7,9 +7,17 @@
         <div class="scrollmenu" id="scrollable2">
             <div id="test" *ngFor="let item of categories; let i = index;">
                 <div class="card" style="border: none; background-color: transparent;">
-                    <div class="card-body category shadow-sm" style="margin: 0px; border-radius: 5px;" [ngStyle]="{'background-image': 'url(/assets/image/' + item.img + ')'}">
-                    <span style="margin: 35px;"></span>
+
+                    <div *ngIf="item.img; else noImage" class="card-body category shadow-sm" style="margin: 0px; border-radius: 5px;" [ngStyle]="{'background-image': 'url(/assets/image/noimage.jpg)'}">
+                        <span style="margin: 35px;"></span>
                     </div>
+
+                    <ng-template #noImage>
+                        <div class="card-body category shadow-sm" style="margin: 0px; border-radius: 5px;" [ngStyle]="{'background-image': 'url(/assets/image/noimage2.jpg)'}">
+                            <span style="margin: 35px;"></span>
+                        </div>
+                    </ng-template>
+                    
                     <span class="text-center" style="margin: 5px; font-size: 13px; color: black;">{{ item.name }}</span>
                 </div>
             </div> 
@@ -70,7 +78,7 @@
                             </ng-template>
                         </div>
                         <div class="col-8 text-right">
-                            <h5 class="card-title">{{ item.name }}</h5>
+                            <h5 class="card-title">{{ item.name | titlecase}}</h5>
                             <div *ngFor="let data of priceObj">
                                 <h5 *ngIf="item.id == data.product_id; else noPrice" id="price">{{ data.minPrice === 0 ? "N/A" : "RM " + data.minPrice }}</h5>
                             </div>
@@ -84,7 +92,7 @@
                             </a>
                         </div>
                         <div class="col" style="text-align: center;">
-                            <a class="btn btn-sm btn-success" style="min-width: 125px;" (click)="onGetDetails(item.productid)" data-toggle="modal" data-target="#modalProduct">
+                            <a class="btn btn-sm btn-success" style="min-width: 125px;" (click)="onGetDetails(item.id)" data-toggle="modal" data-target="#modalProduct">
                                 See more &nbsp;<fa-icon [icon]="iconEye"></fa-icon>
                             </a>
                         </div>

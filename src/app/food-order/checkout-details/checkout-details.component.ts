@@ -43,7 +43,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
     ngAfterViewInit(){
         console.log("after view init");
         this.mScrollbarService.initScrollbar(document.body, { axis: 'y', theme: 'dark-3', scrollButtons: { enable: true } });
-        this.mScrollbarService.initScrollbar('#scrollable4', { axis: 'y', theme: 'dark', scrollButtons: { enable: true } });
+        this.mScrollbarService.initScrollbar('#scrollable4', { axis: 'y', theme: 'dark-thin', scrollButtons: { enable: true } });
     }
 
     ngOnDestroy() {

@@ -63,12 +63,13 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
         // this.product = this._databindService.getProduct();
         // this.categories = this._databindService.getCategories();
         this.modalDataTest = this._databindService.getProduct();
+
+        // console.log('modal details: ', this.details);
         
         this.getProduct();
         this.getCategory();
     }
   
-
     ngAfterViewInit(){
         this.mScrollbarService.initScrollbar(document.body, { axis: 'y', theme: 'dark-3', scrollButtons: { enable: true } });
         this.mScrollbarService.initScrollbar('#scrollable2', { axis: 'x', theme: 'dark-thin', scrollButtons: { enable: true } });
@@ -150,14 +151,18 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     onGetDetails(productid){
-        console.log(productid)
+        console.log('product id: ', productid)
 
-        this.modalDataTest.map((modalDataTest, index) => {
-        index++;
-        if(index == productid){
-            console.log(modalDataTest);
+        console.log('product obj: ', this.product);
 
-            this.details = modalDataTest;
+        // this.product.map((product, index) => {
+        // index++;
+        this.product.map(product => {
+        // console.log('product 2: ', product)
+        if(product.id == productid){
+            console.log('selected product: ', product);
+
+            this.details = product;
             return this.details;
             // console.log(details);
         }

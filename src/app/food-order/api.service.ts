@@ -15,7 +15,7 @@ export class ApiService {
     productServiceURL: any;
     userServiceURL: any;
     payServiceURL: any;
-    token:any = 'W0JANmEyNDIxN2U=';
+    token:any = 'W0JAMmViOTgyYjE=';
     tokenPay:any = '73e7cf38-f390-4d4b-b2e8-7f24cbcf2f46';
 
     constructor(
