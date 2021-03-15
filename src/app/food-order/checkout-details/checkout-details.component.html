@@ -100,10 +100,12 @@
                         <br>
                         <br>
                         <!-- <button type="button" class="btn btn-danger" style="margin-bottom: 50px;">Daftar</button> -->
-                        <button class="btn btn-md col-lg-4 col-md-4 col-xs-12 col-sm-12 btn-success" style="border-radius: 0;">PAY NOW &nbsp;&nbsp;<fa-icon [icon]="iconMoney"></fa-icon></button>
+                        <!-- <button (click)="goPay($event)" class="btn btn-md col-lg-4 col-md-4 col-xs-12 col-sm-12 btn-success" style="border-radius: 0;">PAY NOW &nbsp;&nbsp;<fa-icon [icon]="iconMoney"></fa-icon></button> -->
 
                         <!-- <button class="btn btn-md col-lg-4 col-md-4 col-xs-12 col-sm-12 btn-warning" style="border-radius: 0;">MAIN MENU &nbsp;&nbsp;<fa-icon [icon]="iconMoney"></fa-icon></button> -->
                     </form>
+
+                    <button (click)="goPay($event)" class="btn btn-md col-lg-4 col-md-4 col-xs-12 col-sm-12 btn-success" style="border-radius: 0;">PAY NOW &nbsp;&nbsp;<fa-icon [icon]="iconMoney"></fa-icon></button>
                 </div>
             </div>
         </div>

@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { DragScrollModule } from 'ngx-drag-scroll';
 import { MalihuScrollbarModule } from 'ngx-malihu-scrollbar';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -59,7 +59,8 @@ import { NgPipesModule } from 'ngx-pipes';
     NgPipesModule
   ],
   providers: [
-      DataBindService
+      DataBindService,
+      DatePipe
     ]
 })
 export class FoodOrderModule { }

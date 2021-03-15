@@ -85,11 +85,11 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
 
     getProduct(){
         this.apiService.getProductSByStoreID(this.storeID).subscribe((res: any) => {
-            console.log(res)
+            console.log('raw resp:', res)
             if (res.message) {
                 this.product = res.data.content;
                 console.log('product: ', this.product);
-                console.log('price: ', this.product[0].productInventories[1].price);
+                // console.log('price: ', this.product[0].productInventories[1]);
 
                 let productObj = this.product;
 

@@ -1,4 +1,7 @@
 import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
+import { DatePipe } from '@angular/common';
+import { Router } from '@angular/router';
+import { ApiService } from './../api.service';
 // model 
 import { CartList } from './food-order/../../models/CartList';
 // services
@@ -19,12 +22,16 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
     subtotal:number = 0;
     feetotal:number = 0;
     grandtotal:number = 0;
+    trxid: any;
 
     iconMoney = faMoneyBillAlt;
 
     constructor(
         private _databindService: DataBindService,
-        private mScrollbarService: MalihuScrollbarService
+        private mScrollbarService: MalihuScrollbarService,
+        private route: Router,
+        private apiService: ApiService,
+        private datePipe: DatePipe
     ) { }
 
     ngOnInit(): void {
@@ -62,6 +69,41 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
         // sample grandtotal = subtotal deduct with fees
         this.grandtotal = this.subtotal - this.feetotal;
 
+    }
+
+    goPay(e){
+        let dateTime = new Date()
+
+        this.trxid = this.datePipe.transform(dateTime, "yyyyMMddhhmmss")
+
+        let data = {
+            "customerId": 1,
+            "customerName": "Nazrul",
+            "productCode": "testing",
+            "systemTransactionId": this.trxid,
+            "transactionId": this.trxid,	
+            "paymentAmount": 1
+        }
+
+        // alert(data)
+        // return false;
+
+        this.apiService.postPaymentLink(data).subscribe((res: any) => {
+            console.log('raw resp:', res)
+            if (res.message) {
+                
+
+            } else {
+                // condition if required for different type of response message 
+            }
+
+            
+        }, error => {
+            console.log(error)
+        }) 
+
+        // window.open("https://ecom.mobiversa.com/UMEzyway/ezylink?sl=8NU6C0D565UeE", "_blank");
+        window.open("https://ecom.mobiversa.com/UMEzyway/ezylink?sl=8NU6C0D565UeE");
     }
 
 }

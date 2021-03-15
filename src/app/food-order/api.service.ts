@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders  } from '@angular/common/http';
 import { Observable, of } from "rxjs";
 import { PlatformLocation } from "@angular/common";
+import { createConnection } from 'net';
 
 
 @Injectable({
@@ -13,7 +14,8 @@ export class ApiService {
     // endpointBaseURL: any;
     productServiceURL: any;
     userServiceURL: any;
-    token:any = 'W0JANjA4NThmYjM=';
+    payServiceURL: any;
+    token:any = 'W0JANmEyNDIxN2U=';
 
     constructor(
         private http: HttpClient,
@@ -35,14 +37,17 @@ export class ApiService {
             // later if we have new production endpoint, kindly change all the endpoint under prodURL section 
             this.userServiceURL = "http://209.58.160.20:20921/";
             this.productServiceURL = "http://symplified.ai:7071/";
+            this.payServiceURL = "https://209.58.160.20:6001/";
 
         } else if (stagingURL != null) {
             this.userServiceURL = "http://209.58.160.20:20921/";
             this.productServiceURL = "http://symplified.ai:7071/";
+            this.payServiceURL = "https://209.58.160.20:6001/";
 
         } else {
             this.userServiceURL = "http://209.58.160.20:20921/";
             this.productServiceURL = "http://symplified.ai:7071/";
+            this.payServiceURL = "https://209.58.160.20:6001/";
         }
     }
 
@@ -61,6 +66,14 @@ export class ApiService {
         "&storeId=" +
         storeID;
         return this.http.get(this.productServiceURL + url, header);
+    }
+
+    postPaymentLink(data){
+        console.log('Masok la weh: ', data);
+        // console.log('endpoint: ' + this.payServiceURL + "payments/makePayment")
+        return this.http.post(this.payServiceURL + "payments/makePayment", data);
+        
+        // ask taufik for ssl validation. require cert to access the API 
     }
 
 }
