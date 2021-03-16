@@ -89,7 +89,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
     getCategory(){
         this.apiService.getCategoryByStoreID(this.storeID).subscribe((res: any) => {
 
-            // console.log('category obj: ', res)
+            console.log('category obj: ', res)
             if (res.message){
                 this.categories = res.data.content;
 

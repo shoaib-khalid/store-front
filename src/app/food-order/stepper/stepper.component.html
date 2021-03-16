@@ -3,9 +3,67 @@
     <div class="container">
         <div class="row">
             <div class="col text-center">
-                <div class="breadcrumbs" style="border-top-left-radius: 5px; border-bottom-left-radius: 5px;">
-                    <a (click)="goTo($event, step.id)" *ngFor="let step of stepper" class="{{ (step.status ? 'active' : '') }}" style="font-size: 12px; font-weight: bold; border-top-left-radius: 5px; border-bottom-left-radius: 5px; cursor: pointer;">{{step.name | uppercase }}</a>
+
+                <!-- Destop/Tablet Layout -->
+                <div class="d-none d-sm-none d-md-block d-lg-block d-xl-block">
+                    <div class="breadcrumbs" style="border-top-left-radius: 5px; border-bottom-left-radius: 5px;">
+                        <a (click)="goTo($event, step.id)" *ngFor="let step of stepper" class="{{ (step.status ? 'active' : '') }}" 
+                        style="font-size: 12px; 
+                        font-weight: bold; 
+                        border-top-left-radius: 5px; 
+                        border-bottom-left-radius: 5px; 
+                        cursor: pointer;">
+                            {{step.name | uppercase }}
+                        </a>
+                    </div>
                 </div>
+
+                <!-- Mobile Layout -->
+                <div class="d-block d-sm-block d-md-none d-lg-none d-xl-none">
+                    <div class="row text-center">
+                        <div class="col text-center">
+                            <div class="rounded-circle" style="width: 50px; height: 50px; background-color: white; display: inline-block;
+                            vertical-align: middle; position: relative; z-index: 1; border: 2px solid #ffb347;">
+                                <span style="top: 12px; position: relative;">1</span>
+                            </div>
+
+                            <span style="display:block;
+                            width:100%;
+                            border-top: 3px solid #ffb347;
+                            position: absolute;
+                            top: 50%;
+                            left: 50%;
+                            z-index: 0;">
+                            </span>
+                        </div>
+
+                        <div class="col text-center">
+                            <div class="rounded-circle" style="width: 50px; height: 50px; background-color: white; display: inline-block;
+                            vertical-align: middle; position: relative; z-index: 1; border: 2px solid #ffb347;">
+                                <span style="top: 12px; position: relative;">2</span>
+                            </div>
+
+                            <span style="display:block;
+                            width:100%;
+                            border-top: 3px solid #ffb347;
+                            position: absolute;
+                            top: 50%;
+                            left: 50%;
+                            z-index: 0;">
+                            </span>
+                        </div>
+                        
+                        <div class="col text-center">
+                            <div class="rounded-circle" style="width: 50px; height: 50px; background-color: white; display: inline-block;
+                            vertical-align: middle; position: relative; z-index: 1; border: 2px solid #ffb347;">
+                                <span style="top: 12px; position: relative;">3</span>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                
             </div>
         </div>
     </div>

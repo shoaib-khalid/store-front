@@ -86,16 +86,27 @@
                     </div>
                     <br>
                     <div class="row">
-                        <div class="col" style="text-align: center;">
-                            <a href="#" class="btn btn-sm btn-warning" style="min-width: 125px;">
+                        <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
+                            <div class="bg-warning rounded btnAddtoCart">
+                                <span style="vertical-align: middle;">Add to cart &nbsp;<fa-icon [icon]="iconCart"></fa-icon></span>
+                            </div>
+                        </div>
+                        <!-- <div class="col-lg-2 col-md-12 col-sm-12 col-xs-12"></div> -->
+                        <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
+                            <div class="rounded btnSeeMore" (click)="onGetDetails(item.id)" data-toggle="modal" data-target="#modalProduct">
+                                <span style="vertical-align: middle;">See more &nbsp;<fa-icon [icon]="iconEye"></fa-icon></span>
+                            </div>
+                        </div>
+                        <!-- <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12" style="text-align: center;">
+                            <a class="btn btn-sm btn-warning fontsizer" style="max-width: 125px;">
                                 Add to cart &nbsp;<fa-icon [icon]="iconCart"></fa-icon>
                             </a>
                         </div>
-                        <div class="col" style="text-align: center;">
-                            <a class="btn btn-sm btn-success" style="min-width: 125px;" (click)="onGetDetails(item.id)" data-toggle="modal" data-target="#modalProduct">
+                        <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12" style="text-align: center;">
+                            <a class="btn btn-sm btn-success fontsizer" style="max-width: 125px;" (click)="onGetDetails(item.id)" data-toggle="modal" data-target="#modalProduct">
                                 See more &nbsp;<fa-icon [icon]="iconEye"></fa-icon>
                             </a>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
             </div>
@@ -130,7 +141,7 @@
                 </div>
                 <div class="col"></div>
                 <div class="col">
-                    <button (click)="goTo($event)" class="btn-success btn btn-lg" style="float: right; margin: 5px; border: 1px solid black; width: 150px; border-radius: 0;">NEXT&nbsp;<fa-icon [icon]="iconBag"></fa-icon></button>
+                    <button (click)="goTo($event)" class="btn btn-lg" style="float: right; margin: 5px; border: 1px solid black; width: 150px; border-radius: 0; background-color: #A9E538;">NEXT&nbsp;<fa-icon [icon]="iconBag"></fa-icon></button>
                     <button class="btn btn-warning btn-lg" style="float: right; margin: 5px; border: 1px solid black; border-radius: 0;" data-toggle="modal" data-target="#modalCart">CART LIST - <span id="price">0</span></button>
                 </div>
             </div>
@@ -143,21 +154,20 @@
     <div class="footer">
         <div class="container-fluid">
             <div class="row">
-                <div class="col">
+                <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
                     <div style="margin-top: 15px;">
                         <span id="price" style="font-size: medium;">TOTAL: <span>MYR 0.00</span></span>
                     </div>
                 </div>
                 <!-- <div class="col"></div> -->
-                <div class="col" style="padding-top: 15px;">
-                    <button class="btn btn-warning btn-sm" style="border: 1px solid black; border-radius: 0; margin-right: 10px;" data-toggle="modal" data-target="#modalCart">CART LIST - <span id="price">0</span></button>
-                    <button (click)="goTo($event)" class="btn-success btn btn-sm" style="border: 1px solid black; border-radius: 0;">NEXT&nbsp;<fa-icon [icon]="iconBag"></fa-icon></button>
+                <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12" style="padding-top: 15px;">
+                    <button class="btn btn-warning btn-sm footerfont" style="border: 1px solid black; border-radius: 0; margin-right: 10px;" data-toggle="modal" data-target="#modalCart">CART LIST - <span id="price">0</span></button>
+                    <button (click)="goTo($event)" class="btn btn-sm footerfont" style="border: 1px solid black; border-radius: 0; background-color: #A9E538;">NEXT&nbsp;<fa-icon [icon]="iconBag"></fa-icon></button>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
 
 
 <!-- </div> -->
