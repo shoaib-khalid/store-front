@@ -69,6 +69,20 @@ export class ApiService {
         return this.http.get(this.productServiceURL + url, header);
     }
 
+    // http://symplified.ai:7071/products/BeefBiryani?featured=true&page=0&pageSize=20
+    getProductSByProductID(productID) {
+        const header = {
+            headers: new HttpHeaders().set("Authorization", `Bearer ${this.token}`),
+        };
+        const url =
+            "products/"+ productID
+            "?featured=true" +
+            "&page=0" +
+            "&pageSize=20";
+            
+            return this.http.get(this.productServiceURL + url, header);
+        }
+
     getCategoryByStoreID(storeID){
         const header = {
             headers: new HttpHeaders().set("Authorization", `Bearer ${this.token}`),

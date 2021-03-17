@@ -23,7 +23,8 @@
                         <div class="col-6 text-center">
                             <p>{{ details.desc }} </p>
                             <div style="padding-top: 70px;">
-                                <h5>PRICE : {{ price }}</h5>
+                                <!-- <h5>PRICE : RM {{ price }}</h5> -->
+                                <h5>PRICE : RM {{ details.productInventories[0].price | number: '1.2-2' }}</h5>
                                 <ng-number-picker [(value)]="value" [min]="0" [max]="100" [postfix]="'unit'" [size]="'sm'"></ng-number-picker>
                             </div>
                         </div>

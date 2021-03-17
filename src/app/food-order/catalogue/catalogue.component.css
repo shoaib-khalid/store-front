@@ -156,10 +156,41 @@ drag-scroll-item::-webkit-scrollbar-track {
         font-size: 11px;
     }
 
+    .cartlistm{
+        border: 1px solid black; 
+        border-radius: 0; 
+        margin-right: 20px;
+        padding: 10px;
+    }
+    
+    .nextm{
+        border: 1px solid black; 
+        border-radius: 0; 
+        background-color: #A9E538;
+        padding: 10px;
+        width: 88px;
+    }
+
+}
+
+@media (max-width: 376px){
+    .cartlistm{
+        margin-right: 10px !important;
+        padding: 5px !important;
+        margin-top: 3px;
+        height: 35px;
+    }
+    
+    .nextm{
+        padding: 5px !important;
+        width: 88px !important;
+        margin-top: 3px;
+        height: 35px;
+    }
 }
 
 /*Mobile S Section*/
-@media (max-width: 320px) {
+@media (max-width: 321px) {
 
     .fontsizer{
         font-size: 12px;
@@ -170,12 +201,38 @@ drag-scroll-item::-webkit-scrollbar-track {
         padding-top: 2.5%; 
     }
 
-    .btnAddtoCart{
-        padding-top: 2.5%; 
+    .cartlistm{
+        margin-right: 0px !important;
+        margin-bottom: 5px !important;
+        /* padding: 5px !important; */
+        margin-top: 0px !important;
+        height: 30px !important;
+        width: 100px !important;
+        /* position: relative; */
+        float: right;
+    }
+    
+    .nextm{
+        /* padding: 5px !important; */
+        width: 100px !important;
+        margin-top: 0px !important;
+        height: 30px !important;
+        /* right: 0; */
+        /* position: relative; */
+        float: right;
     }
 
-    .footerfont{
-        font-size: 11px;
+    .removepadding{
+        padding-top: 5px !important;
+    }
+
+    .fontmobile_s{
+        font-size: 12px !important;
+        font-weight: bold !important;
+    }
+
+    .footer{
+        height: 75px !important;
     }
 
 }

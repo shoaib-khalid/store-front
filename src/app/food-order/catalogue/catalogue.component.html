@@ -70,7 +70,7 @@
                 <div class="card-body" style="font-size: 13px;">
                     <div class="row">
                         <div class="col-4">
-                            <div *ngIf="item.thumbnailUrl; else noImage">
+                            <div *ngIf="(item.thumbnailUrl && item.thumbnailUrl!='string'); else noImage">
                                 <img class="card-img-top img-icon" src="{{ item.thumbnailUrl }}" alt="Card image cap">
                             </div>
                             <ng-template #noImage>
@@ -124,6 +124,7 @@
 
 <app-modal-product 
 [details]="details"
+[detailPrice]="detailPrice"
 ></app-modal-product>
 
 <!-- cart modal -->
@@ -154,15 +155,15 @@
     <div class="footer">
         <div class="container-fluid">
             <div class="row">
-                <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
-                    <div style="margin-top: 15px;">
-                        <span id="price" style="font-size: medium;">TOTAL: <span>MYR 0.00</span></span>
-                    </div>
+                <div class="col-5" style="margin-top: 15px;">
+                    <!-- <div style="margin-top: 15px;"> -->
+                        <span class="fontmobile_s" id="price" style="font-size: small;">TOTAL: <span>MYR 0.00</span></span>
+                    <!-- </div> -->
                 </div>
                 <!-- <div class="col"></div> -->
-                <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12" style="padding-top: 15px;">
-                    <button class="btn btn-warning btn-sm footerfont" style="border: 1px solid black; border-radius: 0; margin-right: 10px;" data-toggle="modal" data-target="#modalCart">CART LIST - <span id="price">0</span></button>
-                    <button (click)="goTo($event)" class="btn btn-sm footerfont" style="border: 1px solid black; border-radius: 0; background-color: #A9E538;">NEXT&nbsp;<fa-icon [icon]="iconBag"></fa-icon></button>
+                <div class="col-7 removepadding" style="padding-top: 10px; text-align: center;">
+                    <button class="btn btn-warning btn-sm footerfont cartlistm" data-toggle="modal" data-target="#modalCart">CART LIST - <span id="price">0</span></button>
+                    <button (click)="goTo($event)" class="btn btn-sm footerfont nextm">NEXT&nbsp;<fa-icon [icon]="iconBag"></fa-icon></button>
                 </div>
             </div>
         </div>

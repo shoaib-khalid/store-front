@@ -37,6 +37,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
     priceObj = [];
     clusterPriceArr = [];
     minVal:any;
+    detailPrice:any = '0.00';
 
     constructor(
         private _databindService: DataBindService, 
@@ -153,20 +154,33 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
     onGetDetails(productid){
         console.log('product id: ', productid)
 
-        console.log('product obj: ', this.product);
+        // console.log('product obj: ', this.product);
 
-        // this.product.map((product, index) => {
-        // index++;
-        this.product.map(product => {
-        // console.log('product 2: ', product)
-        if(product.id == productid){
-            console.log('selected product: ', product);
+        // this.product.map(product => {
+        //     if(product.id == productid){
+        //         console.log('selected product: ', product);
+        //         this.details = product;
+        //         return this.details;
+        //     }
+        // })
 
-            this.details = product;
-            return this.details;
-            // console.log(details);
-        }
-        })
+
+        this.apiService.getProductSByProductID(productid).subscribe((res: any) => {
+
+            console.log('product details:', res.data);
+
+            let product_details = res.data;
+
+            if (res.message) {
+                this.details = product_details;
+                this.detailPrice = product_details.productInventories.price;
+            } else {
+
+            }
+
+        }, error => {
+            console.log(error)
+        }) 
     }
 
   onIndexChanged(idx) {

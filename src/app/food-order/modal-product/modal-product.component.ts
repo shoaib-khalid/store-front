@@ -11,9 +11,10 @@ import { NgxGalleryOptions, NgxGalleryImage, NgxGalleryAnimation } from 'ngx-gal
 })
 export class ModalProductComponent implements OnInit {
   @Input() details: any;
+  @Input() detailPrice: any;
 
   value: number;
-  price: any = 'RM 10.00';
+  price: any = '10.00';
 
   galleryOptions: NgxGalleryOptions[];
   galleryImages: NgxGalleryImage[];
