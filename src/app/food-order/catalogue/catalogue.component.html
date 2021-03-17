@@ -79,10 +79,17 @@
                         </div>
                         <div class="col-8 text-right">
                             <h5 class="card-title">{{ item.name | titlecase}}</h5>
+                            <h5 id="price">{{ item.productInventories[0].price | number: '1.2-2'}}</h5>
+                            <!-- <div *ngFor="let data of priceObj">
+                                <h5 *ngIf="item.id == data.product_id; else noPrice" id="price">{{ data.minPrice === 0 ? "N/A" : "RM " + data.minPrice }}</h5>
+                            </div> -->
+                        </div>
+                        <!-- <div class="col-8 text-right">
+                            <h5 class="card-title">{{ item.name | titlecase}}</h5>
                             <div *ngFor="let data of priceObj">
                                 <h5 *ngIf="item.id == data.product_id; else noPrice" id="price">{{ data.minPrice === 0 ? "N/A" : "RM " + data.minPrice }}</h5>
                             </div>
-                        </div>
+                        </div> -->
                     </div>
                     <br>
                     <div class="row">
