@@ -8,12 +8,12 @@ const routes: Routes = [
 
     { path: "", redirectTo: "catalogue", pathMatch: "full" },
     { path: "catalogue", component: StepCatalogueComponent },
-    { path: "catalogue/:store_id", component: StepCatalogueComponent },
+    { path: "catalogue/:referenceId/:senderId/:storeId/:", component: StepCatalogueComponent },
     { path: "checkout", component: StepCheckoutComponent },
 
     { path: "**", redirectTo: "/catalogue" }
 ];
-
+// http://209.58.160.20:8090/catalogue?referenceId=1234&senderId=5678&storeId=9101
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]

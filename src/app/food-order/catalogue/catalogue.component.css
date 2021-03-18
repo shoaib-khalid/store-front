@@ -78,6 +78,16 @@ drag-scroll-item::-webkit-scrollbar-track {
     white-space: nowrap;
   }
 
+    .scrollmobi::-webkit-scrollbar {
+        display: none;
+    }
+
+    /* Hide scrollbar for IE, Edge and Firefox */
+    .scrollmobi {
+        -ms-overflow-style: none;  /* IE and Edge */
+        scrollbar-width: none;  /* Firefox */
+    }
+
   #test {
     display: inline-block;
     color: black;

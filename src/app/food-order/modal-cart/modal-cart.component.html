@@ -15,7 +15,7 @@
             <div class="modal-body" id="scrollable3">
                 
                 <!-- Destop/Tablet Layout -->
-                <div class="d-none d-sm-none d-md-block d-lg-block d-xl-block" style="padding-top: 30px; padding-bottom: 30px;">
+                <!-- <div class="d-none d-sm-none d-md-block d-lg-block d-xl-block" style="padding-top: 30px; padding-bottom: 30px;">
                     <div class="card" style="margin-bottom: 10px;" *ngFor="let item of cartList; let i = index;">
                         <div class="card-body">
                             <div class="row">
@@ -45,10 +45,43 @@
                             </div>
                         </div>
                     </div>
+                </div> -->
+
+                <div class="d-none d-sm-none d-md-block d-lg-block d-xl-block" style="padding-top: 30px; padding-bottom: 30px;">
+                    <div class="card" style="margin-bottom: 10px;" *ngFor="let item of cartitemDetails; let i = index;">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-1">
+                                    <span>{{ i + 1 }}.&nbsp;</span>
+                                </div>
+                                <div class="col-4 text-left">
+                                    <span style="font-weight: bold; font-size: 13px;">{{item.productId | uppercase }}</span>
+                                </div>
+                                <div class="col-3 text-center">
+                                    <span>
+                                        <fa-icon [icon]="iconMinus" class="qtyIcon"></fa-icon>
+                                    </span>
+                                    <span style="margin-left: 20px; margin-right: 20px;">{{item.quantity}}</span>
+                                    <span>
+                                        <fa-icon [icon]="iconAdd" class="qtyIcon"></fa-icon>
+                                    </span>
+                                </div>
+                                <div class="col-3 text-center">
+                                    <span id="price">RM 10.00</span>
+                                    <!-- <span id="price">RM {{item.quantity*item.unitprice | number : '1.2-2'}}</span> -->
+                                </div>
+                                <div class="col-1 text-right">
+                                    <button type="button" class="close" aria-label="Close">
+                                        <span aria-hidden="true"><fa-icon [icon]="iconTrash" class="iconStyle"></fa-icon></span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Mobile Layout -->
-                <div class="d-block d-sm-block d-md-none d-lg-none d-xl-none">
+                <!-- <div class="d-block d-sm-block d-md-none d-lg-none d-xl-none">
                     <div class="card" style="margin-bottom: 10px;" *ngFor="let item of cartList; let i = index;">
                         <div class="card-body">
                             <div class="row">
@@ -69,6 +102,39 @@
                                 </div>
                                 <div class="col-3 text-center">
                                     <span id="price">RM {{item.quantity*item.unitprice | number : '1.2'}}</span>
+                                </div>
+                                <div class="col-1 text-right">
+                                    <button type="button" class="close" aria-label="Close">
+                                        <span aria-hidden="true"><fa-icon [icon]="iconTrash" class="iconStyle"></fa-icon></span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div> -->
+
+                <div class="d-block d-sm-block d-md-none d-lg-none d-xl-none">
+                    <div class="card" style="margin-bottom: 10px;" *ngFor="let item of cartList; let i = index;">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-1">
+                                    <span>{{ i + 1 }}.&nbsp;</span>
+                                </div>
+                                <div class="col-4 text-left">
+                                    <span style="font-weight: bold; font-size: 13px;">{{item.productId | uppercase }}</span>
+                                </div>
+                                <div class="col-3 text-center">
+                                    <span>
+                                        <fa-icon [icon]="iconMinus" class="qtyIcon"></fa-icon>
+                                    </span>
+                                    <span style="margin-left: 20px; margin-right: 20px;">{{item.quantity}}</span>
+                                    <span>
+                                        <fa-icon [icon]="iconAdd" class="qtyIcon"></fa-icon>
+                                    </span>
+                                </div>
+                                <div class="col-3 text-center">
+                                    <span id="price">RM 10.00</span>
+                                    <!-- <span id="price">RM {{item.quantity*item.unitprice | number : '1.2'}}</span> -->
                                 </div>
                                 <div class="col-1 text-right">
                                     <button type="button" class="close" aria-label="Close">

@@ -12,6 +12,7 @@ export class ApiService {
 
     currBaseURL: any;
     // endpointBaseURL: any;
+    orderServiceURL: any;
     productServiceURL: any;
     userServiceURL: any;
     payServiceURL: any;
@@ -39,16 +40,19 @@ export class ApiService {
             this.userServiceURL = "http://209.58.160.20:20921/";
             this.productServiceURL = "http://symplified.ai:7071/";
             this.payServiceURL = "https://209.58.160.20:6001/";
+            this.orderServiceURL = "http://209.58.160.20:7072/";
 
         } else if (stagingURL != null) {
             this.userServiceURL = "http://209.58.160.20:20921/";
             this.productServiceURL = "http://symplified.ai:7071/";
             this.payServiceURL = "https://209.58.160.20:6001/";
+            this.orderServiceURL = "http://209.58.160.20:7072/";
 
         } else {
             this.userServiceURL = "http://209.58.160.20:20921/";
             this.productServiceURL = "http://symplified.ai:7071/";
             this.payServiceURL = "https://209.58.160.20:6001/";
+            this.orderServiceURL = "http://209.58.160.20:7072/";
         }
     }
 
@@ -95,6 +99,47 @@ export class ApiService {
             return this.http.get(this.productServiceURL + url, header);
     }
 
+    getProductSByCategory(categoryId, storeID) {
+        const header = {
+            headers: new HttpHeaders().set("Authorization", `Bearer ${this.token}`),
+        };
+
+        const url =
+            "products?categoryId="+ categoryId +
+            "&featured=true" +
+            "&page=0" +
+            "&pageSize=20" +
+            "&storeId=" +
+            storeID;
+
+        return this.http.get(this.productServiceURL + url, header);
+    }
+
+    getCartList(customerID) {
+        const header = {
+            headers: new HttpHeaders().set("Authorization", `Bearer ${this.token}`),
+        };
+        // http://209.58.160.20:7072/carts?customerId=4&page=0&pageSize=20
+        const url =
+            "carts?customerId="+ customerID +
+            "&page=0" +
+            "&pageSize=20";
+
+        return this.http.get(this.orderServiceURL + url, header);
+    }
+
+    getCartItemByCartID(cartID) {
+        const header = {
+            headers: new HttpHeaders().set("Authorization", `Bearer ${this.token}`),
+        };
+        // http://209.58.160.20:7072/carts/3/items?page=0&pageSize=20
+        const url =
+            "carts/" + cartID + "/items?page=0"+
+            "&pageSize=20";
+
+        return this.http.get(this.orderServiceURL + url, header);
+    }
+
     postPaymentLink(data):Observable<any> {
 
         const httpOptions = {
@@ -110,6 +155,22 @@ export class ApiService {
         console.log('send: ', url, data, httpOptions)
         return this.http.post(url, data, httpOptions);
         // return this.http.get(this.payServiceURL + "payments/makePayment", httpOptions);
+    }
+
+    postAddToCart(data):Observable<any> {
+
+        const httpOptions = {
+            headers: new HttpHeaders(
+            { 
+               'Authorization': `Bearer ${this.token}`,
+               'Content-Type': 'application/json'
+            })
+        }
+
+        const url = this.orderServiceURL + "carts/" + data.cartId + "/items";
+
+        return this.http.post(url, data, httpOptions);
+
     }
     
 }

@@ -1,29 +1,59 @@
 <!-- <div id="scrollable"> -->
 
+<!-- Slider Desktop  -->
+<div class="d-none d-sm-none d-md-block d-lg-block d-xl-block">
+    <!-- category slider one normal horizontal slider with more smooth behaviour-->
+    <div class="container" id="category-section" style="padding-top: 50px;">
+        <div class="row" >
+            <div class="scrollmenu" id="scrollable2">
+                <div id="test" *ngFor="let item of categories; let i = index;">
+                    <div class="card" style="border: none; background-color: transparent; height: 150px;">
 
-<!-- category slider one normal horizontal slider with more smooth behaviour-->
-<div class="container" id="category-section" style="padding-top: 50px;">
-    <div class="row" >
-        <div class="scrollmenu" id="scrollable2">
-            <div id="test" *ngFor="let item of categories; let i = index;">
-                <div class="card" style="border: none; background-color: transparent;">
-
-                    <div *ngIf="item.img; else noImage" class="card-body category shadow-sm" style="margin: 0px; border-radius: 5px;" [ngStyle]="{'background-image': 'url(/assets/image/noimage.jpg)'}">
-                        <span style="margin: 35px;"></span>
-                    </div>
-
-                    <ng-template #noImage>
-                        <div class="card-body category shadow-sm" style="margin: 0px; border-radius: 5px;" [ngStyle]="{'background-image': 'url(/assets/image/noimage2.jpg)'}">
+                        <div (click)="onGetCategoriesItem(item.id)" *ngIf="item.thumbnailUrl; else noImage" class="card-body category shadow-sm" style="margin: 0px; border-radius: 5px; width: 150px; height: 150px; border: 1px solid #ffe259;" [ngStyle]="{'background-image': 'url('+ item.thumbnailUrl +')'}">
                             <span style="margin: 35px;"></span>
                         </div>
-                    </ng-template>
-                    
-                    <span class="text-center" style="margin: 5px; font-size: 13px; color: black;">{{ item.name }}</span>
-                </div>
-            </div> 
+
+                        <ng-template #noImage>
+                            <div class="card-body category shadow-sm" style="margin: 0px; border-radius: 5px; width: 150px; height: 150px;" [ngStyle]="{'background-image': 'url(/assets/image/noimage2.jpg)'}">
+                                <span style="margin: 35px;"></span>
+                            </div>
+                        </ng-template>
+                        
+                        <span class="text-center" id="price" style="margin: 5px; font-size: 13px; color: black; font-weight: bold;">{{ item.name }}</span>
+                    </div>
+                </div> 
+            </div>
         </div>
     </div>
 </div>
+
+<!-- Slider Mobile  -->
+<div class="d-block d-sm-block d-md-none d-lg-none d-xl-none">
+    <!-- category slider one normal horizontal slider with more smooth behaviour-->
+    <div class="container" id="category-section" style="padding-top: 50px;">
+        <div class="row" >
+            <div class="scrollmenu scrollmobi">
+                <div id="test" *ngFor="let item of categories; let i = index;">
+                    <div class="card" style="border: none; background-color: transparent; height: 150px;">
+
+                        <div (click)="onGetCategoriesItem(item.id)" *ngIf="item.thumbnailUrl; else noImage" class="card-body category shadow-sm" style="margin: 0px; border-radius: 5px; width: 150px; height: 150px; border: 1px solid #ffe259;" [ngStyle]="{'background-image': 'url('+ item.thumbnailUrl +')'}">
+                            <span style="margin: 35px;"></span>
+                        </div>
+
+                        <ng-template #noImage>
+                            <div class="card-body category shadow-sm" style="margin: 0px; border-radius: 5px; width: 150px; height: 150px;" [ngStyle]="{'background-image': 'url(/assets/image/noimage2.jpg)'}">
+                                <span style="margin: 35px;"></span>
+                            </div>
+                        </ng-template>
+                        
+                        <span class="text-center" id="price" style="margin: 5px; font-size: 13px; color: black; font-weight: bold;">{{ item.name }}</span>
+                    </div>
+                </div> 
+            </div>
+        </div>
+    </div>
+</div>
+
 
 
 
@@ -78,11 +108,11 @@
                             </ng-template>
                         </div>
                         <div class="col-8 text-right">
-                            <h5 class="card-title">{{ item.name | titlecase}}</h5>
-                            <!-- <h5 id="price">{{ item.productInventories[0].price | number: '1.2-2'}}</h5> -->
-                            <div *ngFor="let data of priceObj">
+                            <h6 class="card-title">{{ item.name | titlecase}}</h6>
+                            <h5 id="price">RM {{ item.productInventories[0].price | number: '1.2-2'}}</h5>
+                            <!-- <div *ngFor="let data of priceObj">
                                 <h5 *ngIf="item.id == data.product_id; else noPrice" id="price">{{ data.minPrice === 0 ? "N/A" : "RM " + data.minPrice }}</h5>
-                            </div>
+                            </div> -->
                         </div>
                         <!-- <div class="col-8 text-right">
                             <h5 class="card-title">{{ item.name | titlecase}}</h5>
@@ -94,7 +124,7 @@
                     <br>
                     <div class="row">
                         <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
-                            <div class="bg-warning rounded btnAddtoCart">
+                            <div (click)="addToCart($event, item.id)" class="bg-warning rounded btnAddtoCart">
                                 <span style="vertical-align: middle;">Add to cart &nbsp;<fa-icon [icon]="iconCart"></fa-icon></span>
                             </div>
                         </div>
@@ -132,10 +162,13 @@
 <app-modal-product 
 [details]="details"
 [detailPrice]="detailPrice"
+[galleryImagesInit]="galleryImagesInit"
 ></app-modal-product>
 
 <!-- cart modal -->
-<app-modal-cart></app-modal-cart>
+<app-modal-cart
+[cartitemDetails]="cartitemDetails"
+></app-modal-cart>
 
 <!-- footer desktop -->
 <div class="d-none d-sm-none d-md-block d-lg-block d-xl-block">
@@ -150,7 +183,7 @@
                 <div class="col"></div>
                 <div class="col">
                     <button (click)="goTo($event)" class="btn btn-lg" style="float: right; margin: 5px; border: 1px solid black; width: 150px; border-radius: 0; background-color: #A9E538;">NEXT&nbsp;<fa-icon [icon]="iconBag"></fa-icon></button>
-                    <button class="btn btn-warning btn-lg" style="float: right; margin: 5px; border: 1px solid black; border-radius: 0;" data-toggle="modal" data-target="#modalCart">CART LIST - <span id="price">0</span></button>
+                    <button class="btn btn-warning btn-lg" style="float: right; margin: 5px; border: 1px solid black; border-radius: 0;" data-toggle="modal" data-target="#modalCart">CART LIST - <span id="price">{{cartitemDetailsCount}}</span></button>
                 </div>
             </div>
         </div>
@@ -169,7 +202,7 @@
                 </div>
                 <!-- <div class="col"></div> -->
                 <div class="col-7 removepadding" style="padding-top: 10px; text-align: center;">
-                    <button class="btn btn-warning btn-sm footerfont cartlistm" data-toggle="modal" data-target="#modalCart">CART LIST - <span id="price">0</span></button>
+                    <button class="btn btn-warning btn-sm footerfont cartlistm" data-toggle="modal" data-target="#modalCart">CART LIST - <span id="price">{{cartitemDetailsCount}}</span></button>
                     <button (click)="goTo($event)" class="btn btn-sm footerfont nextm">NEXT&nbsp;<fa-icon [icon]="iconBag"></fa-icon></button>
                 </div>
             </div>

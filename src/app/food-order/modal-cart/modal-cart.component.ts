@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { faTrashAlt, faMinusCircle, faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 
 // model 
@@ -14,6 +14,8 @@ import { MalihuScrollbarService } from 'ngx-malihu-scrollbar';
   styleUrls: ['./modal-cart.component.css']
 })
 export class ModalCartComponent implements OnInit {
+
+    @Input() cartitemDetails: any;
 
     iconTrash = faTrashAlt;
     iconAdd = faPlusCircle;
