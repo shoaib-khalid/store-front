@@ -137,7 +137,7 @@ export class ModalProductComponent implements OnInit, AfterViewInit {
 
         }else{
 
-            this.apiService.getCartList(this.senderID).subscribe((res: any) => {
+            this.apiService.getCartList(this.senderID, this.storeID).subscribe((res: any) => {
 
                 console.log('cart obj: ', res.data.content)
                 if (res.message){

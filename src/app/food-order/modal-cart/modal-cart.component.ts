@@ -23,6 +23,7 @@ export class ModalCartComponent implements OnInit {
     iconAdd = faPlusCircle;
     iconMinus = faMinusCircle;
     cartitemDetailsCount:any;
+    cartID:any;
 
     cartList:CartList[];
 
@@ -33,6 +34,9 @@ export class ModalCartComponent implements OnInit {
     ) { }
 
     ngOnInit(): void {
+
+        this.cartID = localStorage.getItem('cart_id');
+        
         this.cartList = this._databindService.getCartList();
         this.mScrollbarService.initScrollbar('#scrollable3', { axis: 'y', theme: 'dark', scrollButtons: { enable: true } });
     }
@@ -42,9 +46,12 @@ export class ModalCartComponent implements OnInit {
         console.log('deleted product_id: ' + productID + "| id: " + id)
 
         // return false;
+        console.log('cart Id delete: ' + this.cartID)
+
+        // return false;
 
         let data = {
-            "cartId": "3",
+            "cartId": this.cartID,
             "id": id,
             "itemCode": productID,
             "productId": productID,

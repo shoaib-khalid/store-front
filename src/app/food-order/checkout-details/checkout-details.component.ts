@@ -10,6 +10,7 @@ import { DataBindService } from './../databind.service';
 import { faMoneyBillAlt } from '@fortawesome/free-solid-svg-icons';
 
 import { MalihuScrollbarService } from 'ngx-malihu-scrollbar';
+import { totalmem } from 'os';
 
 @Component({
   selector: 'app-checkout-details',
@@ -36,6 +37,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
     cartitemDetails:any;
     cartitemDetailsCount:number;
     cartItemCount:number;
+    cartID:any;
 
     constructor(
         private _databindService: DataBindService,
@@ -52,6 +54,12 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
         this.refID = localStorage.getItem('ref_id');
         this.storeID = localStorage.getItem('store_id');
 
+        this.cartID = localStorage.getItem('cart_id');
+        
+
+        // console.log(this.refID + "-" + this.senderID + "-" + this.storeID);
+
+        // dummy total, if u delete this view will crash and checkCart() will not be called, later to enhance
         this.cartList = this._databindService.getCartList();
         this.countPrice(this.cartList);
 
@@ -71,44 +79,15 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
     }
 
     checkCart(){
-        this.apiService.getCartList(this.senderID).subscribe((res: any) => {
+        // check count Item in Cart 
+        this.apiService.getCartItemByCartID(this.cartID).subscribe((res: any) => {
+            console.log('cart item by cart ID: ', res.data.content)
 
-            console.log('cart obj: ', res.data.content)
             if (res.message){
+                this.cartitemDetails = res.data.content;
+                this.cartitemDetailsCount = this.cartitemDetails.length;
 
-                this.cart = res.data.content;
-                // if cart empty then initiate cart API
-                this.cartCount = this.cart.length;
-
-                if(this.cartCount > 0){
-                    this.cartExist = true;
-
-                    let cartID = this.cart[0].id;
-
-                    console.log('cart id : ' + cartID)
-
-                    // check count Item in Cart 
-                    this.apiService.getCartItemByCartID(cartID).subscribe((res: any) => {
-                        console.log('cart item by cart ID: ', res.data.content)
-
-                        if (res.message){
-                            this.cartitemDetails = res.data.content;
-                            this.cartitemDetailsCount = this.cartitemDetails.length;
-
-                        } else {
-
-                        }
-
-                    }, error => {
-                        console.log(error)
-                    }) 
-
-                }else{
-                    this.cartItemCount = 0;
-                }
-                
-            }else{
-
+            } else {
             }
         }, error => {
             console.log(error)
@@ -144,7 +123,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
         this.trxid = this.datePipe.transform(dateTime, "yyyyMMddhhmmss")
 
         let data = {
-            "customerId": 1,
+            "customerId": this.senderID,
             "customerName": "Nazrul",
             "productCode": "document",
             "systemTransactionId": this.trxid,

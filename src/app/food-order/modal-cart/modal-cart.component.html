@@ -48,7 +48,7 @@
                 </div> -->
 
                 <div class="d-none d-sm-none d-md-block d-lg-block d-xl-block" style="padding-top: 30px; padding-bottom: 30px;">
-                    <div class="card" style="margin-bottom: 10px;" *ngFor="let item of cartitemDetails; let i = index;">
+                    <div class="card hover" style="margin-bottom: 10px; border-color: #ffe259;" *ngFor="let item of cartitemDetails; let i = index;">
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-1">
@@ -149,7 +149,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-danger" data-dismiss="modal">Clear cart</button>
-                <button type="button" class="btn btn-warning">Next</button>
+                <button type="button" class="btn btn-warning" data-dismiss="modal">Back</button>
             </div>
         </div>
     </div>

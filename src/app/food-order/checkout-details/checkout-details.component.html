@@ -29,6 +29,13 @@
                                         <hr class="nondotted">
                                     </div>
                                 </div>
+
+                                <div class="col" *ngIf="cartitemDetails.length < 1">
+                                    <div class="alert alert-danger" role="alert">
+                                        Cart is Empty!
+                                    </div>
+                                </div>
+                                
                             </div>
                             
 

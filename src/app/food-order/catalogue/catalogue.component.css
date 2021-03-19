@@ -32,7 +32,7 @@
   } */
 
 .category:hover{
-    background-color: #cccccc;
+    background-color: #FFF9D6;
     background-blend-mode: multiply;
     cursor: pointer;
 }

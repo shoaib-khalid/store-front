@@ -47,6 +47,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
     cartItemCount:number;
     cartitemDetails:any;
     cartitemDetailsCount:number = 0;
+    cartID:any;
     fromAddToCart:boolean = false;
     singleInventoriesMode:boolean = true;
 
@@ -77,6 +78,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
         localStorage.setItem('ref_id', this.refID);     // reference
         localStorage.setItem('sender_id', this.senderID);   //customer
         localStorage.setItem('store_id', this.storeID);    // storeid
+
         // this.product = this._databindService.getProduct();
         // this.categories = this._databindService.getCategories();
         this.modalDataTest = this._databindService.getProduct();
@@ -103,9 +105,10 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     checkCart(){
-        this.apiService.getCartList(this.senderID).subscribe((res: any) => {
+        this.apiService.getCartList(this.senderID, this.storeID).subscribe((res: any) => {
 
             console.log('cart obj: ', res.data.content)
+            // console.log('initial cart id: ', res.data.content.id)
             if (res.message){
 
                 this.cart = res.data.content;
@@ -115,12 +118,13 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
                 if(this.cartCount > 0){
                     this.cartExist = true;
 
-                    let cartID = this.cart[0].id;
+                    this.cartID = this.cart[0].id;
+                    localStorage.setItem('cart_id', this.cartID);
 
-                    console.log('cart id : ' + cartID)
+                    console.log('cart id : ' + this.cartID)
 
                     // check count Item in Cart 
-                    this.apiService.getCartItemByCartID(cartID).subscribe((res: any) => {
+                    this.apiService.getCartItemByCartID(this.cartID).subscribe((res: any) => {
                         console.log('cart item by cart ID: ', res.data.content)
 
                         if (res.message){
@@ -159,7 +163,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
         quantity ? qty = quantity : console.log('qty no change');
 
         let data = {
-            "cartId": "3",
+            "cartId": this.cartID,
             "id": "",
             "itemCode": productID,
             "productId": productID,
@@ -169,6 +173,8 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
         if(this.cartExist == true){
             
             this.apiService.postAddToCart(data).subscribe((res: any) => {
+
+                console.log('add to cart resp: ', res)
 
                 // Update item count in Cart 
                 this.apiService.getCartItemByCartID(data.cartId).subscribe((res: any) => {
@@ -192,7 +198,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
 
         }else{
 
-            this.apiService.getCartList(this.senderID).subscribe((res: any) => {
+            this.apiService.getCartList(this.senderID, this.storeID).subscribe((res: any) => {
 
                 console.log('cart obj: ', res.data.content)
                 if (res.message){
@@ -204,12 +210,13 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
                     if(this.cartCount > 0){
                         this.cartExist = true;
     
-                        let cartID = this.cart[0].id;
+                        this.cartID = this.cart[0].id;
+                        localStorage.setItem('cart_id', this.cartID);
     
-                        console.log('cart id : ' + cartID)
+                        console.log('cart id : ' + this.cartID)
     
                         // check count Item in Cart 
-                        this.apiService.getCartItemByCartID(cartID).subscribe((res: any) => {
+                        this.apiService.getCartItemByCartID(this.cartID).subscribe((res: any) => {
                             console.log('cart item by cart ID: ', res.data.content)
     
                             if (res.message){

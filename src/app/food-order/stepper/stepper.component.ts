@@ -10,7 +10,10 @@ import { DataBindService } from '../databind.service';
 })
 export class StepperComponent implements OnInit {
 
-  stepper:Stepper[];
+    stepper:Stepper[];
+    senderID:any;
+    refID:any;
+    storeID:any;
 
   constructor(
     private route: Router,
@@ -19,15 +22,27 @@ export class StepperComponent implements OnInit {
 
   ngOnInit(): void {
     this.stepper = this._databindService.getStepper();
+
   }
 
   goTo(event, id) {
     console.log(id);
     // console.log('current index: ' + idx);
+
+    this.senderID = localStorage.getItem('sender_id');
+    this.refID = localStorage.getItem('ref_id');
+    this.storeID = localStorage.getItem('store_id');
+
+    console.log(this.refID + "-" + this.senderID + "-" + this.storeID);
+
     switch (id) {
       case 1:
         this.stepperHighlighter(id);
-        this.route.navigate(['catalogue']);
+        // this.route.navigate(['/:referenceId'+this.refID+'/:senderId='+this.senderID+'/:storeId/:'+this.storeID])
+        this.route.navigateByUrl('/catalogue?referenceId='+this.refID+'&senderId='+this.senderID+'&storeId='+this.storeID);
+        // router.navigateByUrl('/page?id=37&username=jimmy');
+        // this.route.navigate(['catalogue']);
+        // this.route.navigate(['catalogue', { referenceId: this.refID, senderId: this.senderID, storeId: this.storeID }]);
         break;
       case 2:
         this.stepperHighlighter(id);

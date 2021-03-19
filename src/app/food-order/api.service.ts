@@ -115,7 +115,7 @@ export class ApiService {
         return this.http.get(this.productServiceURL + url, header);
     }
 
-    getCartList(customerID) {
+    getCartList(customerID, storeID) {
         const header = {
             headers: new HttpHeaders().set("Authorization", `Bearer ${this.token}`),
         };
