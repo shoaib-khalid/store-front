@@ -72,7 +72,7 @@
                                 </div>
                                 <div class="col-1 text-right">
                                     <button type="button" class="close" aria-label="Close">
-                                        <span aria-hidden="true"><fa-icon [icon]="iconTrash" class="iconStyle"></fa-icon></span>
+                                        <span (click)="deleteItem(item.id, item.productId)" aria-hidden="true"><fa-icon [icon]="iconTrash" class="iconStyle"></fa-icon></span>
                                     </button>
                                 </div>
                             </div>

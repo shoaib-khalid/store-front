@@ -172,5 +172,22 @@ export class ApiService {
         return this.http.post(url, data, httpOptions);
 
     }
+
+    deleteCartItemID(data, id):Observable<any> {
+
+        const httpOptions = {
+            headers: new HttpHeaders(
+            { 
+               'Authorization': `Bearer ${this.token}`,
+               'Content-Type': 'application/json'
+            }),
+            body: data
+        }
+
+        const url = this.orderServiceURL + "carts/"+data.cartId+"/items/"+id;
+
+        return this.http.delete(url, httpOptions);
+
+    }
     
 }

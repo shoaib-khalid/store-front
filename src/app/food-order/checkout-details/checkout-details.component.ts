@@ -134,6 +134,10 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
 
     }
 
+    goSkip(e){
+        this.route.navigate(['thankyou']);   
+    }
+
     goPay(e){
         let dateTime = new Date()
 

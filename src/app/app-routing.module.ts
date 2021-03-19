@@ -1,8 +1,9 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-import { StepCatalogueComponent } from './food-order/layout-catalogue/step-catalogue.component'
-import { StepCheckoutComponent } from './food-order/layout-checkout/step-checkout.component'
+import { StepCatalogueComponent } from './food-order/layout-catalogue/step-catalogue.component';
+import { StepCheckoutComponent } from './food-order/layout-checkout/step-checkout.component';
+import { ThankyouComponent } from './food-order/thankyou/thankyou.component'
 
 const routes: Routes = [
 
@@ -10,6 +11,7 @@ const routes: Routes = [
     { path: "catalogue", component: StepCatalogueComponent },
     { path: "catalogue/:referenceId/:senderId/:storeId/:", component: StepCatalogueComponent },
     { path: "checkout", component: StepCheckoutComponent },
+    { path: "thankyou", component: ThankyouComponent },
 
     { path: "**", redirectTo: "/catalogue" }
 ];
