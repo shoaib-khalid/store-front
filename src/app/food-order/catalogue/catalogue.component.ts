@@ -46,8 +46,9 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
     cart:any;
     cartItemCount:number;
     cartitemDetails:any;
-    cartitemDetailsCount:number;
+    cartitemDetailsCount:number = 0;
     fromAddToCart:boolean = false;
+    singleInventoriesMode:boolean = true;
 
     constructor(
         private _databindService: DataBindService, 
@@ -83,6 +84,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
         // console.log('modal details: ', this.details);
         
         this.getProduct();
+        // this.getProductNew();
         this.getCategory();
 
         // check cart first 
@@ -168,6 +170,22 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
             
             this.apiService.postAddToCart(data).subscribe((res: any) => {
 
+                // Update item count in Cart 
+                this.apiService.getCartItemByCartID(data.cartId).subscribe((res: any) => {
+                    // console.log('cart item by cart ID: ', res.data.content)
+
+                    if (res.message){
+                        this.cartitemDetails = res.data.content;
+                        this.cartitemDetailsCount = this.cartitemDetails.length;
+
+                    } else {
+
+                    }
+
+                }, error => {
+                    console.log(error)
+                }) 
+
             }, error => {
                 console.log(error)
             }) 
@@ -243,13 +261,15 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
         }) 
     }
 
-    getProduct(){
+    // this function can be used if there is only 1 object inside productInventories 
+    getProductNew(){
+
         this.apiService.getProductSByStoreID(this.storeID).subscribe((res: any) => {
             // console.log('raw resp:', res)
             if (res.message) {
                 this.product = res.data.content;
                 console.log('product: ', this.product);
-                // console.log('price: ', this.product[0].productInventories[1]);
+                console.log('price: ', this.product[0].productInventories[1]);
 
                 let productObj = this.product;
 
@@ -260,12 +280,15 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
                     let inventoryArr = obj.productInventories;
 
                     if(inventoryArr.length !== 0){
-                        inventoryArr.forEach( inventoryObj => {
+                        // inventoryArr.forEach( inventoryObj => {
                             // creating a collection of price array base on cluster item 
-                            this.clusterPriceArr.push(inventoryObj.price);
-                        });
+                            // this.clusterPriceArr.push(inventoryObj.price);
+                        // });
                         // checking the minimum price of each cluster item 
-                        this.minVal = this.clusterPriceArr.reduce((a, b)=>Math.min(a, b));
+                        // this.minVal = this.clusterPriceArr.reduce((a, b)=>Math.min(a, b));
+
+                        this.minVal = inventoryArr[0].price;
+
                     }else{
                         this.minVal = 0;
                     }
@@ -279,7 +302,63 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
                     // populate product id as identifier of item and its min price into a new final object collection 
                     this.priceObj.push(data);
                     
-                    // console.log('Final Object: ', this.priceObj);
+                    console.log('Final Object: ', this.priceObj);
+                });
+
+            } else {
+                // condition if required for different type of response message 
+            }
+        }, error => {
+            console.log(error)
+        }) 
+
+    }
+
+    getProduct(){
+        this.apiService.getProductSByStoreID(this.storeID).subscribe((res: any) => {
+            // console.log('raw resp:', res)
+            if (res.message) {
+                this.product = res.data.content;
+                console.log('product: ', this.product);
+                console.log('price: ', this.product[0].productInventories[1]);
+
+                let productObj = this.product;
+
+                productObj.forEach( obj => {
+                    // console.log(obj);
+
+                    let productID = obj.id;
+                    let inventoryArr = obj.productInventories;
+
+                    if(inventoryArr.length !== 0){
+                        
+                        // pseudocode : If this.singleInventoriesMode is true, then select first Object, if false then loop and get min price 
+                        // for food industries is on this.singleInventoriesMode mode for other might be true or false 
+                        if(this.singleInventoriesMode){
+                            this.minVal = inventoryArr[0].price;
+                        }else{
+                            inventoryArr.forEach( inventoryObj => {
+                                // creating a collection of price array base on cluster item 
+                                this.clusterPriceArr.push(inventoryObj.price);
+                            });
+                            // checking the minimum price of each cluster item 
+                            this.minVal = this.clusterPriceArr.reduce((a, b)=>Math.min(a, b));
+                        }
+
+                    }else{
+                        this.minVal = 0;
+                    }
+                
+                    // creating an object of a specific product item 
+                    let data = {
+                        product_id : productID,
+                        minPrice : this.minVal
+                    }
+
+                    // populate product id as identifier of item and its min price into a new final object collection 
+                    this.priceObj.push(data);
+                    
+                    console.log('Final Object: ', this.priceObj);
                 });
 
             } else {

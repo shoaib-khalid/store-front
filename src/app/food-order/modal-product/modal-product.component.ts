@@ -35,6 +35,7 @@ export class ModalProductComponent implements OnInit, AfterViewInit {
   senderID:any;
   refID:any;
   storeID:any;
+  singleInventoriesMode:boolean = true;
 
   constructor(
     private apiService: ApiService
@@ -113,6 +114,22 @@ export class ModalProductComponent implements OnInit, AfterViewInit {
         if(this.cartExist == true){
             
             this.apiService.postAddToCart(data).subscribe((res: any) => {
+
+                // Update item count in Cart 
+                this.apiService.getCartItemByCartID(data.cartId).subscribe((res: any) => {
+                    // console.log('cart item by cart ID: ', res.data.content)
+
+                    if (res.message){
+                        this.cartitemDetails = res.data.content;
+                        this.cartitemDetailsCount = this.cartitemDetails.length;
+
+                    } else {
+
+                    }
+
+                }, error => {
+                    console.log(error)
+                }) 
 
             }, error => {
                 console.log(error)

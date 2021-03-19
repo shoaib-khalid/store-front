@@ -12,16 +12,18 @@
                                 </div>
                             </div>
                             <div style="height: 300px; overflow: scroll;" id="scrollable4">
-                                <div class="row" *ngFor="let item of cartList; let i = index;">
+                                <!-- <div class="row" *ngFor="let item of cartList; let i = index;"> -->
+                                <div class="row" *ngFor="let item of cartitemDetails; let i = index;">
                                     <div class="col">
                                         <div class="row">
                                             <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12"></div>
                                             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 text-left">
                                                 <span id="price" class="quantity" style="font-size: 13px;">{{item.quantity}}&nbsp;&nbsp;x&nbsp;&nbsp;</span>
-                                                <span style="font-size: 13px;">{{item.title}}</span>
+                                                <span style="font-size: 13px;">{{item.productId}}</span>
                                             </div>
                                             <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 text-right">
-                                                <span id="price" class="unitprice">{{item.unitprice * item.quantity | number: '1.2'}}</span>
+                                                <span id="price" class="unitprice">RM 10.00</span>
+                                                <!-- <span id="price" class="unitprice">{{item.unitprice * item.quantity | number: '1.2-2'}}</span> -->
                                             </div>
                                         </div>
                                         <hr class="nondotted">
@@ -34,7 +36,7 @@
                                 <div class="col">
                                     <div class="col text-left">
                                         <span class="subtotal">SUB-TOTAL</span>
-                                        <span id="price" style="float: right; padding-right: 38px;">RM {{subtotal | number: '1.2'}}</span>
+                                        <span id="price" style="float: right; padding-right: 38px;">RM {{subtotal | number: '1.2-2'}}</span>
                                         <!-- <hr class="dotted"> -->
                                     </div>
                                 </div>
@@ -52,7 +54,7 @@
                                 <div class="col">
                                     <div class="col text-left">
                                         <span class="subtotal" id="price" style="font-size: 15px;">GRAND TOTAL</span>
-                                        <span id="price" style="float: right; padding-right: 38px; font-size: 15px;">RM {{grandtotal | number: '1.2'}}</span>
+                                        <span id="price" style="float: right; padding-right: 38px; font-size: 15px;">RM {{grandtotal | number: '1.2-2'}}</span>
                                         <hr class="dotted">
                                     </div>
                                 </div>

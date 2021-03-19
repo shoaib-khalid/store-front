@@ -26,6 +26,17 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
 
     iconMoney = faMoneyBillAlt;
 
+    senderID:any;
+    refID:any;
+    storeID:any;
+
+    cartExist:boolean = false;
+    cartCount:number;
+    cart:any;
+    cartitemDetails:any;
+    cartitemDetailsCount:number;
+    cartItemCount:number;
+
     constructor(
         private _databindService: DataBindService,
         private mScrollbarService: MalihuScrollbarService,
@@ -36,8 +47,15 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
 
     ngOnInit(): void {
         console.log('ngOnInit');
+
+        this.senderID = localStorage.getItem('sender_id');
+        this.refID = localStorage.getItem('ref_id');
+        this.storeID = localStorage.getItem('store_id');
+
         this.cartList = this._databindService.getCartList();
         this.countPrice(this.cartList);
+
+        this.checkCart();
     }
 
     ngAfterViewInit(){
@@ -50,6 +68,51 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
         // custom cleanup
         // this.mScrollbarService.destroy(document.body);
         this.mScrollbarService.destroy('#scrollable4');
+    }
+
+    checkCart(){
+        this.apiService.getCartList(this.senderID).subscribe((res: any) => {
+
+            console.log('cart obj: ', res.data.content)
+            if (res.message){
+
+                this.cart = res.data.content;
+                // if cart empty then initiate cart API
+                this.cartCount = this.cart.length;
+
+                if(this.cartCount > 0){
+                    this.cartExist = true;
+
+                    let cartID = this.cart[0].id;
+
+                    console.log('cart id : ' + cartID)
+
+                    // check count Item in Cart 
+                    this.apiService.getCartItemByCartID(cartID).subscribe((res: any) => {
+                        console.log('cart item by cart ID: ', res.data.content)
+
+                        if (res.message){
+                            this.cartitemDetails = res.data.content;
+                            this.cartitemDetailsCount = this.cartitemDetails.length;
+
+                        } else {
+
+                        }
+
+                    }, error => {
+                        console.log(error)
+                    }) 
+
+                }else{
+                    this.cartItemCount = 0;
+                }
+                
+            }else{
+
+            }
+        }, error => {
+            console.log(error)
+        }) 
     }
 
     countPrice(list:any){

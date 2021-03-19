@@ -135,7 +135,7 @@ export class ApiService {
         // http://209.58.160.20:7072/carts/3/items?page=0&pageSize=20
         const url =
             "carts/" + cartID + "/items?page=0"+
-            "&pageSize=20";
+            "&pageSize=200";
 
         return this.http.get(this.orderServiceURL + url, header);
     }

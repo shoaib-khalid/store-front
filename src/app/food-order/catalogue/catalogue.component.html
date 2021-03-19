@@ -100,7 +100,7 @@
                 <div class="card-body" style="font-size: 13px;">
                     <div class="row">
                         <div class="col-4">
-                            <div *ngIf="(item.thumbnailUrl && item.thumbnailUrl!='string'); else noImage">
+                            <div *ngIf="(item.thumbnailUrl); else noImage">
                                 <img class="card-img-top img-icon" src="{{ item.thumbnailUrl }}" alt="Card image cap">
                             </div>
                             <ng-template #noImage>
@@ -109,10 +109,10 @@
                         </div>
                         <div class="col-8 text-right">
                             <h6 class="card-title">{{ item.name | titlecase}}</h6>
-                            <h5 id="price">RM {{ item.productInventories[0].price | number: '1.2-2'}}</h5>
-                            <!-- <div *ngFor="let data of priceObj">
+                            <!-- <h5 id="price">RM {{ item.productInventories[0].price | number: '1.2-2'}}</h5> -->
+                            <div *ngFor="let data of priceObj">
                                 <h5 *ngIf="item.id == data.product_id; else noPrice" id="price">{{ data.minPrice === 0 ? "N/A" : "RM " + data.minPrice }}</h5>
-                            </div> -->
+                            </div>
                         </div>
                         <!-- <div class="col-8 text-right">
                             <h5 class="card-title">{{ item.name | titlecase}}</h5>
@@ -154,6 +154,7 @@
                 Product Not Found!
             </div>
         </div>
+        
     </div>
 </div>
 
