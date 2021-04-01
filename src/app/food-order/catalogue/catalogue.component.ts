@@ -4,12 +4,16 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { Category } from './food-order/../../models/Category';
 import { Product } from './food-order/../../models/Product';
 
-import { faEye, faShoppingCart, faShoppingBag } from '@fortawesome/free-solid-svg-icons';
+import { faEye, faShoppingCart, faShoppingBag, faArrowCircleLeft, faMinusCircle, faPlusCircle, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 
 import { DataBindService } from './../databind.service';
 import { MalihuScrollbarService } from 'ngx-malihu-scrollbar';
 
 import { ApiService } from './../api.service';
+
+import { NgxGalleryOptions, NgxGalleryImage, NgxGalleryAnimation } from 'ngx-gallery-9';
+// import { exists } from 'fs';
+// import { ucFirst } from 'ngx-pipes/src/ng-pipes/pipes/helpers/helpers';
 
 
 @Component({
@@ -22,6 +26,10 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
     iconEye = faEye;
     iconCart = faShoppingCart;
     iconBag = faShoppingBag;
+    iconBack = faArrowCircleLeft;
+    iconAdd = faPlusCircle;
+    iconMinus = faMinusCircle;
+    iconTrash = faTrashAlt;
 
     // categories:Category[];
     //   product:Product[];
@@ -47,9 +55,18 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
     cartItemCount:number;
     cartitemDetails:any;
     cartitemDetailsCount:number = 0;
-    cartID:any;
+    cartID:any = null;
     fromAddToCart:boolean = false;
     singleInventoriesMode:boolean = true;
+
+    // modal variable
+    value: number;
+    detailsObj: any = {};
+    galleryOptions: NgxGalleryOptions[];
+    galleryImages: NgxGalleryImage[];
+    inputQty:any;
+    imageCollection = [];
+    productAssets:any;
 
     constructor(
         private _databindService: DataBindService, 
@@ -91,6 +108,8 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
 
         // check cart first 
         this.checkCart();
+
+
     }
   
     ngAfterViewInit(){
@@ -105,9 +124,12 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     checkCart(){
+        // console.log('check cart: ' + this.senderID + "|" + this.storeID)
+
+        // return false;
         this.apiService.getCartList(this.senderID, this.storeID).subscribe((res: any) => {
 
-            console.log('cart obj: ', res.data.content)
+            console.log('checkCart obj: ', res.data.content)
             // console.log('initial cart id: ', res.data.content.id)
             if (res.message){
 
@@ -125,7 +147,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
 
                     // check count Item in Cart 
                     this.apiService.getCartItemByCartID(this.cartID).subscribe((res: any) => {
-                        console.log('cart item by cart ID: ', res.data.content)
+                        console.log('cart item by cart ID 1: ', res.data.content)
 
                         if (res.message){
                             this.cartitemDetails = res.data.content;
@@ -156,11 +178,17 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
         this.route.navigate(['checkout']);   
     }
 
-    addToCart(event, productID, quantity){
+    addToCart(event, productID, option){
 
+        // pseudo quantity & option
+        // if option 1 then add single item 
+        // if option 2 then use this.inputQty 
+
+        console.log('Change Quantity: ' + this.inputQty);
+        
         let qty = 1;
-        // replace qty if quantity param exist 
-        quantity ? qty = quantity : console.log('qty no change');
+        // replace qty if option is 2
+        option == 2 ? qty = this.inputQty : console.log('single item added to cart!');
 
         let data = {
             "cartId": this.cartID,
@@ -169,6 +197,16 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
             "productId": productID,
             "quantity": qty
         }
+        console.log('let data cart object: ', data)
+
+        // pseudo cart 
+        // 1 - If cart exists 
+            // then - directly Add item to cart using cartID in checkCart method  
+
+        // 2 - If cart not exists 
+            // then - create cart first
+            // then - get cart again to get the cartId 
+            // then - Add item to cart by cartID  
 
         if(this.cartExist == true){
             
@@ -178,7 +216,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
 
                 // Update item count in Cart 
                 this.apiService.getCartItemByCartID(data.cartId).subscribe((res: any) => {
-                    // console.log('cart item by cart ID: ', res.data.content)
+                    console.log('cart item by cart ID 2: ', res.data.content)
 
                     if (res.message){
                         this.cartitemDetails = res.data.content;
@@ -198,53 +236,74 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
 
         }else{
 
-            this.apiService.getCartList(this.senderID, this.storeID).subscribe((res: any) => {
+            let data = {
+                "created": "2021-04-01T04:51:01.765Z",
+                "customerId": this.senderID,
+                "id": "",
+                "storeId": this.storeID,
+                "updated": "2021-04-01T04:51:01.765Z"
+            }
 
-                console.log('cart obj: ', res.data.content)
+            this.apiService.postCreateCart(data).subscribe((res: any) => {
+                console.log('creating cart: ', res.data.content)
+
                 if (res.message){
-    
-                    this.cart = res.data.content;
-                    // if cart empty then initiate cart API
-                    this.cartCount = this.cart.length;
-    
-                    if(this.cartCount > 0){
-                        this.cartExist = true;
-    
-                        this.cartID = this.cart[0].id;
-                        localStorage.setItem('cart_id', this.cartID);
-    
-                        console.log('cart id : ' + this.cartID)
-    
-                        // check count Item in Cart 
-                        this.apiService.getCartItemByCartID(this.cartID).subscribe((res: any) => {
-                            console.log('cart item by cart ID: ', res.data.content)
-    
-                            if (res.message){
-                                this.cartitemDetails = res.data.content;
-                                this.cartitemDetailsCount = this.cartitemDetails.length;
 
-                                // add to cart 
-                                this.apiService.postAddToCart(data).subscribe((res: any) => {
+                    this.apiService.getCartList(this.senderID, this.storeID).subscribe((res: any) => {
 
+                        console.log('cart obj: ', res.data.content)
+                        if (res.message){
+            
+                            this.cart = res.data.content;
+                            // if cart empty then initiate cart API
+                            this.cartCount = this.cart.length;
+            
+                            if(this.cartCount > 0){
+                                this.cartExist = true;
+            
+                                this.cartID = this.cart[0].id;
+                                localStorage.setItem('cart_id', this.cartID);
+            
+                                console.log('cart id : ' + this.cartID)
+            
+                                // check count Item in Cart 
+                                this.apiService.getCartItemByCartID(this.cartID).subscribe((res: any) => {
+                                    console.log('cart item by cart ID 3: ', res.data.content)
+            
+                                    if (res.message){
+                                        this.cartitemDetails = res.data.content;
+                                        this.cartitemDetailsCount = this.cartitemDetails.length;
+        
+                                        // add to cart 
+                                        this.apiService.postAddToCart(data).subscribe((res: any) => {
+        
+                                        }, error => {
+                                            console.log(error)
+                                        }) 
+            
+                                    } else {
+            
+                                    }
+            
                                 }, error => {
                                     console.log(error)
                                 }) 
-    
-                            } else {
-    
+            
+                            }else{
+                                this.cartItemCount = 0;
                             }
-    
-                        }, error => {
-                            console.log(error)
-                        }) 
-    
-                    }else{
-                        this.cartItemCount = 0;
-                    }
-                    
+                            
+                        }else{
+            
+                        }
+                    }, error => {
+                        console.log(error)
+                    }) 
+
                 }else{
-    
+
                 }
+
             }, error => {
                 console.log(error)
             }) 
@@ -309,7 +368,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
                     // populate product id as identifier of item and its min price into a new final object collection 
                     this.priceObj.push(data);
                     
-                    console.log('Final Object: ', this.priceObj);
+                    // console.log('Final Object: ', this.priceObj);
                 });
 
             } else {
@@ -365,7 +424,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
                     // populate product id as identifier of item and its min price into a new final object collection 
                     this.priceObj.push(data);
                     
-                    console.log('Final Object: ', this.priceObj);
+                    // console.log('Final Object: ', this.priceObj);
                 });
 
             } else {
@@ -389,6 +448,34 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
         //     }
         // })
 
+        // reinstantiate
+        this.inputQty = 0;
+        this.galleryImages = [];
+        this.imageCollection = [];
+
+        this.galleryOptions = [
+            {
+                width: '200px',
+                height: '200px',
+                thumbnailsColumns: 3,
+                imageAnimation: NgxGalleryAnimation.Zoom,
+                thumbnailsArrows: true,
+                // previewDownload: true,
+                imageArrowsAutoHide: true, 
+                thumbnailsArrowsAutoHide: true
+            },
+            // max-width 767 Mobile configuration
+            {
+                breakpoint: 767,
+                thumbnailsColumns: 2,
+                width: '100%',
+                height: '250px',
+                imagePercent: 80,
+                thumbnailsPercent: 30,
+                thumbnailsMargin: 10,
+                thumbnailMargin: 5,
+            }
+        ];
 
         this.apiService.getProductSByProductID(productid).subscribe((res: any) => {
 
@@ -398,13 +485,34 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
 
             if (res.message) {
                 this.details = product_details;
-                this.detailPrice = product_details.productInventories[0].price;
-                // console.log('detailPrice: ' + this.detailPrice);
+                // console.log('details data: ' , this.details['name']);
 
                 // when product id is triggered, kindly fetch product image
                 this.galleryImagesInit = 'assets/image/food-sample1.jpg';
+                
+                // convert arr to obj 
+                this.detailsObj = Object.assign({}, this.details);
+                
+                this.detailPrice = this.detailsObj.productInventories[0].price;
 
-                // console.log('test 2: ' + this.galleryImagesInit)
+                this.productAssets = this.detailsObj.productAssets;
+
+                this.productAssets.forEach( obj => {
+                    console.log('productAssets: ', obj.url);
+
+                    let img_obj = {
+                        small: ''+obj.url+'',
+                        medium: ''+obj.url+'',
+                        big: ''+obj.url+''
+                    }
+
+                    this.imageCollection.push(img_obj)
+                });
+
+                console.log('imageCollection: ', this.imageCollection);
+                
+                this.galleryImages = this.imageCollection
+                
             } else {
 
             }
@@ -412,6 +520,82 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
         }, error => {
             console.log(error)
         }) 
+    }
+
+
+    deleteItem(id, productID){
+
+        console.log('deleted product_id: ' + productID + "| id: " + id)
+
+        // return false;
+        console.log('cart Id delete: ' + this.cartID)
+
+        // return false;
+
+        let data = {
+            "cartId": this.cartID,
+            "id": id,
+            "itemCode": productID,
+            "productId": productID,
+            "quantity": "1"
+          }
+
+        this.apiService.deleteCartItemID(data, id).subscribe((res: any) => {
+
+            if (res.message){
+                console.log('delete response : ', res)
+
+                // Update item count in Cart 
+                this.apiService.getCartItemByCartID(data.cartId).subscribe((res: any) => {
+                    // console.log('cart item by cart ID: ', res.data.content)
+
+                    if (res.message){
+                        this.cartitemDetails = res.data.content;
+                        this.cartitemDetailsCount = this.cartitemDetails.length;
+
+                    } else {
+
+                    }
+
+                }, error => {
+                    console.log(error)
+                }) 
+
+            } else {
+
+            }
+
+        }, error => {
+            console.log(error)
+        }) 
+
+    }
+
+
+    getCartItemDetails(){
+        
+        console.log('masok')
+        
+        // check count Item in Cart 
+        this.apiService.getCartItemByCartID(this.cartID).subscribe((res: any) => {
+            console.log('cart item from Cart Item Details: ', res.data.content)
+
+            if (res.message){
+                this.cartitemDetails = res.data.content;
+                this.cartitemDetailsCount = this.cartitemDetails.length;
+
+            } else {
+
+            }
+
+        }, error => {
+            console.log(error)
+        }) 
+
+    }
+
+    checkQuantity(){
+        console.log('Change Quantity: ' + this.inputQty);
     }
 
     onGetCategoriesItem(categoryId){

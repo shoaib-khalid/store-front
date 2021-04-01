@@ -123,7 +123,8 @@ export class ApiService {
         const url =
             "carts?customerId="+ customerID +
             "&page=0" +
-            "&pageSize=20";
+            "&pageSize=20" +
+            "&storeId=" + storeID;
 
         return this.http.get(this.orderServiceURL + url, header);
     }
@@ -171,6 +172,24 @@ export class ApiService {
 
         return this.http.post(url, data, httpOptions);
 
+    }
+    
+    // postAuthenticate(data) {
+    //     return this.http.post(this.userServiceURL + "clients/authenticate", data);
+    // }
+    
+    postCreateCart(data):Observable<any> {
+
+        const httpOptions = {
+            headers: new HttpHeaders(
+            { 
+               'Authorization': `Bearer ${this.token}`,
+               'Content-Type': 'application/json'
+            })
+        }
+        
+        const url = this.orderServiceURL + "carts";
+        return this.http.post(url, data, httpOptions);
     }
 
     deleteCartItemID(data, id):Observable<any> {

@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { CommonModule, DatePipe } from '@angular/common';
 import { DragScrollModule } from 'ngx-drag-scroll';
 import { MalihuScrollbarModule } from 'ngx-malihu-scrollbar';
@@ -47,7 +48,8 @@ import { ThankyouComponent } from './thankyou/thankyou.component';
     NgxGalleryModule,
     NumberPickerModule,
     HttpClientModule,
-    NgPipesModule
+    NgPipesModule,
+    FormsModule
   ],
   exports: [
     StepCheckoutComponent,
@@ -58,7 +60,8 @@ import { ThankyouComponent } from './thankyou/thankyou.component';
     NgxGalleryModule,
     NumberPickerModule,
     HttpClientModule,
-    NgPipesModule
+    NgPipesModule,
+    FormsModule
   ],
   providers: [
       DataBindService,

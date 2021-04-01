@@ -111,7 +111,7 @@
                             <h6 class="card-title">{{ item.name | titlecase}}</h6>
                             <!-- <h5 id="price">RM {{ item.productInventories[0].price | number: '1.2-2'}}</h5> -->
                             <div *ngFor="let data of priceObj">
-                                <h5 *ngIf="item.id == data.product_id; else noPrice" id="price">{{ data.minPrice === 0 ? "N/A" : "RM " + data.minPrice }}</h5>
+                                <h5 *ngIf="item.id == data.product_id; else noPrice" id="price">RM {{ data.minPrice === 0  ? "0.00" : data.minPrice  | number: '1.2-2'}}</h5>
                             </div>
                         </div>
                         <!-- <div class="col-8 text-right">
@@ -124,7 +124,7 @@
                     <br>
                     <div class="row">
                         <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
-                            <div (click)="addToCart($event, item.id)" class="bg-warning rounded btnAddtoCart">
+                            <div (click)="addToCart($event, item.id, 1)" class="bg-warning rounded btnAddtoCart">
                                 <span style="vertical-align: middle;">Add to cart &nbsp;<fa-icon [icon]="iconCart"></fa-icon></span>
                             </div>
                         </div>
@@ -160,16 +160,194 @@
 
 
 
-<app-modal-product 
+<!-- update 20210401  -->
+<!-- to combine instead of splitting component to get dynamic response between modal & catalogue view -->
+
+<!-- <app-modal-product 
 [details]="details"
 [detailPrice]="detailPrice"
 [galleryImagesInit]="galleryImagesInit"
-></app-modal-product>
+></app-modal-product> -->
+
+<!-- Product Modal Popup -->
+<div class="modal fade" id="modalProduct" tabindex="-1" role="dialog" aria-labelledby="modalProduct" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">{{ detailsObj.name | titlecase }}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <!-- <form (submit)="checkQuantity()"> -->
+            <form (submit)="addToCart($event, detailsObj.id, 2)">
+                <div class="modal-body">
+
+                    <!-- Destop/Tablet Layout -->
+                    <div class="d-none d-sm-none d-md-block d-lg-block d-xl-block">
+                        <div class="row">
+                            <div class="col-6 text-center">
+                                <ngx-gallery [options]="galleryOptions" [images]="galleryImages"></ngx-gallery>
+                                <!-- <img class="card-img-top img-icon" src="{{ detailsObj.thumbnailUrl }}" alt="Card image cap"> -->
+                            </div>
+                            <div class="col-6 text-center">
+                                <p>{{ detailsObj.desc }} </p>
+                                <div style="padding-top: 70px;">
+                                    <!-- <h5 id="price">PRICE : RM {{ detailPrice | number: '1.2-2'}}</h5> -->
+                                    <h5>PRICE : RM {{ detailPrice | number: '1.2-2' }}</h5>
+                                    <ng-number-picker name="inputQty" [(ngModel)]="inputQty" [(value)]="inputQty" [min]="0" [max]="100" [postfix]="'unit'" [size]="'sm'"></ng-number-picker>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+    
+                    <!-- Mobile Layout -->
+                    <div class="d-block d-sm-block d-md-none d-lg-none d-xl-none">
+                        <div class="row">
+                            <div class="col text-center">
+                                <ngx-gallery [options]="galleryOptions" [images]="galleryImages"></ngx-gallery>
+                                <!-- <img class="card-img-top img-icon" src="{{ detailsObj.thumbnailUrl }}" alt="Card image cap"> -->
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col text-center" style="padding-top: 20px;">
+                                <p>{{ detailsObj.desc }} </p>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col text-center">
+                                <div style="padding-top: 20px;">
+                                    <!-- <h5>PRICE : {{ price }}</h5> -->
+                                    <h5 id="price">PRICE : RM {{ detailPrice | number: '1.2-2'}}</h5>
+                                    <ng-number-picker name="inputQty" [(ngModel)]="inputQty" [(value)]="inputQty" [min]="0" [max]="100" [postfix]="'unit'" [size]="'sm'"></ng-number-picker>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+    
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal"><fa-icon [icon]="iconBack"></fa-icon>&nbsp;Close</button>
+                    <button type="submit" class="btn btn-warning">Add to cart&nbsp;<fa-icon [icon]="iconCart"></fa-icon></button>
+                    <!-- <button type="submit" class="btn btn-warning" >check Quantity&nbsp;<fa-icon [icon]="iconCart"></fa-icon></button> -->
+                </div>
+
+            </form>
+            
+        </div>
+    </div>
+</div>
+
+
+<!-- update 20210401  -->
+<!-- to combine instead of splitting component to get dynamic response between modal & catalogue view -->
 
 <!-- cart modal -->
-<app-modal-cart
+<!-- <app-modal-cart
 [cartitemDetails]="cartitemDetails"
-></app-modal-cart>
+></app-modal-cart> -->
+
+<!-- Desktop & Tablet view -->
+<div class="modal fade" id="modalCart" tabindex="-1" role="dialog" aria-labelledby="modalCart" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Cart List</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="scrollable3">
+                
+                <!-- Destop/Tablet Layout -->
+                <div class="col" *ngIf="cartitemDetails.length < 1">
+                    <div class="alert alert-danger" role="alert">
+                        Cart Empty!
+                    </div>
+                </div>
+
+                <div class="d-none d-sm-none d-md-block d-lg-block d-xl-block" style="padding-top: 30px; padding-bottom: 30px;">
+                    <div class="card hover" style="margin-bottom: 10px; border-color: #ffe259;" *ngFor="let item of cartitemDetails; let i = index;">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-1">
+                                    <span>{{ i + 1 }}.&nbsp;</span>
+                                </div>
+                                <div class="col-4 text-left">
+                                    <span style="font-weight: bold; font-size: 13px;">{{item.productId | uppercase }}</span>
+                                </div>
+                                <div class="col-3 text-center">
+                                    <span>
+                                        <fa-icon [icon]="iconMinus" class="qtyIcon"></fa-icon>
+                                    </span>
+                                    <span style="margin-left: 20px; margin-right: 20px;">{{item.quantity}}</span>
+                                    <span>
+                                        <fa-icon [icon]="iconAdd" class="qtyIcon"></fa-icon>
+                                    </span>
+                                </div>
+                                <div class="col-3 text-center">
+                                    <span id="price">RM 10.00</span>
+                                    <!-- <span id="price">RM {{item.quantity*item.unitprice | number : '1.2-2'}}</span> -->
+                                </div>
+                                <div class="col-1 text-right">
+                                    <button type="button" class="close" aria-label="Close">
+                                        <span (click)="deleteItem(item.id, item.productId)" aria-hidden="true"><fa-icon [icon]="iconTrash" class="iconStyle"></fa-icon></span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mobile Layout -->
+
+                <div class="d-block d-sm-block d-md-none d-lg-none d-xl-none">
+                    <div class="card" style="margin-bottom: 10px;" *ngFor="let item of cartitemDetails; let i = index;">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-1">
+                                    <span style="font-size: 10px;">{{ i + 1 }}&nbsp;</span>
+                                </div>
+                                <div class="col-4 text-left">
+                                    <span style="font-weight: bold; font-size: 10px;">{{item.productId | uppercase }}</span>
+                                </div>
+                                <div class="col-3 text-center">
+                                    <span>
+                                        <fa-icon [icon]="iconMinus" class="qtyIcon"></fa-icon>
+                                    </span>
+                                    <span style="margin-left: 20px; margin-right: 20px;">{{item.quantity}}</span>
+                                    <span>
+                                        <fa-icon [icon]="iconAdd" class="qtyIcon"></fa-icon>
+                                    </span>
+                                </div>
+                                <div class="col-3 text-center">
+                                    <span id="price" style="font-size: 12px;">RM 10.00</span>
+                                    <!-- <span id="price">RM {{item.quantity*item.unitprice | number : '1.2'}}</span> -->
+                                </div>
+                                <div class="col-1 text-right">
+                                    <button type="button" class="close" aria-label="Close">
+                                        <span (click)="deleteItem(item.id, item.productId)" aria-hidden="true"><fa-icon [icon]="iconTrash" class="iconStyle"></fa-icon></span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Clear cart</button>
+                <button type="button" class="btn btn-warning" data-dismiss="modal">Back</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
 
 <!-- footer desktop -->
 <div class="d-none d-sm-none d-md-block d-lg-block d-xl-block">
@@ -184,7 +362,7 @@
                 <div class="col"></div>
                 <div class="col">
                     <button (click)="goTo($event)" class="btn btn-lg" style="float: right; margin: 5px; border: 1px solid black; width: 150px; border-radius: 0; background-color: #A9E538;">NEXT&nbsp;<fa-icon [icon]="iconBag"></fa-icon></button>
-                    <button class="btn btn-warning btn-lg" style="float: right; margin: 5px; border: 1px solid black; border-radius: 0;" data-toggle="modal" data-target="#modalCart">CART LIST - <span id="price">{{cartitemDetailsCount}}</span></button>
+                    <button (click)="getCartItemDetails()" class="btn btn-warning btn-lg" style="float: right; margin: 5px; border: 1px solid black; border-radius: 0;" data-toggle="modal" data-target="#modalCart">CART LIST - <span id="price">{{cartitemDetailsCount}}</span></button>
                 </div>
             </div>
         </div>
@@ -203,7 +381,7 @@
                 </div>
                 <!-- <div class="col"></div> -->
                 <div class="col-7 removepadding" style="padding-top: 10px; text-align: center;">
-                    <button class="btn btn-warning btn-sm footerfont cartlistm" data-toggle="modal" data-target="#modalCart">CART LIST - <span id="price">{{cartitemDetailsCount}}</span></button>
+                    <button (click)="getCartItemDetails()" class="btn btn-warning btn-sm footerfont cartlistm" data-toggle="modal" data-target="#modalCart">CART LIST - <span id="price">{{cartitemDetailsCount}}</span></button>
                     <button (click)="goTo($event)" class="btn btn-sm footerfont nextm">NEXT&nbsp;<fa-icon [icon]="iconBag"></fa-icon></button>
                 </div>
             </div>

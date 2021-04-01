@@ -143,6 +143,35 @@ drag-scroll-item::-webkit-scrollbar-track {
 }
 
 
+/* open cart item details  */
+
+.iconStyle{
+    font-size: 15px; color: red;
+}
+
+.qtyIcon{
+    color: #6c757d;
+}
+
+.qtyIcon:hover{
+    color: #343a40;
+    cursor: pointer;
+
+}
+
+.hover:hover{
+    background-color: #FFF9D6;
+}
+
+
+/* for mobile */
+@media (min-width: 992px) {
+    .modal-dialog {
+        max-width: 50%;
+    }
+}
+
+
 /*Mobile Section*/
 @media (max-width: 767px) {
     .bg-image-full {
