@@ -14,6 +14,7 @@ import { ApiService } from './../api.service';
 import { NgxGalleryOptions, NgxGalleryImage, NgxGalleryAnimation } from 'ngx-gallery-9';
 // import { exists } from 'fs';
 // import { ucFirst } from 'ngx-pipes/src/ng-pipes/pipes/helpers/helpers';
+import Swal from 'sweetalert2'
 
 
 @Component({
@@ -57,7 +58,10 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
     cartitemDetailsCount:number = 0;
     cartID:any = null;
     fromAddToCart:boolean = false;
-    singleInventoriesMode:boolean = true;
+    catalogueList = [];
+
+    //applicable for variant product logic
+    singleInventoriesMode:boolean = false;
 
     // modal variable
     value: number;
@@ -67,6 +71,8 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
     inputQty:any;
     imageCollection = [];
     productAssets:any;
+    popupPrice:any = 0;
+    inventoryObj: any = {};
 
     constructor(
         private _databindService: DataBindService, 
@@ -108,7 +114,6 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
 
         // check cart first 
         this.checkCart();
-
 
     }
   
@@ -178,8 +183,10 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
         this.route.navigate(['checkout']);   
     }
 
-    addToCart(event, productID, option){
+    addToCart(event, productID, itemCode, option){
 
+        // alert("productID: " + productID + " itemCode: " + itemCode + " option: " + option)
+        // return false;
         // pseudo quantity & option
         // if option 1 then add single item 
         // if option 2 then use this.inputQty 
@@ -190,10 +197,18 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
         // replace qty if option is 2
         option == 2 ? qty = this.inputQty : console.log('single item added to cart!');
 
+        this.priceObj.map(product => {
+            if(product.product_id == productID){
+                // console.log('selected product: ', product);
+                this.popupPrice = product.minPrice;
+                return this.popupPrice;
+            }
+        })
+
         let data = {
             "cartId": this.cartID,
             "id": "",
-            "itemCode": productID,
+            "itemCode": itemCode,
             "productId": productID,
             "quantity": qty
         }
@@ -209,7 +224,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
             // then - Add item to cart by cartID  
 
         if(this.cartExist == true){
-            
+
             this.apiService.postAddToCart(data).subscribe((res: any) => {
 
                 console.log('add to cart resp: ', res)
@@ -222,16 +237,18 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
                         this.cartitemDetails = res.data.content;
                         this.cartitemDetailsCount = this.cartitemDetails.length;
 
+                        Swal.fire("Great!", "Item successfully added to cart", "success")
+
                     } else {
 
                     }
 
                 }, error => {
-                    console.log(error)
+                    Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
                 }) 
 
             }, error => {
-                console.log(error)
+                Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
             }) 
 
         }else{
@@ -278,7 +295,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
                                         this.apiService.postAddToCart(data).subscribe((res: any) => {
         
                                         }, error => {
-                                            console.log(error)
+                                            Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
                                         }) 
             
                                     } else {
@@ -286,7 +303,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
                                     }
             
                                 }, error => {
-                                    console.log(error)
+                                    Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
                                 }) 
             
                             }else{
@@ -297,7 +314,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
             
                         }
                     }, error => {
-                        console.log(error)
+                        Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
                     }) 
 
                 }else{
@@ -305,7 +322,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
                 }
 
             }, error => {
-                console.log(error)
+                Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
             }) 
         }  
     }
@@ -335,7 +352,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
             if (res.message) {
                 this.product = res.data.content;
                 console.log('product: ', this.product);
-                console.log('price: ', this.product[0].productInventories[1]);
+                // console.log('price: ', this.product[0].productInventories[1]);
 
                 let productObj = this.product;
 
@@ -385,8 +402,10 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
             // console.log('raw resp:', res)
             if (res.message) {
                 this.product = res.data.content;
-                console.log('product: ', this.product);
-                console.log('price: ', this.product[0].productInventories[1]);
+                console.log('getProduct(): ', this.product);
+                // console.log('price: ', this.product[0].productInventories[1]);
+
+                // return false;
 
                 let productObj = this.product;
 
@@ -403,12 +422,26 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
                         if(this.singleInventoriesMode){
                             this.minVal = inventoryArr[0].price;
                         }else{
+
+                            // clean back clusterPriceArr  
+                            this.clusterPriceArr = [];
+
                             inventoryArr.forEach( inventoryObj => {
                                 // creating a collection of price array base on cluster item 
                                 this.clusterPriceArr.push(inventoryObj.price);
                             });
-                            // checking the minimum price of each cluster item 
+
+                            // get min price among the clusterPriceArr 
                             this.minVal = this.clusterPriceArr.reduce((a, b)=>Math.min(a, b));
+
+                            // map and stored the item object with minimum price to be shown on the catalogue list 
+                            inventoryArr.map(item => {
+                                if(item.price == this.minVal){
+                                    // console.log('selected product: ', product);
+                                    this.catalogueList.push(item)
+                                    return this.catalogueList;
+                                }
+                            })
                         }
 
                     }else{
@@ -425,7 +458,10 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
                     this.priceObj.push(data);
                     
                     // console.log('Final Object: ', this.priceObj);
+                    
                 });
+                
+                console.log('catalogue List: ', this.catalogueList)
 
             } else {
                 // condition if required for different type of response message 
@@ -440,13 +476,21 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
 
         // console.log('product obj: ', this.product);
 
-        // this.product.map(product => {
-        //     if(product.id == productid){
-        //         console.log('selected product: ', product);
-        //         this.details = product;
-        //         return this.details;
+        // inventoryArr.map(item => {
+        //     if(item.price == this.minVal){
+        //         // console.log('selected product: ', product);
+        //         this.catalogueList.push(item)
+        //         return this.catalogueList;
         //     }
         // })
+
+        this.priceObj.map(product => {
+            if(product.product_id == productid){
+                // console.log('selected product: ', product);
+                this.popupPrice = product.minPrice;
+                return this.popupPrice;
+            }
+        })
 
         // reinstantiate
         this.inputQty = 0;
@@ -492,13 +536,15 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
                 
                 // convert arr to obj 
                 this.detailsObj = Object.assign({}, this.details);
+
+                console.log('detailsObj: ', this.detailsObj)
                 
-                this.detailPrice = this.detailsObj.productInventories[0].price;
+                // this.detailPrice = this.detailsObj.productInventories[0].price;
 
                 this.productAssets = this.detailsObj.productAssets;
 
                 this.productAssets.forEach( obj => {
-                    console.log('productAssets: ', obj.url);
+                    // console.log('productAssets: ', obj.url);
 
                     let img_obj = {
                         small: ''+obj.url+'',
@@ -518,7 +564,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
             }
 
         }, error => {
-            console.log(error)
+            Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
         }) 
     }
 
@@ -558,7 +604,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
                     }
 
                 }, error => {
-                    console.log(error)
+                    Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
                 }) 
 
             } else {
@@ -566,7 +612,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
             }
 
         }, error => {
-            console.log(error)
+            Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
         }) 
 
     }
