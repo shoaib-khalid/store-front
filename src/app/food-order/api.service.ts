@@ -192,6 +192,20 @@ export class ApiService {
         return this.http.post(url, data, httpOptions);
     }
 
+    postInitOrder(data):Observable<any> {
+
+        const httpOptions = {
+            headers: new HttpHeaders(
+            { 
+               'Authorization': `Bearer ${this.token}`,
+               'Content-Type': 'application/json'
+            })
+        }
+        
+        const url = this.orderServiceURL + "orders";
+        return this.http.post(url, data, httpOptions);
+    }
+
     deleteCartItemID(data, id):Observable<any> {
 
         const httpOptions = {

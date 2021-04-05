@@ -59,6 +59,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
     cartID:any = null;
     fromAddToCart:boolean = false;
     catalogueList = [];
+    allProductInventory = [];
 
     //applicable for variant product logic
     singleInventoriesMode:boolean = false;
@@ -73,6 +74,10 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
     productAssets:any;
     popupPrice:any = 0;
     inventoryObj: any = {};
+    popupItemCode:any = null;
+
+    subTotal:any;
+    totalPrice:any;
 
     constructor(
         private _databindService: DataBindService, 
@@ -126,6 +131,30 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
         // custom cleanup
         // this.mScrollbarService.destroy(document.body);
         this.mScrollbarService.destroy('#scrollable2');
+    }
+
+    initOrder(){
+        // buat ni esok 
+        let data = {
+            "cartId": this.cartID,
+            "completionStatus": "",
+            "created": "2021-04-05T08:10:02.072Z",
+            "customerId": this.senderID,
+            "customerNotes": "",
+            "id": "",
+            "paymentStatus": "pending",
+            "privateAdminNotes": "",
+            "storeId": this.storeID,
+            "subTotal": 0,
+            "total": this.totalPrice,
+            "updated": "2021-04-05T08:10:02.072Z"
+        }
+        
+        this.apiService.postInitOrder(data).subscribe((res: any) => {
+
+        }, error => {
+            Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
+        }) 
     }
 
     checkCart(){
@@ -197,6 +226,12 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
         // replace qty if option is 2
         option == 2 ? qty = this.inputQty : console.log('single item added to cart!');
 
+        if(qty == 0 || qty == null){
+            Swal.fire("", "Quantity required!", "warning")
+            this.inputQty = 0;
+            return false;
+        }
+
         this.priceObj.map(product => {
             if(product.product_id == productID){
                 // console.log('selected product: ', product);
@@ -238,9 +273,10 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
                         this.cartitemDetailsCount = this.cartitemDetails.length;
 
                         Swal.fire("Great!", "Item successfully added to cart", "success")
+                        this.inputQty = 0;
 
                     } else {
-
+                        Swal.fire("Great!", "Item failed", "error")
                     }
 
                 }, error => {
@@ -429,6 +465,10 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
                             inventoryArr.forEach( inventoryObj => {
                                 // creating a collection of price array base on cluster item 
                                 this.clusterPriceArr.push(inventoryObj.price);
+
+                                // creating a collection of productInventories array to prepare base mapping 
+                                // for logic that related to itemCode
+                                this.allProductInventory.push(inventoryObj);
                             });
 
                             // get min price among the clusterPriceArr 
@@ -442,6 +482,15 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
                                     return this.catalogueList;
                                 }
                             })
+
+                            // map and stored the item object with minimum price to be shown on the catalogue list 
+                            // inventoryArr.map(item => {
+                            //     if(item.price == this.minVal){
+                            //         // console.log('selected product: ', product);
+                            //         this.catalogueList.push(item)
+                            //         return this.catalogueList;
+                            //     }
+                            // })
                         }
 
                     }else{
@@ -461,7 +510,8 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
                     
                 });
                 
-                console.log('catalogue List: ', this.catalogueList)
+                console.log('initial catalogue product: ', this.catalogueList)
+                console.log('all product inventories: ', this.allProductInventory)
 
             } else {
                 // condition if required for different type of response message 
@@ -484,11 +534,21 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
         //     }
         // })
 
-        this.priceObj.map(product => {
-            if(product.product_id == productid){
-                // console.log('selected product: ', product);
-                this.popupPrice = product.minPrice;
-                return this.popupPrice;
+        // this.priceObj.map(product => {
+        //     if(product.product_id == productid){
+        //         // console.log('selected product: ', product);
+        //         this.popupPrice = product.minPrice;
+        //         return this.popupPrice;
+        //     }
+        // })
+
+        // 1st popup will default item from catalogue list, which is the minimum price one 
+        this.catalogueList.map(product => {
+            if(product.productId == productid){
+                console.log('selected product: ', product);
+                this.popupPrice = product.price;
+                this.popupItemCode = product.itemCode;
+                // return this.popupPrice;
             }
         })
 
@@ -523,7 +583,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
 
         this.apiService.getProductSByProductID(productid).subscribe((res: any) => {
 
-            console.log('product details:', res.data);
+            // console.log('product details:', res.data);
 
             let product_details = res.data;
 
@@ -598,6 +658,13 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
                     if (res.message){
                         this.cartitemDetails = res.data.content;
                         this.cartitemDetailsCount = this.cartitemDetails.length;
+
+                        Swal.fire({
+                            icon: 'info',
+                            title: 'Item successfully deleted',
+                            showConfirmButton: false,
+                            timer: 1000
+                        })
 
                     } else {
 
