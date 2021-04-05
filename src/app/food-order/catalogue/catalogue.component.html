@@ -90,6 +90,7 @@
             <h4>PRODUCT LIST</h4>
         </div>
         <div class="col-lg-3 col-sm-12 col-md-12 col-xs-12">
+            <!-- <button (click)="initOrder()">TEST</button> -->
             <input type="text" class="form-control search-bar" style="border-radius: 5px;" placeholder="search">
         </div>
     </div>
@@ -399,7 +400,7 @@
                 </div>
                 <div class="col"></div>
                 <div class="col">
-                    <button (click)="goTo($event)" class="btn btn-lg" style="float: right; margin: 5px; border: 1px solid black; width: 150px; border-radius: 0; background-color: #A9E538;">NEXT&nbsp;<fa-icon [icon]="iconBag"></fa-icon></button>
+                    <button (click)="initOrder()" class="btn btn-lg" style="float: right; margin: 5px; border: 1px solid black; width: 150px; border-radius: 0; background-color: #A9E538;">NEXT&nbsp;<fa-icon [icon]="iconBag"></fa-icon></button>
                     <button (click)="getCartItemDetails()" class="btn btn-warning btn-lg" style="float: right; margin: 5px; border: 1px solid black; border-radius: 0;" data-toggle="modal" data-target="#modalCart">CART LIST - <span id="price">{{cartitemDetailsCount}}</span></button>
                 </div>
             </div>
@@ -420,7 +421,7 @@
                 <!-- <div class="col"></div> -->
                 <div class="col-7 removepadding" style="padding-top: 10px; text-align: center;">
                     <button (click)="getCartItemDetails()" class="btn btn-warning btn-sm footerfont cartlistm" data-toggle="modal" data-target="#modalCart">CART LIST - <span id="price">{{cartitemDetailsCount}}</span></button>
-                    <button (click)="goTo($event)" class="btn btn-sm footerfont nextm">NEXT&nbsp;<fa-icon [icon]="iconBag"></fa-icon></button>
+                    <button (click)="initOrder()" class="btn btn-sm footerfont nextm">NEXT&nbsp;<fa-icon [icon]="iconBag"></fa-icon></button>
                 </div>
             </div>
         </div>

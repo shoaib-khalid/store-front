@@ -19,10 +19,15 @@
                                             <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12"></div>
                                             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 text-left">
                                                 <span id="price" class="quantity" style="font-size: 13px;">{{item.quantity}}&nbsp;&nbsp;x&nbsp;&nbsp;</span>
-                                                <span style="font-size: 13px;">{{item.productId}}</span>
+                                                <!-- <span style="font-size: 13px;">{{item.productId}}</span> -->
+                                                <div *ngFor="let product of product">
+                                                    <span *ngIf="item.productId == product.id" style="font-weight: bold; font-size: 13px;">{{product.name | uppercase }}</span>
+                                                </div>
                                             </div>
                                             <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 text-right">
-                                                <span id="price" class="unitprice">RM 10.00</span>
+                                                <div *ngFor="let inventory of allProductInventory">
+                                                    <span *ngIf="item.itemCode == inventory.itemCode" id="price">RM {{ item.quantity * inventory.price }}</span>
+                                                </div>
                                                 <!-- <span id="price" class="unitprice">{{item.unitprice * item.quantity | number: '1.2-2'}}</span> -->
                                             </div>
                                         </div>

@@ -129,6 +129,20 @@ export class ApiService {
         return this.http.get(this.orderServiceURL + url, header);
     }
 
+    getOrderId(customerID, storeID){
+        const header = {
+            headers: new HttpHeaders().set("Authorization", `Bearer ${this.token}`),
+        };
+        // http://209.58.160.20:7072/orders?customerId=4&page=0&pageSize=20&storeId=b0c5d5bf-be25-465c-811a-44c20011d025
+        const url =
+            "orders?customerId="+ customerID +
+            "&page=0" +
+            "&pageSize=20" +
+            "&storeId=" + storeID;
+
+        return this.http.get(this.orderServiceURL + url, header);
+    }
+
     getCartItemByCartID(cartID) {
         const header = {
             headers: new HttpHeaders().set("Authorization", `Bearer ${this.token}`),

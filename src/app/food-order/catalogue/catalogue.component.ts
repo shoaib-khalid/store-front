@@ -15,6 +15,7 @@ import { NgxGalleryOptions, NgxGalleryImage, NgxGalleryAnimation } from 'ngx-gal
 // import { exists } from 'fs';
 // import { ucFirst } from 'ngx-pipes/src/ng-pipes/pipes/helpers/helpers';
 import Swal from 'sweetalert2'
+import { forkJoin } from 'rxjs';
 
 
 @Component({
@@ -78,6 +79,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
 
     subTotal:any;
     totalPrice:any;
+    orderId:any;
 
     constructor(
         private _databindService: DataBindService, 
@@ -134,7 +136,6 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     initOrder(){
-        // buat ni esok 
         let data = {
             "cartId": this.cartID,
             "completionStatus": "",
@@ -150,11 +151,26 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
             "updated": "2021-04-05T08:10:02.072Z"
         }
         
-        this.apiService.postInitOrder(data).subscribe((res: any) => {
+        let initOrder = this.apiService.postInitOrder(data)
+        let getOrderId = this.apiService.getOrderId(this.senderID, this.storeID)
 
-        }, error => {
+        forkJoin([initOrder, getOrderId]).subscribe(results => {
+
+        let objPost = results[0]
+        let objGet = results[1]
+
+        this.orderId = objGet['data'].content[0].id
+
+        localStorage.setItem('order_id', this.orderId);
+
+        console.log('result 1: ', objPost)
+        console.log('result 2: ', this.orderId)
+
+        this.route.navigate(['checkout']);
+
+        }, error =>{
             Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
-        }) 
+        });
     }
 
     checkCart(){
@@ -205,11 +221,6 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
         }, error => {
             console.log(error)
         }) 
-    }
-
-    goTo(event){
-        // console.log('ditekan mengenai');
-        this.route.navigate(['checkout']);   
     }
 
     addToCart(event, productID, itemCode, option){

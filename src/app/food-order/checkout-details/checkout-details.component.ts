@@ -11,6 +11,7 @@ import { faMoneyBillAlt } from '@fortawesome/free-solid-svg-icons';
 
 import { MalihuScrollbarService } from 'ngx-malihu-scrollbar';
 import { totalmem } from 'os';
+import Swal from 'sweetalert2'
 
 @Component({
   selector: 'app-checkout-details',
@@ -38,6 +39,9 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
     cartitemDetailsCount:number;
     cartItemCount:number;
     cartID:any;
+    orderID:any;
+    product:any;
+    allProductInventory = [];
 
     constructor(
         private _databindService: DataBindService,
@@ -55,6 +59,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
         this.storeID = localStorage.getItem('store_id');
 
         this.cartID = localStorage.getItem('cart_id');
+        this.orderID = localStorage.getItem('order_id')
         
 
         // console.log(this.refID + "-" + this.senderID + "-" + this.storeID);
@@ -63,6 +68,8 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
         this.cartList = this._databindService.getCartList();
         this.countPrice(this.cartList);
 
+        this.getProduct();
+        
         this.checkCart();
     }
 
@@ -77,6 +84,45 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
         // this.mScrollbarService.destroy(document.body);
         this.mScrollbarService.destroy('#scrollable4');
     }
+
+
+    getProduct(){
+        this.apiService.getProductSByStoreID(this.storeID).subscribe((res: any) => {
+            // console.log('raw resp:', res)
+            if (res.message) {
+                this.product = res.data.content;
+                console.log('getProduct(): ', this.product);
+                // console.log('price: ', this.product[0].productInventories[1]);
+
+                // return false;
+
+                let productObj = this.product;
+
+                productObj.forEach( obj => {
+                    // console.log(obj);
+                    let productID = obj.id;
+                    let inventoryArr = obj.productInventories;
+
+                    if(inventoryArr.length !== 0){
+
+                        inventoryArr.forEach( inventoryObj => {
+                            // creating a collection of productInventories array to prepare base mapping 
+                            // for logic that related to itemCode
+                            this.allProductInventory.push(inventoryObj);
+                        });
+                    }
+                });
+                
+                console.log('all product inventories: ', this.allProductInventory)
+
+            } else {
+                // condition if required for different type of response message 
+            }
+        }, error => {
+            console.log(error)
+        }) 
+    }
+
 
     checkCart(){
         // check count Item in Cart 
@@ -142,7 +188,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
                 // condition if required for different type of response message 
             }
         }, error => {
-            console.log(error)
+            Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
         }) 
     }
 
