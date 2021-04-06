@@ -230,7 +230,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
                 // condition if required for different type of response message 
             }
         }, error => {
-            Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
+            Swal.fire("Payment failed!", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
         }) 
     }
 
@@ -241,12 +241,16 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
         // this.userCountries)
 
         let data = {
-
-            "merchantId": 1,
-            "customerId": this.senderID,
-            "productCode": "parcel",
+            "merchantId":1,
+            "customerId": 1,
+            "productCode": "document",
             "itemType": "parcel",
-            "totalWeightKg": 1,
+            "deliveryProviderId":1,
+            "totalWeightKg":1,
+            "shipmentContent":"Flyers Supllies",
+            "pieces": 2,
+            "IsInsurance": false,
+            "shipmentValue":1,
             
             "delivery" : {
                 "deliveryPostcode": this.userPostcode,
@@ -260,11 +264,21 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
             },
             
             "pickup" : {
-                "pickupOption":"SHCEDULE",
+                "pickupOption":"ADDHOC",
                 "vehicleType":"MOTORCYCLE",
-                "pickupPostcode":"47500"	  
+                "isTrolleyRequired":false,
+                "pickupRemarks":"",
+                "pickupContactName": "SK",
+                "pickupContactPhone": "0123327339",
+                "pickupContactEmail": "taufik@kalsym.com",
+                "pickupAddress": "Unit S-14-09,Level 12B, First Subang,Jalan SS15/4G,47500 Subang Jaya, Selangor",  
+                "pickupPostcode":"47500",
+                "pickupCity":"Subang Jaya",
+                "pickupState":"Selangor",
+                "pickupCountry":"MYS",
+                "pickupLocationId":34176
             }
-        }
+          }
 
         this.submitOrder(data);
     }
