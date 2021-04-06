@@ -48,7 +48,7 @@
                                 <div class="col">
                                     <div class="col text-left">
                                         <span class="subtotal">SUB-TOTAL</span>
-                                        <span id="price" style="float: right; padding-right: 38px;">RM {{subtotal | number: '1.2-2'}}</span>
+                                        <span id="price" style="float: right; padding-right: 38px;">RM {{subTotal | number: '1.2-2'}}</span>
                                         <!-- <hr class="dotted"> -->
                                     </div>
                                 </div>
@@ -57,7 +57,7 @@
                                 <div class="col">
                                     <div class="col text-left">
                                         <span class="subtotal">FEE</span>
-                                        <span id="price" style="float: right; padding-right: 38px;">RM {{feetotal | number: '1.2-2'}}</span>
+                                        <span id="price" style="float: right; padding-right: 38px;">RM {{deliveryFee | number: '1.2-2'}}</span>
                                         <hr class="dotted">
                                     </div>
                                 </div>
@@ -66,7 +66,7 @@
                                 <div class="col">
                                     <div class="col text-left">
                                         <span class="subtotal" id="price" style="font-size: 15px;">GRAND TOTAL</span>
-                                        <span id="price" style="float: right; padding-right: 38px; font-size: 15px;">RM {{grandtotal | number: '1.2-2'}}</span>
+                                        <span id="price" style="float: right; padding-right: 38px; font-size: 15px;">RM {{totalPrice | number: '1.2-2'}}</span>
                                         <hr class="dotted">
                                     </div>
                                 </div>
@@ -81,20 +81,22 @@
                     <div style="padding: 10px; background-color: #ffb347;">
                         <span style="font-weight: bold;">CONTACT INFORMATION</span>
                     </div>
-                    <form style="color: white; text-align: center; padding: 20px;">
-                        <input type="text" id="name" name="name" placeholder="Full name">
+                    <form (submit)="checkOut()" style="color: white; text-align: center; padding: 20px;" ngNativeValidate>
+                        <input type="text" id="name" name="userName" [(ngModel)]="userName" [(value)]="userName" placeholder="Full name" required>
                         <br>
-                        <input type="email" id="email" name="email" placeholder="Email">
+                        <input type="email" id="email" name="userEmail" [(ngModel)]="userEmail" [(value)]="userEmail" placeholder="Email" required>
                         <br>
-                        <input type="text" id="msisdn" name="msisdn" placeholder="Phone No">
+                        <input type="text" id="msisdn" name="userMsisdn" [(ngModel)]="userMsisdn" [(value)]="userMsisdn" placeholder="Phone No" required>
                         <br>
-                        <textarea name="address" id="address" cols="30" rows="4" placeholder="Address"></textarea>
+                        <textarea name="userAddress" id="address" [(ngModel)]="userAddress" [(value)]="userAddress" cols="30" rows="4" placeholder="Address" required></textarea>
                         <br>
-                        <input type="text" name="postcode" placeholder="Postcode">
+                        <input type="text" name="userPostcode" [(ngModel)]="userPostcode" [(value)]="userPostcode" (change)="getDeliveryFee()" placeholder="Postcode" required>
+                        <br>
+                        <input type="text" name="userCities" [(ngModel)]="userCities" [(value)]="userCities" placeholder="Cities" required>
                         <br>
                         <div class="row">
                             <div class="col-lg-6 col-md-6 col-xs-12 col-sm-12">
-                                <select name="state" id="state">
+                                <select name="userState" id="state" [(ngModel)]="userState" [(value)]="userState" required>
                                     <option selected="true" disabled="">States</option>
                                     <option value="Selangor">Selangor</option>
                                     <option value="Perak">Perak</option>
@@ -102,11 +104,11 @@
                                 </select>
                             </div>
                             <div class="col-lg-6 col-md-6 col-xs-12 col-sm-12">
-                                <select name="countries" id="countries">
+                                <select name="userCountries" id="countries" [(ngModel)]="userCountries" [(value)]="userCountries" required>
                                     <option selected="true" disabled="">Countries</option>
-                                    <option value="Selangor">Malaysia</option>
-                                    <option value="Perak">Pakistan</option>
-                                    <option value="Kelantan">Thailand</option>
+                                    <option value="Malaysia">Malaysia</option>
+                                    <option value="Malaysia">Pakistan</option>
+                                    <option value="Malaysia">Thailand</option>
                                 </select>
                             </div>
                         </div>
@@ -117,10 +119,11 @@
                         <!-- <button (click)="goPay($event)" class="btn btn-md col-lg-4 col-md-4 col-xs-12 col-sm-12 btn-success" style="border-radius: 0;">PAY NOW &nbsp;&nbsp;<fa-icon [icon]="iconMoney"></fa-icon></button> -->
 
                         <!-- <button class="btn btn-md col-lg-4 col-md-4 col-xs-12 col-sm-12 btn-warning" style="border-radius: 0;">MAIN MENU &nbsp;&nbsp;<fa-icon [icon]="iconMoney"></fa-icon></button> -->
-                    </form>
-
-                    <button (click)="goPay($event)" class="btn btn-md col-lg-4 col-md-4 col-xs-12 col-sm-12 btn-success" style="border-radius: 0;">PAY NOW &nbsp;&nbsp;<fa-icon [icon]="iconMoney"></fa-icon></button>
+                    
+                    <!-- <button (click)="checkLah()"></button> -->
+                    <button type="submit" class="btn btn-md col-lg-4 col-md-4 col-xs-12 col-sm-12 btn-success" style="border-radius: 0;">PAY NOW &nbsp;&nbsp;<fa-icon [icon]="iconMoney"></fa-icon></button>
                     <!-- <button (click)="goSkip($event)" class="btn btn-md col-lg-4 col-md-4 col-xs-12 col-sm-12 btn-success" style="border-radius: 0;">PAY NOW &nbsp;&nbsp;<fa-icon [icon]="iconMoney"></fa-icon></button> -->
+                    </form>
                 </div>
             </div>
         </div>

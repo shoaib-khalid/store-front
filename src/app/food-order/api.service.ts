@@ -16,8 +16,9 @@ export class ApiService {
     productServiceURL: any;
     userServiceURL: any;
     payServiceURL: any;
+    deliveryServiceURL: any;
     token:any = 'accessToken';
-    tokenPay:any = '73e7cf38-f390-4d4b-b2e8-7f24cbcf2f46';
+    tokenPay:any = 'accessToken';
 
     constructor(
         private http: HttpClient,
@@ -41,18 +42,21 @@ export class ApiService {
             this.productServiceURL = "http://symplified.ai:7071/";
             this.payServiceURL = "https://209.58.160.20:6001/";
             this.orderServiceURL = "http://209.58.160.20:7072/";
+            this.deliveryServiceURL = "http://209.58.160.20:5000/";
 
         } else if (stagingURL != null) {
             this.userServiceURL = "http://209.58.160.20:20921/";
             this.productServiceURL = "http://symplified.ai:7071/";
             this.payServiceURL = "https://209.58.160.20:6001/";
             this.orderServiceURL = "http://209.58.160.20:7072/";
+            this.deliveryServiceURL = "http://209.58.160.20:5000/";
 
         } else {
             this.userServiceURL = "http://209.58.160.20:20921/";
             this.productServiceURL = "http://symplified.ai:7071/";
             this.payServiceURL = "https://209.58.160.20:6001/";
             this.orderServiceURL = "http://209.58.160.20:7072/";
+            this.deliveryServiceURL = "http://209.58.160.20:5000/";
         }
     }
 
@@ -155,6 +159,45 @@ export class ApiService {
         return this.http.get(this.orderServiceURL + url, header);
     }
 
+    
+    postTogetDeliveryFee(data):Observable<any> {
+
+        // http://209.58.160.20:5000/orders/getprice
+        
+        const httpOptions = {
+            headers: new HttpHeaders(
+            { 
+               'Authorization': `Bearer ${this.tokenPay}`,
+               'Content-Type': 'application/json'
+            })
+        }
+
+        const url = this.deliveryServiceURL + "orders/getprice";
+
+        // console.log('get delivery endpoint: ', url, data, httpOptions)
+        return this.http.post(url, data, httpOptions);
+        // return this.http.get(this.payServiceURL + "payments/makePayment", httpOptions);
+    }
+
+    postSubmitDeliveryOrder(data):Observable<any> {
+
+        // http://209.58.160.20:5000/orders/submitorder
+        
+        const httpOptions = {
+            headers: new HttpHeaders(
+            { 
+               'Authorization': `Bearer ${this.tokenPay}`,
+               'Content-Type': 'application/json'
+            })
+        }
+
+        const url = this.deliveryServiceURL + "orders/submitorder";
+
+        // console.log('get delivery endpoint: ', url, data, httpOptions)
+        return this.http.post(url, data, httpOptions);
+        // return this.http.get(this.payServiceURL + "payments/makePayment", httpOptions);
+    }
+
     postPaymentLink(data):Observable<any> {
 
         const httpOptions = {
@@ -167,7 +210,7 @@ export class ApiService {
 
         const url = this.payServiceURL + "payments/makePayment";
 
-        console.log('send: ', url, data, httpOptions)
+        console.log('send payment: ', url, data, httpOptions)
         return this.http.post(url, data, httpOptions);
         // return this.http.get(this.payServiceURL + "payments/makePayment", httpOptions);
     }

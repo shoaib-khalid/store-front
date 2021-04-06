@@ -15,7 +15,7 @@ import { NgxGalleryOptions, NgxGalleryImage, NgxGalleryAnimation } from 'ngx-gal
 // import { exists } from 'fs';
 // import { ucFirst } from 'ngx-pipes/src/ng-pipes/pipes/helpers/helpers';
 import Swal from 'sweetalert2'
-import { forkJoin } from 'rxjs';
+
 
 
 @Component({
@@ -135,42 +135,8 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
         this.mScrollbarService.destroy('#scrollable2');
     }
 
-    initOrder(){
-        let data = {
-            "cartId": this.cartID,
-            "completionStatus": "",
-            "created": "2021-04-05T08:10:02.072Z",
-            "customerId": this.senderID,
-            "customerNotes": "",
-            "id": "",
-            "paymentStatus": "pending",
-            "privateAdminNotes": "",
-            "storeId": this.storeID,
-            "subTotal": 0,
-            "total": this.totalPrice,
-            "updated": "2021-04-05T08:10:02.072Z"
-        }
-        
-        let initOrder = this.apiService.postInitOrder(data)
-        let getOrderId = this.apiService.getOrderId(this.senderID, this.storeID)
-
-        forkJoin([initOrder, getOrderId]).subscribe(results => {
-
-        let objPost = results[0]
-        let objGet = results[1]
-
-        this.orderId = objGet['data'].content[0].id
-
-        localStorage.setItem('order_id', this.orderId);
-
-        console.log('result 1: ', objPost)
-        console.log('result 2: ', this.orderId)
-
+    goToCheckout(){
         this.route.navigate(['checkout']);
-
-        }, error =>{
-            Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
-        });
     }
 
     checkCart(){
@@ -485,10 +451,14 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
                             // get min price among the clusterPriceArr 
                             this.minVal = this.clusterPriceArr.reduce((a, b)=>Math.min(a, b));
 
+                            let count = false
+
                             // map and stored the item object with minimum price to be shown on the catalogue list 
                             inventoryArr.map(item => {
-                                if(item.price == this.minVal){
+                                if(item.price == this.minVal && !count){
                                     // console.log('selected product: ', product);
+
+                                    count = true;
                                     this.catalogueList.push(item)
                                     return this.catalogueList;
                                 }

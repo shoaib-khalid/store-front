@@ -12,6 +12,7 @@ import { faMoneyBillAlt } from '@fortawesome/free-solid-svg-icons';
 import { MalihuScrollbarService } from 'ngx-malihu-scrollbar';
 import { totalmem } from 'os';
 import Swal from 'sweetalert2'
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-checkout-details',
@@ -21,9 +22,6 @@ import Swal from 'sweetalert2'
 export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
 
     cartList:CartList[];
-    subtotal:number = 0;
-    feetotal:number = 0;
-    grandtotal:number = 0;
     trxid: any;
 
     iconMoney = faMoneyBillAlt;
@@ -39,9 +37,22 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
     cartitemDetailsCount:number;
     cartItemCount:number;
     cartID:any;
-    orderID:any;
     product:any;
     allProductInventory = [];
+    orderId:any;
+
+    totalPrice:number = 0;
+    subTotal:number = 0;
+    deliveryFee:number = 0;
+
+    userPostcode:any;
+    userName:any;
+    userEmail:any;
+    userMsisdn:any;
+    userAddress:any;
+    userCities:any;
+    userState:any;
+    userCountries:any;
 
     constructor(
         private _databindService: DataBindService,
@@ -57,16 +68,13 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
         this.senderID = localStorage.getItem('sender_id');
         this.refID = localStorage.getItem('ref_id');
         this.storeID = localStorage.getItem('store_id');
-
         this.cartID = localStorage.getItem('cart_id');
-        this.orderID = localStorage.getItem('order_id')
-        
+        // this.orderID = localStorage.getItem('order_id')
 
         // console.log(this.refID + "-" + this.senderID + "-" + this.storeID);
 
         // dummy total, if u delete this view will crash and checkCart() will not be called, later to enhance
-        this.cartList = this._databindService.getCartList();
-        this.countPrice(this.cartList);
+        // this.cartList = this._databindService.getCartList();
 
         this.getProduct();
         
@@ -85,6 +93,40 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
         this.mScrollbarService.destroy('#scrollable4');
     }
 
+    initOrder(){
+        let data = {
+            "cartId": this.cartID,
+            "completionStatus": "",
+            "created": "",
+            "customerId": this.senderID,
+            "customerNotes": "",
+            "id": "",
+            "paymentStatus": "pending",
+            "privateAdminNotes": "",
+            "storeId": this.storeID,
+            "subTotal": 0,
+            "total": this.totalPrice,
+            "updated": ""
+        }
+        
+        let initOrder = this.apiService.postInitOrder(data)
+        let getOrderId = this.apiService.getOrderId(this.senderID, this.storeID)
+
+        forkJoin([initOrder, getOrderId]).subscribe(results => {
+
+        let objGet = results[1]
+
+        // always get latest order id 
+        this.orderId = objGet['data'].content[0].id
+
+        // console.log('result 1: ', objPost)
+        console.log('orderID: ', this.orderId)
+
+        }, error =>{
+            Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
+        });
+    }
+
 
     getProduct(){
         this.apiService.getProductSByStoreID(this.storeID).subscribe((res: any) => {
@@ -100,7 +142,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
 
                 productObj.forEach( obj => {
                     // console.log(obj);
-                    let productID = obj.id;
+                    // let productID = obj.id;
                     let inventoryArr = obj.productInventories;
 
                     if(inventoryArr.length !== 0){
@@ -114,6 +156,9 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
                 });
                 
                 console.log('all product inventories: ', this.allProductInventory)
+
+                //get the price
+                this.countPrice(this.allProductInventory);
 
             } else {
                 // condition if required for different type of response message 
@@ -140,30 +185,27 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
         }) 
     }
 
-    countPrice(list:any){
+    countPrice(productList:any){
 
-        console.log('countPrice');
+        this.subTotal = 0
 
-        list.forEach(item => {
+        this.cartitemDetails.forEach(cartItem => {
 
-            this.subtotal = this.subtotal + (item.quantity * item.unitprice);
-            
-            console.log('current total: ' + this.subtotal);
+            productList.map(allProduct => {
+                if(allProduct.itemCode == cartItem.itemCode){
+                    this.subTotal = this.subTotal + (allProduct.price * cartItem.quantity)
+                }
+            })
         });
 
-        // sample total fee = 5% out of total subtotal 
-        this.feetotal = this.subtotal * 0.05;
-
-        // sample grandtotal = subtotal deduct with fees
-        this.grandtotal = this.subtotal - this.feetotal;
-
+        this.totalPrice = this.subTotal + this.deliveryFee
     }
 
     goSkip(e){
         this.route.navigate(['thankyou']);   
     }
 
-    goPay(e){
+    goPay(){
         let dateTime = new Date()
 
         this.trxid = this.datePipe.transform(dateTime, "yyyyMMddhhmmss")
@@ -190,6 +232,109 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
         }, error => {
             Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
         }) 
+    }
+
+    checkOut(){
+        // alert('postcode: ' + 
+        // this.userPostcode + this.userName + this.userEmail + 
+        // this.userMsisdn + this.userAddress + this.userState + 
+        // this.userCountries)
+
+        let data = {
+
+            "merchantId": 1,
+            "customerId": this.senderID,
+            "productCode": "parcel",
+            "itemType": "parcel",
+            "totalWeightKg": 1,
+            
+            "delivery" : {
+                "deliveryPostcode": this.userPostcode,
+                "deliveryAddress": this.userAddress,
+                "deliveryCity": this.userCities,
+                "deliveryContactEmail": this.userEmail,
+                "deliveryContactName": this.userName,
+                "deliveryContactPhone": this.userMsisdn,
+                "deliveryCountry": this.userCountries,
+                "deliveryState": this.userState 
+            },
+            
+            "pickup" : {
+                "pickupOption":"SHCEDULE",
+                "vehicleType":"MOTORCYCLE",
+                "pickupPostcode":"47500"	  
+            }
+        }
+
+        this.submitOrder(data);
+    }
+
+    submitOrder(data:any){
+
+        this.apiService.postSubmitDeliveryOrder(data).subscribe((res: any) => {
+            if (res.message) {
+
+                console.log('submit order response: ' , res)
+
+                this.goPay()
+
+            }
+        }, error => {
+            Swal.fire("Submit order failed!", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
+        }) 
+
+    }
+
+    getDeliveryFee(){
+
+        // alert('postcode: ' + 
+        // this.userPostcode + this.userName + this.userEmail + 
+        // this.userMsisdn + this.userAddress + this.userState + 
+        // this.userCountries)
+
+        // return false;
+        let data = {
+
+                "merchantId": 1,
+                "customerId": this.senderID,
+                "productCode": "parcel",
+                "itemType": "parcel",
+                "totalWeightKg": 1,
+                
+                "delivery" : {
+                    "deliveryPostcode": this.userPostcode,
+                    "deliveryAddress": "No 20, Jalan Temasik, Tamago Island, 40150, Nippon",
+                    // "deliveryCity": "Tamago Island",
+                    // "deliveryContactEmail": "nazrul@kalsym.com",
+                    // "deliveryContactName": "nazrul",
+                    // "deliveryContactPhone": "0142217851",
+                    // "deliveryCountry": "Nippon",
+                    // "deliveryState": "Selangor" 
+                },
+                
+                "pickup" : {
+                    "pickupOption":"SHCEDULE",
+                    "vehicleType":"MOTORCYCLE",
+                    "pickupPostcode":"47500"	  
+                }
+            }
+        
+
+        this.apiService.postTogetDeliveryFee(data).subscribe((res: any) => {
+            if (res.message) {
+
+                this.deliveryFee = res.data[0].price;
+
+                // alert('delivery charge: '+this.deliveryFee)
+
+                this.totalPrice = this.subTotal + this.deliveryFee
+
+                Swal.fire("Delivery Fees", "Additional charges RM " + this.deliveryFee, "info")
+            }
+        }, error => {
+            Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
+        }) 
+
     }
 
 }
