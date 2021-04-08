@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
+import { ApiService } from './../api.service';
 
 import Swal from 'sweetalert2'
 
@@ -21,6 +22,7 @@ export class ThankyouComponent implements OnInit {
 
   constructor(
     private route: Router,
+    private apiService: ApiService,
     private activatedRoute: ActivatedRoute
   ) {
         // get url parameter style e.g http://209.58.160.20:8090/thankyou?txid=PY160321055629630e&refId=R123123111&status=SUCCESS
@@ -59,10 +61,39 @@ export class ThankyouComponent implements OnInit {
         })
     }
 
+    this.updateStatus(this.payStatus)
   }
 
   shopAgain(){
     this.route.navigateByUrl('/catalogue?referenceId='+this.refID+'&senderId='+this.senderID+'&storeId='+this.storeID);
+  }
+
+  updateStatus(status){
+      console.log('Masok')
+
+    let data = {
+        "cartId": this.cartID,
+        // "completionStatus": "",
+        // "created": "2021-04-08T09:51:47.166Z",
+        "customerId": this.senderID,
+        // "customerNotes": "",
+        // "id": "",
+        "paymentStatus": status,
+        // "privateAdminNotes": "",
+        "storeId": this.storeID,
+        // "subTotal": 0,
+        // "total": 0,
+        "updated": "2021-04-09T09:51:47.166Z"
+      }
+
+    this.apiService.putUpdateOrderStatus(data).subscribe((res: any) => {
+        if (res.message){
+            console.log('Order succesfully updated')
+        }
+    }, error => {
+        console.log(error)
+    }) 
+
   }
 
 }

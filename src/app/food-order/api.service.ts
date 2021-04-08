@@ -230,6 +230,22 @@ export class ApiService {
         return this.http.post(url, data, httpOptions);
 
     }
+
+    postAddItemToOrder(data):Observable<any> {
+
+        const httpOptions = {
+            headers: new HttpHeaders(
+            { 
+               'Authorization': `Bearer ${this.token}`,
+               'Content-Type': 'application/json'
+            })
+        }
+
+        const url = this.orderServiceURL + "carts/" + data.cartId + "/items";
+
+        return this.http.post(url, data, httpOptions);
+
+    }
     
     // postAuthenticate(data) {
     //     return this.http.post(this.userServiceURL + "clients/authenticate", data);
@@ -250,6 +266,20 @@ export class ApiService {
     }
 
     postInitOrder(data):Observable<any> {
+
+        const httpOptions = {
+            headers: new HttpHeaders(
+            { 
+               'Authorization': `Bearer ${this.token}`,
+               'Content-Type': 'application/json'
+            })
+        }
+        
+        const url = this.orderServiceURL + "orders";
+        return this.http.post(url, data, httpOptions);
+    }
+
+    putUpdateOrderStatus(data):Observable<any> {
 
         const httpOptions = {
             headers: new HttpHeaders(

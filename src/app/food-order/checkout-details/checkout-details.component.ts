@@ -122,11 +122,54 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
         // console.log('result 1: ', objPost)
         console.log('orderID: ', this.orderId)
 
+        this.addItemOrder(this.orderId)
+
         }, error =>{
             Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
         });
     }
 
+    addItemOrder(orderId){
+
+        this.cartitemDetails.map(cartItem => {
+
+            let itemCode = cartItem.itemCode
+            let productId = cartItem.productId
+            let quantity = cartItem.quantity
+
+            this.allProductInventory.forEach( allItem => {
+
+                let price = allItem.price
+
+                if(itemCode == allItem.itemCode){
+
+                    let data = {
+                        "id": "",
+                        "itemCode": itemCode,
+                        "orderId": orderId,
+                        "price": price,
+                        "productId": productId,
+                        "productPrice": price,
+                        "quantity": quantity,
+                        "sku": "string",
+                        "weight": 0
+                    }
+
+                    this.apiService.postAddItemToOrder(data).subscribe((res: any) => {
+            
+                        if (res.message){
+                            console.log('item succesfully added: ' + itemCode)
+                        } else {
+                        }
+                    }, error => {
+                        console.log(error)
+                    }) 
+
+                    this.goPay()
+                }
+            });
+        })
+    }
 
     getProduct(){
         this.apiService.getProductSByStoreID(this.storeID).subscribe((res: any) => {
@@ -206,6 +249,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
     }
 
     goPay(){
+
         let dateTime = new Date()
 
         this.trxid = this.datePipe.transform(dateTime, "yyyyMMddhhmmss")
@@ -226,9 +270,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
                 let paymentLink = res.data.paymentLink;
                 // window.open(paymentLink, "_blank");
                 window.location.href = paymentLink;
-            } else {
-                // condition if required for different type of response message 
-            }
+            } 
         }, error => {
             Swal.fire("Payment failed!", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
         }) 

@@ -81,7 +81,7 @@
                     <div style="padding: 10px; background-color: #ffb347;">
                         <span style="font-weight: bold;">CONTACT INFORMATION</span>
                     </div>
-                    <form (submit)="checkOut()" style="color: white; text-align: center; padding: 20px;" ngNativeValidate>
+                    <form (submit)="initOrder()" style="color: white; text-align: center; padding: 20px;" ngNativeValidate>
                         <input type="text" id="name" name="userName" [(ngModel)]="userName" [(value)]="userName" placeholder="Full name" required>
                         <br>
                         <input type="email" id="email" name="userEmail" [(ngModel)]="userEmail" [(value)]="userEmail" placeholder="Email" required>
