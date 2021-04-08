@@ -9,9 +9,11 @@ const routes: Routes = [
 
     { path: "", redirectTo: "catalogue", pathMatch: "full" },
     { path: "catalogue", component: StepCatalogueComponent },
-    { path: "catalogue/:referenceId/:senderId/:storeId/:", component: StepCatalogueComponent },
+    // { path: "catalogue/:referenceId/:senderId/:storeId", component: StepCatalogueComponent },
     { path: "checkout", component: StepCheckoutComponent },
+    // { path: "thankyou/:txid/:refId/:status", component: ThankyouComponent },
     { path: "thankyou", component: ThankyouComponent },
+    // http://209.58.160.20:8090/thankyou?txid=PY160321055629630e&refId=R123123111&status=SUCCESS
 
     { path: "**", redirectTo: "/catalogue" }
 ];

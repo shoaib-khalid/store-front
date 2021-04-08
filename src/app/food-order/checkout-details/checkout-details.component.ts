@@ -331,8 +331,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
                     "vehicleType":"MOTORCYCLE",
                     "pickupPostcode":"47500"	  
                 }
-            }
-        
+            }        
 
         this.apiService.postTogetDeliveryFee(data).subscribe((res: any) => {
             if (res.message) {
