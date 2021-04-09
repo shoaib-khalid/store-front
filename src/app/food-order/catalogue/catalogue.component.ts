@@ -36,6 +36,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
     // categories:Category[];
     //   product:Product[];
     categories:any;
+    newCategories:Category[];
     product:any;
     leftNavDisabled = false;
     rightNavDisabled = false;
@@ -55,7 +56,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
     cartCount:number;
     cart:any;
     cartItemCount:number;
-    cartitemDetails:any;
+    cartitemDetails:any = {};
     cartitemDetailsCount:number = 0;
     cartID:any = null;
     fromAddToCart:boolean = false;
@@ -178,7 +179,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
                     }) 
 
                 }else{
-                    this.cartItemCount = 0;
+                    this.cartitemDetailsCount = 0;
                 }
                 
             }else{
@@ -320,7 +321,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
                                 }) 
             
                             }else{
-                                this.cartItemCount = 0;
+                                this.cartitemDetailsCount = 0;
                             }
                             
                         }else{
@@ -344,10 +345,41 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
         this.apiService.getCategoryByStoreID(this.storeID).subscribe((res: any) => {
 
             console.log('category obj: ', res)
-            if (res.message){
-                this.categories = res.data.content;
+            
 
-                console.log('category obj: ', this.categories);
+            if (res.message){
+
+                if(res.data.content.length > 1){
+
+                    // let data = {
+                    //     "id": "a27e3a32-391c-4eb3-b76e-49c22ad1bce9",
+                    //     "name": "All Item",
+                    //     "parentCategoryId": null,
+                    //     "storeId": "af2cda1a-d4ac-4a9e-b51b-fc5b32578e5b",
+                    //     "thumbnailUrl": null
+                    // }
+                    
+                    this.categories = res.data.content;
+
+                    // this.categories.push(data);
+                }else{
+                    
+                    // let data = {
+                    //     "id": "a27e3a32-391c-4eb3-b76e-49c22ad1bce9",
+                    //     "name": "All Item",
+                    //     "parentCategoryId": null,
+                    //     "storeId": "af2cda1a-d4ac-4a9e-b51b-fc5b32578e5b",
+                    //     "thumbnailUrl": null
+                    // }
+
+                    this.categories = res.data.content;
+
+                    // this.categories.push(data);
+                    
+                }
+
+                // this.newCategories = this.categories
+                console.log('newCategories getCategory: ', this.categories);
             }else{
 
             }

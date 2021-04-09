@@ -1,10 +1,11 @@
-import { NgModule } from '@angular/core';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA  } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule, DatePipe } from '@angular/common';
 import { DragScrollModule } from 'ngx-drag-scroll';
 import { MalihuScrollbarModule } from 'ngx-malihu-scrollbar';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgxGalleryModule } from 'ngx-gallery-9';
+import { NgxSpinnerModule } from "ngx-spinner";
 // import 'hammerjs';
 // important node: ngx-gallery-9 library
 import {NumberPickerModule} from 'ng-number-picker';
@@ -49,7 +50,8 @@ import { ThankyouComponent } from './thankyou/thankyou.component';
     NumberPickerModule,
     HttpClientModule,
     NgPipesModule,
-    FormsModule
+    FormsModule,
+    NgxSpinnerModule
   ],
   exports: [
     StepCheckoutComponent,
@@ -61,8 +63,10 @@ import { ThankyouComponent } from './thankyou/thankyou.component';
     NumberPickerModule,
     HttpClientModule,
     NgPipesModule,
-    FormsModule
+    FormsModule,
+    NgxSpinnerModule
   ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [
       DataBindService,
       DatePipe

@@ -6,6 +6,7 @@ import { ApiService } from './../api.service';
 import { CartList } from './food-order/../../models/CartList';
 // services
 import { DataBindService } from './../databind.service';
+import { NgxSpinnerService } from "ngx-spinner";
 
 import { faMoneyBillAlt } from '@fortawesome/free-solid-svg-icons';
 
@@ -54,12 +55,15 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
     userState:any;
     userCountries:any;
 
+    visible:boolean = false;
+
     constructor(
         private _databindService: DataBindService,
         private mScrollbarService: MalihuScrollbarService,
         private route: Router,
         private apiService: ApiService,
-        private datePipe: DatePipe
+        private datePipe: DatePipe,
+        private spinner: NgxSpinnerService
     ) { }
 
     ngOnInit(): void {
@@ -79,6 +83,8 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
         this.getProduct();
         
         this.checkCart();
+
+        this.spinner.show();
     }
 
     ngAfterViewInit(){
@@ -91,6 +97,23 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
         // custom cleanup
         // this.mScrollbarService.destroy(document.body);
         this.mScrollbarService.destroy('#scrollable4');
+    }
+
+    showSpinner() {
+        // visible return true 
+        this.visible = true;
+        
+
+        // calling function after 2 second 
+        setTimeout(() => {;
+            this.hideSpinner()
+        }, 1500);
+    }
+
+    hideSpinner(){
+        // visible return false 
+        this.visible = false;
+        // this.spinner.hide();
     }
 
     initOrder(){
@@ -164,6 +187,9 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
                     }, error => {
                         console.log(error)
                     }) 
+                    
+                    // start the loading 
+                    this.visible = true;
 
                     this.goPay()
                 }
@@ -269,7 +295,10 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
 
                 let paymentLink = res.data.paymentLink;
                 // window.open(paymentLink, "_blank");
+
+                // this.visible = false
                 window.location.href = paymentLink;
+                
             } 
         }, error => {
             Swal.fire("Payment failed!", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")

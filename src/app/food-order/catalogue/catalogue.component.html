@@ -1,15 +1,37 @@
 <!-- <div id="scrollable"> -->
 
+<!-- <div *ngFor="let test of categories">
+    <p style="background-color: coral;">{{test.id}}</p>
+</div> -->
+
 <!-- Slider Desktop  -->
 <div class="d-none d-sm-none d-md-block d-lg-block d-xl-block">
     <!-- category slider one normal horizontal slider with more smooth behaviour-->
     <div class="container" id="category-section" style="padding-top: 50px;">
         <div class="row" >
             <div class="scrollmenu" id="scrollable2">
-                <div id="test" *ngFor="let item of categories; let i = index;">
+
+                <!-- <div id="test">
                     <div class="card" style="border: none; background-color: transparent; height: 150px;">
 
-                        <div (click)="onGetCategoriesItem(item.id)" *ngIf="item.thumbnailUrl; else noImage" class="card-body category shadow-sm" style="margin: 0px; border-radius: 5px; width: 150px; height: 150px; border: 1px solid #ffe259;" [ngStyle]="{'background-image': 'url('+ item.thumbnailUrl +')'}">
+                        <div (click)="onGetCategoriesItem(categories.id)" *ngIf="categories.thumbnailUrl; else noImage" class="card-body category shadow-sm" style="margin: 0px; border-radius: 5px; width: 150px; height: 150px; border: 1px solid #ffe259;" [ngStyle]="{'background-image': 'url('+ categories.thumbnailUrl +')'}">
+                            <span style="margin: 35px;">Ada Image</span>
+                        </div>
+
+                        <ng-template #noImage>
+                            <div class="card-body category shadow-sm" style="margin: 0px; border-radius: 5px; width: 150px; height: 150px;" style="background-image: url(/assets/image/noimage2.jpg)">
+                                <span style="margin: 35px;">No Image</span>
+                            </div>
+                        </ng-template>
+                        
+                        <span class="text-center" id="price" style="margin: 5px; font-size: 13px; color: black; font-weight: bold;">{{ categories.name }}</span>
+                    </div>
+                </div>  -->
+
+                <div id="test" *ngFor="let item of categories; let i = index;">
+                    <div class="card" style="border: none; background-color: transparent; height: 150px;">
+                        
+                        <div (click)="onGetCategoriesItem(item.id)" *ngIf="item.thumbnailUrl != null; else noImage" class="card-body category shadow-sm" style="margin: 0px; border-radius: 5px; width: 150px; height: 150px; border: 1px solid #ffe259;" [ngStyle]="{'background-image': 'url('+ item.thumbnailUrl +')'}">
                             <span style="margin: 35px;"></span>
                         </div>
 

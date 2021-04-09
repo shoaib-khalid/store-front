@@ -34,6 +34,7 @@
     "ngx-gallery-9": "^1.0.6",
     "ngx-malihu-scrollbar": "^9.0.0",
     "ngx-pipes": "^2.7.5",
+    "ngx-spinner": "^11.0.1",
     "np-ui-lib": "^11.1.5",
     "popper.js": "^1.16.1",
     "rxjs": "~6.6.0",
