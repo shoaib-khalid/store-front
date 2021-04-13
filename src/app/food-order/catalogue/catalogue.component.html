@@ -11,23 +11,6 @@
         <div class="row" >
             <div class="scrollmenu" id="scrollable2">
 
-                <!-- <div id="test">
-                    <div class="card" style="border: none; background-color: transparent; height: 150px;">
-
-                        <div (click)="onGetCategoriesItem(categories.id)" *ngIf="categories.thumbnailUrl; else noImage" class="card-body category shadow-sm" style="margin: 0px; border-radius: 5px; width: 150px; height: 150px; border: 1px solid #ffe259;" [ngStyle]="{'background-image': 'url('+ categories.thumbnailUrl +')'}">
-                            <span style="margin: 35px;">Ada Image</span>
-                        </div>
-
-                        <ng-template #noImage>
-                            <div class="card-body category shadow-sm" style="margin: 0px; border-radius: 5px; width: 150px; height: 150px;" style="background-image: url(/assets/image/noimage2.jpg)">
-                                <span style="margin: 35px;">No Image</span>
-                            </div>
-                        </ng-template>
-                        
-                        <span class="text-center" id="price" style="margin: 5px; font-size: 13px; color: black; font-weight: bold;">{{ categories.name }}</span>
-                    </div>
-                </div>  -->
-
                 <div id="test" *ngFor="let item of categories; let i = index;">
                     <div class="card" style="border: none; background-color: transparent; height: 150px;">
                         
@@ -56,7 +39,7 @@
         <div class="row" >
             <div class="scrollmenu scrollmobi">
                 <div id="test" *ngFor="let item of categories; let i = index;">
-                    <div class="card" style="border: none; background-color: transparent; height: 150px;">
+                    <div class="card" style="border: none; background-color: transparent; height: 50px;">
 
                         <div (click)="onGetCategoriesItem(item.id)" *ngIf="item.thumbnailUrl; else noImage" class="card-body category shadow-sm" style="margin: 0px; border-radius: 5px; width: 150px; height: 150px; border: 1px solid #ffe259;" [ngStyle]="{'background-image': 'url('+ item.thumbnailUrl +')'}">
                             <span style="margin: 35px;"></span>
@@ -227,8 +210,8 @@
                                     {{ option.value | uppercase}}</p>
                                 </div>
 
-                                <!-- <div class="row">
-                                    Item Code : {{popupItemCode}}
+                                <!-- <div class="row" *ngFor="let variant of detailsObj.productInventories; let i = index;" style="padding-bottom: 10px;">
+                                    {{variant.itemCode}}
                                 </div> -->
                             
                                 <div style="padding-top: 70px;">
