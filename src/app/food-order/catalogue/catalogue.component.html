@@ -200,19 +200,30 @@
                                 <!-- <img class="card-img-top img-icon" src="{{ detailsObj.thumbnailUrl }}" alt="Card image cap"> -->
                             </div>
                             <div class="col-6 text-center">
-                                <!-- <p>{{ detailsObj.desc }} </p> -->
-                                <div class="row" *ngFor="let item of detailsObj.productVariants; let i = index;" style="padding-bottom: 10px;">
-                                    <p style="margin-left: 10px;">{{ item.name }} : </p>
+                                
+                                <!-- variant option  -->
+                                <fieldset id="{{variant.name}}" *ngFor="let variant of detailsObj.productVariants; let i = index;">
+                                    <div class="row">
+                                        <label for="{{variant.name}}" style="font-weight: bold; font-size: 12px;">{{variant.name | uppercase}}</label>
+                                    </div>
 
-                                    <p class="badge badge-light btn-outline-info border border-info" 
-                                    *ngFor="let option of item.productVariantsAvailable;" 
-                                    style="margin-left: 10px; padding: 10px; cursor: pointer;">
-                                    {{ option.value | uppercase}}</p>
-                                </div>
-
-                                <!-- <div class="row" *ngFor="let variant of detailsObj.productInventories; let i = index;" style="padding-bottom: 10px;">
-                                    {{variant.itemCode}}
-                                </div> -->
+                                    <div class="row">
+                                        <ul class="donate-now">
+                                            <!-- <form> -->
+                                                <li *ngFor="let option of variant.productVariantsAvailable; let i = index;">
+                                                    <input type="radio" 
+                                                    id="{{variant.name + i}}" 
+                                                    value="{{option.value}}" 
+                                                    name="{{variant.name}}" 
+                                                    [checked]="currentVariant.indexOf(option.id) > -1"
+                                                    (change)="onChangeVariant(option.id, variant.name, option.productId)"
+                                                    >
+                                                    <label for="{{variant.name + i}}">{{option.value}}</label>
+                                                </li>
+                                            <!-- </form> -->
+                                        </ul>
+                                    </div>
+                                </fieldset>
                             
                                 <div style="padding-top: 70px;">
                                     <!-- <h5 id="price">PRICE : RM {{ detailPrice | number: '1.2-2'}}</h5> -->
@@ -238,11 +249,11 @@
                                 <div class="row" *ngFor="let item of detailsObj.productVariants; let i = index;" style="padding-bottom: 10px;">
                                     <p style="margin-left: 10px;">{{ item.name }} : </p>
 
-                                    <select name="{{item.name}}" id="{{item.name}}">
+                                    <!-- <select name="{{item.name}}" id="{{item.name}}">
                                         <option *ngFor="let option of item.productVariantsAvailable;">
                                             {{ option.value | uppercase}}
                                         </option>
-                                    </select>
+                                    </select> -->
                                     <!-- <p class="badge badge-light btn-outline-info border border-info" 
                                     *ngFor="let option of item.productVariantsAvailable;" 
                                     style="margin-left: 10px; padding: 10px; cursor: pointer;">

@@ -19,6 +19,7 @@ export class ApiService {
     deliveryServiceURL: any;
     token:any = 'accessToken';
     tokenPay:any = 'accessToken';
+    variantStr:string = "";
 
     constructor(
         private http: HttpClient,
@@ -157,6 +158,33 @@ export class ApiService {
             "&pageSize=200";
 
         return this.http.get(this.orderServiceURL + url, header);
+    }
+
+    getUpdatedByVariant(storeId, productId, variantArr){
+        const header = {
+            headers: new HttpHeaders().set("Authorization", `Bearer ${this.token}`),
+        };
+
+        this.variantStr = ""
+
+        variantArr.forEach((variant) => {
+
+            if(variant.variantID === variantArr[variantArr.length - 1].variantID){
+                this.variantStr += "variantIds=" + variant.variantID
+            }else{
+                this.variantStr += "variantIds=" + variant.variantID + "&"
+            }
+
+        });
+
+        const url =
+            "stores/" + storeId + 
+            "/products/"+ productId +
+            "/inventory?" + this.variantStr;
+
+        console.log(url)
+
+        return this.http.get(this.productServiceURL + url, header);
     }
 
     

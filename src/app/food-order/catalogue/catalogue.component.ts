@@ -33,6 +33,8 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
     iconMinus = faMinusCircle;
     iconTrash = faTrashAlt;
 
+    isActive = true;
+
     // categories:Category[];
     //   product:Product[];
     categories:any;
@@ -81,6 +83,15 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
     subTotal:any;
     totalPrice:any;
     orderId:any;
+    priceMapVariant:any;
+    itemWithinProduct:any;
+    selectedProduct:any = {};
+    currentVariant:any = [];
+    selectedVariantID:any;
+    allVariantObj:any;
+    selectedOption:any;
+    variantOption:any;
+    requestParamVariant:any = [];
 
     constructor(
         private _databindService: DataBindService, 
@@ -559,6 +570,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
         this.catalogueList.map(product => {
             if(product.productId == productid){
                 console.log('selected product: ', product);
+                this.selectedProduct = product
                 this.popupPrice = product.price;
                 this.popupItemCode = product.itemCode;
                 // return this.popupPrice;
@@ -569,6 +581,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
         this.inputQty = 0;
         this.galleryImages = [];
         this.imageCollection = [];
+        this.requestParamVariant = []
 
         this.galleryOptions = [
             {
@@ -631,6 +644,64 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
                 console.log('imageCollection: ', this.imageCollection);
                 
                 this.galleryImages = this.imageCollection
+
+                // this.priceMapVariant = this.detailsObj
+
+                this.itemWithinProduct = this.detailsObj.productInventories
+
+                console.log('item within product: ', this.itemWithinProduct)
+
+                this.currentVariant = []
+
+                // this is redundant, later to be enhanced 
+                let variantOfSelected = this.selectedProduct.productInventoryItems
+
+                variantOfSelected.forEach(variants => {
+
+                    console.log('selected item variant id: ', variants.productVariantAvailableId)
+
+                    this.currentVariant.push(variants.productVariantAvailableId)
+                });
+
+                console.log('current variant obj:', this.currentVariant)
+                // end of redundant code activity 
+
+                // logic to extract current selected variant and to reconstruct new object with its string identifier 
+                let allVariantObjBase = this.detailsObj.productVariants
+
+                console.log('allVariantObjBase: ' , allVariantObjBase)
+
+                allVariantObjBase.map(variantBase => {
+
+                    console.log(variantBase)
+
+                    let productVariantsAvailable = variantBase.productVariantsAvailable
+                    
+                    productVariantsAvailable.forEach(element => {
+                        console.log('element: ' + element.id + " basename: " + variantBase.name)
+
+                        this.currentVariant.map(currentVariant => {
+                            console.log('currentVariant: ', currentVariant)
+
+                            if(currentVariant.indexOf(element.id) > -1){
+                                console.log(element.id + ' exist in array')
+
+                                let data = {
+                                    basename: variantBase.name,
+                                    variantID: element.id,
+                                }
+
+                                this.requestParamVariant.push(data)
+                            }
+                        })
+
+                    })
+
+                })
+
+                console.log('requestParamVariant: ' , this.requestParamVariant)
+
+                // console.log('data: ' , this.allVariantObj)
                 
             } else {
 
@@ -639,6 +710,55 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
         }, error => {
             Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
         }) 
+    }
+
+    onChangeVariant(id, type, productID){
+
+        // alert(id + "|" + type)
+
+        this.requestParamVariant.map( variant => {
+            if(variant.basename == type && variant.variantID != id){
+
+                console.log(variant.variantID + ' (' + type + ') has been replaced with ' + id + '(' + type + ')')
+
+                this.requestParamVariant.find( oldVariant => oldVariant.basename === type).variantID = id
+            }
+            
+        })
+
+        console.log('updated request param: ', this.requestParamVariant)
+
+        this.apiService.getUpdatedByVariant(this.storeID, productID, this.requestParamVariant).subscribe((res: any) => {
+            // console.log('cart item by cart ID: ', res.data.content)
+
+            if (res.message){
+                console.log('getUpdatedByVariant response: ', res.data)
+
+                this.popupPrice = res.data[0].price
+            } 
+
+        }, error => {
+            Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
+        }) 
+
+    }
+
+    getItemByVariant(event, id){
+        alert(id)
+        // this.moreThan = false;
+        console.log(event)
+        this.selectedVariantID = id
+
+        console.log('targer id: ' + event.target.id)
+
+        this.selectedOption = id;
+
+        // if(event.target.id == id){
+        //     event.srcElement.classList.add("active")
+        // }else{
+        //     event.srcElement.classList.remove("active")
+        // }
+  
     }
 
 
