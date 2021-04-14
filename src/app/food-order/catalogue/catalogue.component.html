@@ -39,7 +39,7 @@
         <div class="row" >
             <div class="scrollmenu scrollmobi">
                 <div id="test" *ngFor="let item of categories; let i = index;">
-                    <div class="card" style="border: none; background-color: transparent; height: 50px;">
+                    <div class="card" style="border: none; background-color: transparent; height: 120px;">
 
                         <div (click)="onGetCategoriesItem(item.id)" *ngIf="item.thumbnailUrl; else noImage" class="card-body category shadow-sm" style="margin: 0px; border-radius: 5px; width: 150px; height: 150px; border: 1px solid #ffe259;" [ngStyle]="{'background-image': 'url('+ item.thumbnailUrl +')'}">
                             <span style="margin: 35px;"></span>
@@ -244,25 +244,30 @@
                         </div>
                         <hr>
                         <div class="row">
-                            <div class="col text-center" style="padding-top: 20px;">
-                                <!-- <p>{{ detailsObj.desc }} </p> -->
-                                <div class="row" *ngFor="let item of detailsObj.productVariants; let i = index;" style="padding-bottom: 10px;">
-                                    <p style="margin-left: 10px;">{{ item.name }} : </p>
+                            <div class="col" style="padding-top: 20px;">
+                                <!-- variant option  -->
+                                <fieldset style="padding-left: 50px;" id="m{{variant.name}}" *ngFor="let variant of detailsObj.productVariants; let i = index;">
+                                    <div class="row">
+                                        <label for="m{{variant.name}}" style="font-weight: bold; font-size: 12px;">{{variant.name | uppercase}}</label>
+                                    </div>
 
-                                    <!-- <select name="{{item.name}}" id="{{item.name}}">
-                                        <option *ngFor="let option of item.productVariantsAvailable;">
-                                            {{ option.value | uppercase}}
-                                        </option>
-                                    </select> -->
-                                    <!-- <p class="badge badge-light btn-outline-info border border-info" 
-                                    *ngFor="let option of item.productVariantsAvailable;" 
-                                    style="margin-left: 10px; padding: 10px; cursor: pointer;">
-                                    {{ option.value | uppercase}}</p> -->
-                                </div>
-
-                                <!-- <div class="row">
-                                    Item Code : {{popupItemCode}}
-                                </div> -->
+                                    <div class="row">
+                                        <ul class="donate-now">
+                                            <!-- <form> -->
+                                                <li *ngFor="let option of variant.productVariantsAvailable; let i = index;">
+                                                    <input type="radio" 
+                                                    id="m{{variant.name + i}}" 
+                                                    value="m{{option.value}}" 
+                                                    name="m{{variant.name}}" 
+                                                    [checked]="currentVariant.indexOf(option.id) > -1"
+                                                    (change)="onChangeVariant(option.id, variant.name, option.productId)"
+                                                    >
+                                                    <label for="m{{variant.name + i}}">{{option.value}}</label>
+                                                </li>
+                                            <!-- </form> -->
+                                        </ul>
+                                    </div>
+                                </fieldset>
                             </div>
                         </div>
                         <hr>

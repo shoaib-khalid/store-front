@@ -221,13 +221,12 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
             return false;
         }
 
-        this.priceObj.map(product => {
-            if(product.product_id == productID){
-                // console.log('selected product: ', product);
-                this.popupPrice = product.minPrice;
-                return this.popupPrice;
-            }
-        })
+        // this.priceObj.map(product => {
+        //     if(product.product_id == productID){
+        //         this.popupPrice = product.minPrice;
+        //         return this.popupPrice;
+        //     }
+        // })
 
         let data = {
             "cartId": this.cartID,
@@ -734,7 +733,17 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
             if (res.message){
                 console.log('getUpdatedByVariant response: ', res.data)
 
+                // this.catalogueList.map(product => {
+                //     if(product.productId == productID){
+                //         console.log('selected product: ', product);
+                //         this.selectedProduct = product
+                //         this.popupPrice = product.price;
+                //         this.popupItemCode = product.itemCode;
+                //     }
+                // })
+
                 this.popupPrice = res.data[0].price
+                this.popupItemCode = res.data[0].itemCode
             } 
 
         }, error => {

@@ -31,7 +31,7 @@
   
   .donate-now input[type="radio"]:checked+label,
   .Checked+label {
-    background: yellow;
+    background: #ffb347;
   }
   
   .donate-now label {
