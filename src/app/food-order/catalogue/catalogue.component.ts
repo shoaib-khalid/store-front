@@ -16,6 +16,8 @@ import { NgxGalleryOptions, NgxGalleryImage, NgxGalleryAnimation } from 'ngx-gal
 // import { ucFirst } from 'ngx-pipes/src/ng-pipes/pipes/helpers/helpers';
 import Swal from 'sweetalert2'
 
+import { PlatformLocation } from "@angular/common";
+
 
 
 @Component({
@@ -37,22 +39,22 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
 
     // categories:Category[];
     //   product:Product[];
-    categories:any;
+    categories:any[] = [];
     newCategories:Category[];
-    product:any;
+    product:any[] = [];
     leftNavDisabled = false;
     rightNavDisabled = false;
     idx = 0;
     details: any[] = [];
     modalDataTest:any = [];
     data = {};
-    storeID:any;
+    storeID:any = null;
     priceObj = [];
     clusterPriceArr = [];
     minVal:any;
     detailPrice:any = '0.00';
     galleryImagesInit:any;
-    senderID:any;
+    senderID:any = null;
     refID:any;
     cartExist:boolean = false;
     cartCount:number;
@@ -93,46 +95,168 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
     variantOption:any;
     requestParamVariant:any = [];
 
+    currBaseURL:any;
+    storeName:any;
+    localURL:any;
+
     constructor(
         private _databindService: DataBindService, 
         private route: Router,
         private activatedRoute: ActivatedRoute,
         private mScrollbarService: MalihuScrollbarService,
-        private apiService: ApiService
+        private apiService: ApiService,
+        private platformLocation: PlatformLocation
     ) { 
         
+        // init clear localStorage
+        localStorage.clear();
+
+
         // get url parameter style e.g http://localhost:4200/catalogue?store_id=3
-        this.activatedRoute.queryParams.subscribe(params => {
-            this.refID = params['referenceId'];
-            this.senderID = params['senderId'];
-            this.storeID = params['storeId'];
-            console.log(this.refID + "-" + this.senderID + "-" + this.storeID); // Print the parameter to the console. 
-        });
+        // this.activatedRoute.queryParams.subscribe(params => {
+        //     this.refID = params['referenceId'];
+        //     this.senderID = params['senderId'];
+        //     this.storeID = params['storeId'];
+        //     console.log(this.refID + "-" + this.senderID + "-" + this.storeID); // Print the parameter to the console. 
+        // });
 
         // url path style e.g http://localhost:4200/catalogue/3
         // this.activatedRoute.params.subscribe(params => {
         //     let date = params['store_id'];
         //     console.log(date); // Print the parameter to the console. 
         // });
+
+        // get the store id base on subdomain
+        this.currBaseURL = (this.platformLocation as any).location.origin;
+        this.localURL = this.currBaseURL.match(/localhost/g);
+
+        console.log('Base URL: ' + this.currBaseURL)
+
+        if(this.localURL != null){
+            // use this for localhost
+            // this.storeID = "McD"
+
+            // get url parameter style e.g http://localhost:4200/catalogue?store_id=3
+            this.activatedRoute.queryParams.subscribe(params => {
+                this.refID = params['referenceId'];
+                this.senderID = params['senderId'];
+                this.storeID = params['storeId'];
+                console.log(this.refID + "-" + this.senderID + "-" + this.storeID); // Print the parameter to the console. 
+            });
+
+            console.log('Location: Staging')
+        }else{
+            console.log('Location: Prod')
+            var host = this.currBaseURL
+            var subdomain = host.split('.')[0]
+
+            console.log('subdomain: ' + subdomain)
+            console.log('removed https: ' + subdomain.replace(/^(https?:|)\/\//, ''))
+
+            this.storeName = subdomain.replace(/^(https?:|)\/\//, '')
+
+            // this.storeName = "mcd";
+            console.log('storename: ' + this.storeName)
+
+            // get url parameter style e.g http://localhost:4200/catalogue?store_id=3
+            this.activatedRoute.queryParams.subscribe(params => {
+                this.senderID = params['senderId'];
+                console.log('customerID: ' + this.senderID); // Print the parameter to the console. 
+            });
+
+        }
+
     }
 
     ngOnInit(): void {
-        localStorage.setItem('ref_id', this.refID);     // reference
-        localStorage.setItem('sender_id', this.senderID);   //customer
-        localStorage.setItem('store_id', this.storeID);    // storeid
+
+        console.log('ngOnInit started...');
+
+        // (async () => { 
+        //     // Do something before delay
+        //     console.log('before delay')
+    
+        //     await this.delay(1000);
+    
+        //     // Do something after
+        //     console.log('after delay')
+
+        // })();
+
+        // this is for initial base setup 
+        if(this.localURL != null){
+
+            //Staging
+
+            this.getProduct();
+
+            this.getCategory();
+
+            if(this.senderID != null){
+                this.checkCart();
+            }else{
+                this.anonymouseFlow();
+            }
+            
+        }else{
+            // Production
+            this.getMerchantInfo(this.storeName)
+        }
+
+        
+
+        // localStorage.setItem('ref_id', this.refID);     // reference
+        // localStorage.setItem('sender_id', this.senderID);   //customer
+        // localStorage.setItem('store_id', this.storeID);    // storeid
 
         // this.product = this._databindService.getProduct();
         // this.categories = this._databindService.getCategories();
-        this.modalDataTest = this._databindService.getProduct();
+        // this.modalDataTest = this._databindService.getProduct();
 
         // console.log('modal details: ', this.details);
-        
-        this.getProduct();
-        // this.getProductNew();
-        this.getCategory();
 
-        // check cart first 
-        this.checkCart();
+    }
+
+    delay(ms: number) {
+        return new Promise( resolve => setTimeout(resolve, ms) );
+    }
+
+    getMerchantInfo(storename){
+
+        this.apiService.getStoreInfo(storename).subscribe((res: any) => {
+            console.log('store information: ', res.data.content)
+
+            let data = res.data.content[0]
+            let exist = data.length
+
+            if (res.message){
+
+                if(exist == 0){
+                    Swal.fire("Ops!", "Store information not exist!", "error")
+
+                    return false
+                }
+
+                this.storeID = data.id;
+
+                this.getProduct();
+                // this.getProductNew();
+                this.getCategory();
+
+                // check cart first 
+                this.checkCart();
+
+                console.log('id: ' + this.storeID)
+
+            } else {
+                Swal.fire("Great!", "Item failed", "error")
+            }
+
+        }, error => {
+            Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
+        }) 
+
+        localStorage.setItem('store_id', this.storeID);
 
     }
   
@@ -149,6 +273,10 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
 
     goToCheckout(){
         this.route.navigate(['checkout']);
+    }
+
+    anonymouseFlow(){
+
     }
 
     checkCart(){
@@ -320,6 +448,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
         
                                         }, error => {
                                             Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
+                                            console.log('failed at postAddToCart')
                                         }) 
             
                                     } else {
@@ -328,6 +457,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
             
                                 }, error => {
                                     Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
+                                    console.log('failed at getCartItemByCartID')
                                 }) 
             
                             }else{
@@ -339,6 +469,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
                         }
                     }, error => {
                         Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
+                        console.log('failed at getCartList')
                     }) 
 
                 }else{
@@ -347,6 +478,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
 
             }, error => {
                 Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
+                console.log('failed at postCreateCart')
             }) 
         }  
     }

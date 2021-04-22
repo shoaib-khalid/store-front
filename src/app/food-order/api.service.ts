@@ -40,24 +40,24 @@ export class ApiService {
         if (prodURL != null) {
             // later if we have new production endpoint, kindly change all the endpoint under prodURL section 
             this.userServiceURL = "http://209.58.160.20:20921/";
-            this.productServiceURL = "http://symplified.ai:7071/";
+            this.productServiceURL = "https://api.symplified.biz/v1/product-service/";
             this.payServiceURL = "https://209.58.160.20:6001/";
-            this.orderServiceURL = "http://209.58.160.20:7072/";
-            this.deliveryServiceURL = "http://209.58.160.20:5000/";
+            this.orderServiceURL = "https://api.symplified.biz/v1/order-service/";
+            this.deliveryServiceURL = "https://api.symplified.biz/v1/delivery-service/";
 
         } else if (stagingURL != null) {
             this.userServiceURL = "http://209.58.160.20:20921/";
-            this.productServiceURL = "http://symplified.ai:7071/";
+            this.productServiceURL = "https://api.symplified.biz/v1/product-service/";
             this.payServiceURL = "https://209.58.160.20:6001/";
-            this.orderServiceURL = "http://209.58.160.20:7072/";
-            this.deliveryServiceURL = "http://209.58.160.20:5000/";
+            this.orderServiceURL = "https://api.symplified.biz/v1/order-service/";
+            this.deliveryServiceURL = "https://api.symplified.biz/v1/delivery-service/";
 
         } else {
             this.userServiceURL = "http://209.58.160.20:20921/";
-            this.productServiceURL = "http://symplified.ai:7071/";
+            this.productServiceURL = "https://api.symplified.biz/v1/product-service/";
             this.payServiceURL = "https://209.58.160.20:6001/";
-            this.orderServiceURL = "http://209.58.160.20:7072/";
-            this.deliveryServiceURL = "http://209.58.160.20:5000/";
+            this.orderServiceURL = "https://api.symplified.biz/v1/order-service/";
+            this.deliveryServiceURL = "https://api.symplified.biz/v1/delivery-service//";
         }
     }
 
@@ -77,6 +77,18 @@ export class ApiService {
         storeID;
         return this.http.get(this.productServiceURL + url, header);
     }
+
+    getStoreInfo(storename) {
+        const header = {
+            headers: new HttpHeaders().set("Authorization", `Bearer ${this.token}`),
+        };
+        const url =
+            "stores?name=" + storename +
+            "&page=0" +
+            "&pageSize=20";
+
+            return this.http.get(this.productServiceURL + url, header);
+        }
 
     // http://symplified.ai:7071/products/BeefBiryani?featured=true&page=0&pageSize=20
     getProductSByProductID(productID) {
