@@ -72,10 +72,18 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
         this.senderID = localStorage.getItem('sender_id');
         this.refID = localStorage.getItem('ref_id');
         this.storeID = localStorage.getItem('store_id');
-        this.cartID = localStorage.getItem('cart_id');
+
+        if(this.senderID === 'undefined'){
+            this.cartID = localStorage.getItem("anonym_cart_id")
+            console.log('cart id anonymous session' + this.cartID)
+        }else{
+            this.cartID = localStorage.getItem('cart_id');
+            console.log('cart id session' + this.cartID)
+        }
+        
         // this.orderID = localStorage.getItem('order_id')
 
-        // console.log(this.refID + "-" + this.senderID + "-" + this.storeID);
+        console.log('session: ' + this.senderID + "-" + this.storeID + "-" + this.cartID);
 
         // dummy total, if u delete this view will crash and checkCart() will not be called, later to enhance
         // this.cartList = this._databindService.getCartList();
@@ -84,7 +92,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
         
         this.checkCart();
 
-        this.spinner.show();
+        // this.spinner.show();
     }
 
     ngAfterViewInit(){
@@ -164,6 +172,8 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
 
                 let price = allItem.price
 
+                console.log('price: ' + price)
+
                 if(itemCode == allItem.itemCode){
 
                     let data = {
@@ -179,7 +189,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
                     }
 
                     this.apiService.postAddItemToOrder(data).subscribe((res: any) => {
-            
+                        console.log('add item to order loop: ', res)
                         if (res.message){
                             console.log('item succesfully added: ' + itemCode)
                         } else {
@@ -191,10 +201,13 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
                     // start the loading 
                     this.visible = true;
 
-                    this.goPay()
+                    
                 }
             });
+
         })
+
+        this.goPay()
     }
 
     getProduct(){
@@ -286,7 +299,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
             "productCode": "document",
             "systemTransactionId": this.trxid,
             "transactionId": this.trxid,	
-            "paymentAmount": 3
+            "paymentAmount": this.totalPrice
         }
 
         this.apiService.postPaymentLink(data).subscribe((res: any) => {
@@ -297,6 +310,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
                 // window.open(paymentLink, "_blank");
 
                 // this.visible = false
+                // console.log('goto pay mobi: ' + paymentLink)
                 window.location.href = paymentLink;
                 
             } 

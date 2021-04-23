@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy, HostListener } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 
 import { Category } from './food-order/../../models/Category';
@@ -26,6 +26,11 @@ import { PlatformLocation } from "@angular/common";
   styleUrls: ['./catalogue.component.css']
 })
 export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
+
+    // @HostListener("window:onbeforeunload",["$event"])
+    // clearLocalStorage(event){
+    //     localStorage.clear();
+    // }
 
     iconEye = faEye;
     iconCart = faShoppingCart;
@@ -109,7 +114,8 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
     ) { 
         
         // init clear localStorage
-        localStorage.clear();
+        // localStorage.clear();
+        
 
 
         // get url parameter style e.g http://localhost:4200/catalogue?store_id=3
@@ -134,15 +140,19 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
 
         if(this.localURL != null){
             // use this for localhost
-            // this.storeID = "McD"
+            this.storeID = "McD"
+            this.storeName = "mcd"
 
             // get url parameter style e.g http://localhost:4200/catalogue?store_id=3
             this.activatedRoute.queryParams.subscribe(params => {
                 this.refID = params['referenceId'];
                 this.senderID = params['senderId'];
-                this.storeID = params['storeId'];
+                // this.storeID = params['storeId'];
                 console.log(this.refID + "-" + this.senderID + "-" + this.storeID); // Print the parameter to the console. 
             });
+
+            localStorage.setItem('store_id', this.storeID)
+            localStorage.setItem('sender_id', this.senderID)
 
             console.log('Location: Staging')
         }else{
@@ -164,6 +174,8 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
                 console.log('customerID: ' + this.senderID); // Print the parameter to the console. 
             });
 
+            localStorage.setItem('sender_id', this.senderID)
+
         }
 
     }
@@ -171,17 +183,6 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
     ngOnInit(): void {
 
         console.log('ngOnInit started...');
-
-        // (async () => { 
-        //     // Do something before delay
-        //     console.log('before delay')
-    
-        //     await this.delay(1000);
-    
-        //     // Do something after
-        //     console.log('after delay')
-
-        // })();
 
         // this is for initial base setup 
         if(this.localURL != null){
@@ -192,10 +193,23 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
 
             this.getCategory();
 
-            if(this.senderID != null){
+            if(this.senderID){
                 this.checkCart();
+                console.log('senderId exist!' + this.senderID)
             }else{
-                this.anonymouseFlow();
+
+                // sessionStorage = only for current browser, The data survives page refresh, but not closing/opening the tab
+                // localStorage = The data does not expire. It remains after the browser restart and even OS reboot. Shared between all tabs and windows from the same origin.
+                this.cartID = localStorage.getItem("anonym_cart_id")
+                // var sesStoreName = localStorage.getItem('store_name')
+
+                if(this.cartID){
+                    this.getItemDetails(this.cartID)
+                }else{
+                    this.cartitemDetailsCount = 0;
+                }
+
+                console.log('you are anonymous')
             }
             
         }else{
@@ -203,23 +217,127 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
             this.getMerchantInfo(this.storeName)
         }
 
-        
+    }
 
-        // localStorage.setItem('ref_id', this.refID);     // reference
-        // localStorage.setItem('sender_id', this.senderID);   //customer
-        // localStorage.setItem('store_id', this.storeID);    // storeid
+    async flow_anonymCheckCartItem(){
 
-        // this.product = this._databindService.getProduct();
-        // this.categories = this._databindService.getCategories();
-        // this.modalDataTest = this._databindService.getProduct();
+        const created_cart = await this.createCart()
+        console.log("creating anonymous cart finished...", created_cart)
+        this.cartID = created_cart['id'];
 
-        // console.log('modal details: ', this.details);
+        await this.checkCartItemByID(this.cartID)
+        console.log("checking cart item["+ this.cartID+"] is finished...")
 
     }
 
-    delay(ms: number) {
-        return new Promise( resolve => setTimeout(resolve, ms) );
+    async flow_anonymAddToCart(itemCode, productID, qty){
+
+        console.log("init flow_anonymAddToCart.... ")
+
+        // var sesStoreName = localStorage.getItem('store_name')
+
+        if(!this.cartID){
+            console.log('cart session not exist')
+            const created_cart = await this.createCart()
+            console.log("creating anonymous cart finished...", created_cart)
+            this.cartID = created_cart['id'];
+            localStorage.setItem('anonym_cart_id', this.cartID)
+            // localStorage.setItem('store_name', this.storeName)
+            this.cartExist = true
+            console.log('created cart id: ' + this.cartID)
+        }
+
+        const add_item = await this.addItemToCart(this.cartID, itemCode, productID, qty)
+        console.log("item added to cart...")
+        console.log("add item details ", add_item )
+
+        const count_cart = await this.getItemDetails(this.cartID)
+        console.log("starting to get cart item details...")
+        console.log("cart item details ", count_cart)
+        console.log("cart item count is " + count_cart['length'])
+
     }
+
+    getItemDetails(cartID){
+
+        return new Promise(resolve => {
+
+            // check count Item in Cart 
+            this.apiService.getCartItemByCartID(cartID).subscribe((res: any) => {
+                // console.log('cart item by cart ID 3: ', res.data.content)
+
+                resolve(res.data.content)
+
+                if (res.message){
+                    this.cartitemDetails = res.data.content;
+                    this.cartitemDetailsCount = this.cartitemDetails.length;
+
+                    this.inputQty = 0;
+                }
+
+            }, error => {
+                Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
+
+            }) 
+            
+        });
+
+    }
+
+    addItemToCart(cartID, itemCode, productID, qty){
+        console.log("starting to add item to cart...")
+        return new Promise(resolve => {
+
+
+            let data = {
+                "cartId": cartID,
+                "id": "",
+                "itemCode": itemCode,
+                "productId": productID,
+                "quantity": qty
+            }
+
+            // add to cart 
+            this.apiService.postAddToCart(data).subscribe((res: any) => {
+                
+                resolve(res.data)
+
+                Swal.fire("Great!", "Item successfully added to cart", "success")
+
+            }, error => {
+                Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
+            }) 
+                
+        });
+
+    }
+
+    createCart(){
+        console.log("creating anonymous cart...")
+
+        return new Promise(resolve => {
+
+            let data = {
+                "created": "2021-04-01T04:51:01.765Z",
+                "customerId": this.senderID,
+                "id": "",
+                "storeId": this.storeID,
+                "updated": "2021-04-01T04:51:01.765Z"
+            }
+
+            this.apiService.postCreateCart(data).subscribe((res: any) => {
+                // resolve hold data as return 
+                resolve(res.data)
+
+            }, error => {
+                Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
+                // console.log('failed at postCreateCart')
+            }) 
+            
+        });
+
+    }
+
 
     getMerchantInfo(storename){
 
@@ -266,17 +384,36 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     ngOnDestroy() {
-        // custom cleanup
+        // custom cleanup upon closing browser tab
         // this.mScrollbarService.destroy(document.body);
         this.mScrollbarService.destroy('#scrollable2');
+        // localStorage.clear();
+
     }
 
     goToCheckout(){
+
+        console.log(this.senderID+"-"+this.cartID+"-"+this.storeID)
+
         this.route.navigate(['checkout']);
     }
 
-    anonymouseFlow(){
+    checkCartItemByID(cartID){
+        // check count Item in Cart 
+        this.apiService.getCartItemByCartID(cartID).subscribe((res: any) => {
+            console.log('cart item by cart ID 1: ', res.data.content)
 
+            if (res.message){
+                this.cartitemDetails = res.data.content;
+                this.cartitemDetailsCount = this.cartitemDetails.length;
+
+            } else {
+
+            }
+
+        }, error => {
+            console.log(error)
+        }) 
     }
 
     checkCart(){
@@ -301,21 +438,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
 
                     console.log('cart id : ' + this.cartID)
 
-                    // check count Item in Cart 
-                    this.apiService.getCartItemByCartID(this.cartID).subscribe((res: any) => {
-                        console.log('cart item by cart ID 1: ', res.data.content)
-
-                        if (res.message){
-                            this.cartitemDetails = res.data.content;
-                            this.cartitemDetailsCount = this.cartitemDetails.length;
-
-                        } else {
-
-                        }
-
-                    }, error => {
-                        console.log(error)
-                    }) 
+                    this.checkCartItemByID(this.cartID)
 
                 }else{
                     this.cartitemDetailsCount = 0;
@@ -328,6 +451,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
             console.log(error)
         }) 
     }
+
 
     addToCart(event, productID, itemCode, option){
 
@@ -348,13 +472,6 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
             this.inputQty = 0;
             return false;
         }
-
-        // this.priceObj.map(product => {
-        //     if(product.product_id == productID){
-        //         this.popupPrice = product.minPrice;
-        //         return this.popupPrice;
-        //     }
-        // })
 
         let data = {
             "cartId": this.cartID,
@@ -405,81 +522,90 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
 
         }else{
 
-            let data = {
-                "created": "2021-04-01T04:51:01.765Z",
-                "customerId": this.senderID,
-                "id": "",
-                "storeId": this.storeID,
-                "updated": "2021-04-01T04:51:01.765Z"
+            if(this.senderID){
+
+                let new_data = {
+                    "created": "2021-04-01T04:51:01.765Z",
+                    "customerId": this.senderID,
+                    "id": "",
+                    "storeId": this.storeID,
+                    "updated": "2021-04-01T04:51:01.765Z"
+                }
+    
+                this.apiService.postCreateCart(new_data).subscribe((res: any) => {
+                    console.log('creating cart: ', res)
+    
+                    if (res.message){
+    
+                        this.apiService.getCartList(this.senderID, this.storeID).subscribe((res: any) => {
+    
+                            console.log('cart obj: ', res.data.content)
+                            if (res.message){
+                
+                                this.cart = res.data.content;
+                                // if cart empty then initiate cart API
+                                this.cartCount = this.cart.length;
+                
+                                if(this.cartCount > 0){
+                                    this.cartExist = true;
+                
+                                    this.cartID = this.cart[0].id;
+                                    localStorage.setItem('cart_id', this.cartID);
+                
+                                    console.log('cart id : ' + this.cartID)
+                
+                                    // check count Item in Cart 
+                                    this.apiService.getCartItemByCartID(this.cartID).subscribe((res: any) => {
+                                        console.log('cart item by cart ID 3: ', res.data.content)
+                
+                                        if (res.message){
+                                            this.cartitemDetails = res.data.content;
+                                            this.cartitemDetailsCount = this.cartitemDetails.length;
+            
+                                            // add to cart 
+                                            this.apiService.postAddToCart(data).subscribe((res: any) => {
+            
+                                            }, error => {
+                                                Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
+                                                console.log('failed at postAddToCart')
+                                            }) 
+                
+                                        } else {
+                
+                                        }
+                
+                                    }, error => {
+                                        Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
+                                        console.log('failed at getCartItemByCartID')
+                                    }) 
+                
+                                }else{
+                                    this.cartitemDetailsCount = 0;
+                                }
+                                
+                            }else{
+                
+                            }
+                        }, error => {
+                            Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
+                            console.log('failed at getCartList')
+                        }) 
+    
+                    }else{
+    
+                    }
+    
+                }, error => {
+                    Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
+                    console.log('failed at postCreateCart')
+                }) 
+
+                
+            }else{
+                this.flow_anonymAddToCart(itemCode, productID, qty)
             }
 
-            this.apiService.postCreateCart(data).subscribe((res: any) => {
-                console.log('creating cart: ', res.data.content)
-
-                if (res.message){
-
-                    this.apiService.getCartList(this.senderID, this.storeID).subscribe((res: any) => {
-
-                        console.log('cart obj: ', res.data.content)
-                        if (res.message){
             
-                            this.cart = res.data.content;
-                            // if cart empty then initiate cart API
-                            this.cartCount = this.cart.length;
-            
-                            if(this.cartCount > 0){
-                                this.cartExist = true;
-            
-                                this.cartID = this.cart[0].id;
-                                localStorage.setItem('cart_id', this.cartID);
-            
-                                console.log('cart id : ' + this.cartID)
-            
-                                // check count Item in Cart 
-                                this.apiService.getCartItemByCartID(this.cartID).subscribe((res: any) => {
-                                    console.log('cart item by cart ID 3: ', res.data.content)
-            
-                                    if (res.message){
-                                        this.cartitemDetails = res.data.content;
-                                        this.cartitemDetailsCount = this.cartitemDetails.length;
-        
-                                        // add to cart 
-                                        this.apiService.postAddToCart(data).subscribe((res: any) => {
-        
-                                        }, error => {
-                                            Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
-                                            console.log('failed at postAddToCart')
-                                        }) 
-            
-                                    } else {
-            
-                                    }
-            
-                                }, error => {
-                                    Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
-                                    console.log('failed at getCartItemByCartID')
-                                }) 
-            
-                            }else{
-                                this.cartitemDetailsCount = 0;
-                            }
-                            
-                        }else{
-            
-                        }
-                    }, error => {
-                        Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
-                        console.log('failed at getCartList')
-                    }) 
-
-                }else{
-
-                }
-
-            }, error => {
-                Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
-                console.log('failed at postCreateCart')
-            }) 
         }  
     }
 
