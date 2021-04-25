@@ -110,7 +110,6 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
     showSpinner() {
         // visible return true 
         this.visible = true;
-        
 
         // calling function after 2 second 
         setTimeout(() => {;

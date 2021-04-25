@@ -33,7 +33,7 @@ export class ApiService {
         // console.log((this.platformLocation as any).location.origin);
         this.currBaseURL = (this.platformLocation as any).location.origin;
 
-        let prodURL = this.currBaseURL.match(/symplified.ai/g);
+        let prodURL = this.currBaseURL.match(/symplified.store/g);
         let stagingURL = this.currBaseURL.match(/sandbox.symplified.ai/g);
         let localURL = this.currBaseURL.match(/localhost/g);
 
@@ -43,8 +43,8 @@ export class ApiService {
             this.productServiceURL = "https://api.symplified.biz/v1/product-service/";
             // this.payServiceURL = "https://209.58.160.20:6001/";
             this.payServiceURL = "https://api.symplified.biz/v1/payment-service/"
-            // this.orderServiceURL = "https://api.symplified.biz/v1/order-service/";
-            this.orderServiceURL = "http://209.58.160.20:7072/";
+            this.orderServiceURL = "https://api.symplified.biz/v1/order-service/";
+            // this.orderServiceURL = "http://209.58.160.20:7072/";
             this.deliveryServiceURL = "https://api.symplified.biz/v1/delivery-service/";
 
         } else if (stagingURL != null) {
@@ -52,8 +52,8 @@ export class ApiService {
             this.productServiceURL = "https://api.symplified.biz/v1/product-service/";
             // this.payServiceURL = "https://209.58.160.20:6001/";
             this.payServiceURL = "https://api.symplified.biz/v1/payment-service/"
-            // this.orderServiceURL = "https://api.symplified.biz/v1/order-service/";
-            this.orderServiceURL = "http://209.58.160.20:7072/";
+            this.orderServiceURL = "https://api.symplified.biz/v1/order-service/";
+            // this.orderServiceURL = "http://209.58.160.20:7072/";
             this.deliveryServiceURL = "https://api.symplified.biz/v1/delivery-service/";
 
         } else {
@@ -61,8 +61,8 @@ export class ApiService {
             this.productServiceURL = "https://api.symplified.biz/v1/product-service/";
             // this.payServiceURL = "https://209.58.160.20:6001/";
             this.payServiceURL = "https://api.symplified.biz/v1/payment-service/"
-            // this.orderServiceURL = "https://api.symplified.biz/v1/order-service/";
-            this.orderServiceURL = "http://209.58.160.20:7072/";
+            this.orderServiceURL = "https://api.symplified.biz/v1/order-service/";
+            // this.orderServiceURL = "http://209.58.160.20:7072/";
             this.deliveryServiceURL = "https://api.symplified.biz/v1/delivery-service/";
         }
     }
@@ -287,7 +287,7 @@ export class ApiService {
             })
         }
 
-        const url = this.orderServiceURL + "carts/" + data.orderId + "/items";
+        const url = this.orderServiceURL + "orders/" + data.orderId + "/items";
 
         return this.http.post(url, data, httpOptions);
 

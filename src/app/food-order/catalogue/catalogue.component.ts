@@ -140,12 +140,12 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
 
         if(this.localURL != null){
             // use this for localhost
-            this.storeID = "McD"
+            this.storeID = "af2cda1a-d4ac-4a9e-b51b-fc5b32578e5a"
             this.storeName = "mcd"
 
             // get url parameter style e.g http://localhost:4200/catalogue?store_id=3
             this.activatedRoute.queryParams.subscribe(params => {
-                this.refID = params['referenceId'];
+                // this.refID = params['referenceId'];
                 this.senderID = params['senderId'];
                 // this.storeID = params['storeId'];
                 console.log(this.refID + "-" + this.senderID + "-" + this.storeID); // Print the parameter to the console. 
@@ -214,6 +214,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
             
         }else{
             // Production
+            console.log('getMerchantInfo started...')
             this.getMerchantInfo(this.storeName)
         }
 
@@ -362,9 +363,31 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.getCategory();
 
                 // check cart first 
-                this.checkCart();
+                // this.checkCart();
+
+                //add block prod here
+
+                if(this.senderID){
+                    this.checkCart();
+                    console.log('senderId exist!' + this.senderID)
+                }else{
+    
+                    // sessionStorage = only for current browser, The data survives page refresh, but not closing/opening the tab
+                    // localStorage = The data does not expire. It remains after the browser restart and even OS reboot. Shared between all tabs and windows from the same origin.
+                    this.cartID = localStorage.getItem("anonym_cart_id")
+                    // var sesStoreName = localStorage.getItem('store_name')
+    
+                    if(this.cartID){
+                        this.getItemDetails(this.cartID)
+                    }else{
+                        this.cartitemDetailsCount = 0;
+                    }
+    
+                    console.log('you are anonymous')
+                }
 
                 console.log('id: ' + this.storeID)
+                localStorage.setItem('store_id', this.storeID);
 
             } else {
                 Swal.fire("Great!", "Item failed", "error")
@@ -373,8 +396,6 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
         }, error => {
             Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
         }) 
-
-        localStorage.setItem('store_id', this.storeID);
 
     }
   

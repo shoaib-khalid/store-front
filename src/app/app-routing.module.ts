@@ -7,15 +7,16 @@ import { ThankyouComponent } from './food-order/thankyou/thankyou.component'
 
 const routes: Routes = [
 
-    { path: "", redirectTo: "catalogue", pathMatch: "full" },
-    { path: "catalogue", component: StepCatalogueComponent },
+    // { path: "", redirectTo: "catalogue", pathMatch: "full" },
+    { path: "", component: StepCatalogueComponent },
     // { path: "catalogue/:referenceId/:senderId/:storeId", component: StepCatalogueComponent },
     { path: "checkout", component: StepCheckoutComponent },
     // { path: "thankyou/:txid/:refId/:status", component: ThankyouComponent },
     { path: "thankyou", component: ThankyouComponent },
     // http://209.58.160.20:8090/thankyou?txid=PY160321055629630e&refId=R123123111&status=SUCCESS
+    // { path: "product/:category/:senderId/:storeId", component: StepCatalogueComponent },
 
-    { path: "**", redirectTo: "/catalogue" }
+    { path: "**", redirectTo: "" }
 ];
 // http://209.58.160.20:8090/catalogue?referenceId=1234&senderId=5678&storeId=9101
 @NgModule({
