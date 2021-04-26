@@ -138,6 +138,25 @@ export class ApiService {
         return this.http.get(this.productServiceURL + url, header);
     }
 
+    getProductSByName(name, store_id) {
+        const header = {
+            headers: new HttpHeaders().set("Authorization", `Bearer ${this.token}`),
+        };
+
+        const url =
+            "stores/" + store_id +
+            "/products?" +
+            "&featured=true" +
+            "&page=0" +
+            "&pageSize=20" +
+            "&name=" +
+            name;
+
+        console.log('URL: ' + this.productServiceURL + url)
+
+        return this.http.get(this.productServiceURL + url, header);
+    }
+
     getCartList(customerID, storeID) {
         const header = {
             headers: new HttpHeaders().set("Authorization", `Bearer ${this.token}`),

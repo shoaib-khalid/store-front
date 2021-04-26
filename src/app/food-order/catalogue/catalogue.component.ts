@@ -104,6 +104,8 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
     storeName:any;
     localURL:any;
 
+    has_storeId:boolean = false;
+
     constructor(
         private _databindService: DataBindService, 
         private route: Router,
@@ -140,7 +142,8 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
 
         if(this.localURL != null){
             // use this for localhost
-            this.storeID = "af2cda1a-d4ac-4a9e-b51b-fc5b32578e5a"
+            this.storeID = "a6df650a-3792-4dc8-b3de-92508357276b"
+            // this.storeID = 'McD'
             this.storeName = "mcd"
 
             // get url parameter style e.g http://localhost:4200/catalogue?store_id=3
@@ -171,6 +174,13 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
             // get url parameter style e.g http://localhost:4200/catalogue?store_id=3
             this.activatedRoute.queryParams.subscribe(params => {
                 this.senderID = params['senderId'];
+                this.storeID = params['storeId'];
+
+                if(this.storeID){
+                    this.has_storeId = true
+                }
+
+                console.log('has query param store id? ' + this.has_storeId)
                 console.log('customerID: ' + this.senderID); // Print the parameter to the console. 
             });
 
@@ -215,7 +225,13 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
         }else{
             // Production
             console.log('getMerchantInfo started...')
-            this.getMerchantInfo(this.storeName)
+            
+            if(this.has_storeId == false){
+                this.getMerchantInfo(this.storeName)
+            }else{
+                this.skipMerchantInfo()
+            }
+
         }
 
     }
@@ -398,17 +414,50 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
         }) 
 
     }
+
+    skipMerchantInfo(){
+        this.getProduct();
+        // this.getProductNew();
+        this.getCategory();
+
+        // check cart first 
+        // this.checkCart();
+
+        //add block prod here
+
+        if(this.senderID){
+            this.checkCart();
+            console.log('senderId exist!' + this.senderID)
+        }else{
+
+            // sessionStorage = only for current browser, The data survives page refresh, but not closing/opening the tab
+            // localStorage = The data does not expire. It remains after the browser restart and even OS reboot. Shared between all tabs and windows from the same origin.
+            this.cartID = localStorage.getItem("anonym_cart_id")
+            // var sesStoreName = localStorage.getItem('store_name')
+
+            if(this.cartID){
+                this.getItemDetails(this.cartID)
+            }else{
+                this.cartitemDetailsCount = 0;
+            }
+
+            console.log('you are anonymous')
+        }
+
+        console.log('id: ' + this.storeID)
+        localStorage.setItem('store_id', this.storeID);
+    }
   
     ngAfterViewInit(){
         // this.mScrollbarService.initScrollbar(document.body, { axis: 'y', theme: 'dark-3', scrollButtons: { enable: true } });
-        this.mScrollbarService.initScrollbar('#scrollable2', { axis: 'x', theme: 'dark-thin', scrollButtons: { enable: true } });
+        // this.mScrollbarService.initScrollbar('#scrollable2', { axis: 'x', theme: 'dark-thin', scrollButtons: { enable: true } });
     }
 
     ngOnDestroy() {
         // custom cleanup upon closing browser tab
         // this.mScrollbarService.destroy(document.body);
-        this.mScrollbarService.destroy('#scrollable2');
-        // localStorage.clear();
+        // this.mScrollbarService.destroy('#scrollable2');
+
 
     }
 

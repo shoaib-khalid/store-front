@@ -1,0 +1,66 @@
+.cover-div {
+    height: 100vh !important;
+}   
+
+.header {
+    background: #ffb347;
+    /* position: fixed; */
+    left: 0;
+    right: 0;
+    top: 0;
+    height: 60px;
+    /* border-top: 1px solid rgb(207, 136, 3); */
+    margin-bottom: 50px;
+    /* border-top-left-radius: 10px; */
+    /* border-top-right-radius: 10px; */
+}   
+
+/* variant */
+
+.donate-now {
+    list-style-type: none;
+    margin: 0 0 10px 0;
+    padding: 0;
+  }
+  
+  .donate-now li {
+    float: left;
+    margin: 0 5px 0 0;
+    width: 100px;
+    height: 40px;
+    position: relative;
+  }
+  
+  .donate-now label,
+  .donate-now input {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 15px;
+  }
+  
+  .donate-now input[type="radio"] {
+    opacity: 0.01;
+    z-index: 100;
+  }
+  
+  .donate-now input[type="radio"]:checked+label,
+  .Checked+label {
+    background: #ffb347;
+  }
+  
+  .donate-now label {
+    padding: 5px;
+    border: 1px solid #CCC;
+    cursor: pointer;
+    z-index: 90;
+  }
+  
+  .donate-now label:hover {
+    background: #f9f9f9;
+  }
+
+  /* end of variant */

@@ -1,1 +1,81 @@
-<p>product-details works!</p>
+
+
+
+<section class="cover-div">
+    <!-- <div class="header"></div> -->
+    <div class="container-fluid">
+        <div class="row" style="height: 100vh;">
+            <div class="col-lg-7 col-md-7 col-xs-12 col-sm-12" style="text-align: center; padding: 50px 0px 25px 0px; background-color: #f9f9f9; ">
+                <ngx-gallery [options]="galleryOptions" [images]="galleryImages"></ngx-gallery>
+            </div>
+            <div class="col-lg-5 col-md-5 col-xs-12 col-sm-12" style="background-color: #FFF0C2; padding: 25px 25px 25px 25px;">
+
+                <h5 class="font-weight-bold text-center">{{detailsObj.name | uppercase}}</h5>
+                <div style="padding-top: 25px; padding-bottom: 25px;" class="text-justify">
+                    <span style="font-size: 13px;">
+                        {{detailsObj.description}}
+                    </span>
+                </div>
+                <!-- variant option  -->
+                <fieldset id="{{variant.name}}" *ngFor="let variant of detailsObj.productVariants; let i = index;" style="margin-top: 15px;">
+                    <div class="row">
+                        <div class="col">
+                            <label for="{{variant.name}}" style="font-weight: bold; font-size: 12px;">{{variant.name | uppercase}} : </label>
+                        </div>
+                       
+                    </div>
+
+                    <div class="row text-center">
+                        <div class="col text-center">
+                            <ul class="donate-now">
+                                <li *ngFor="let option of variant.productVariantsAvailable; let i = index;">
+                                    <input type="radio" 
+                                    id="{{variant.name + i}}" 
+                                    value="{{option.value}}" 
+                                    name="{{variant.name}}" 
+                                    [checked]="currentVariant.indexOf(option.id) > -1"
+                                    (change)="onChangeVariant(option.id, variant.name, option.productId)"
+                                    >
+                                    <label for="{{variant.name + i}}">{{option.value}}</label>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <div class="row" style="margin-top: 50px; margin-bottom: 50px;">
+                    <div class="col-lg-6 col-md-6 col-xs-12 col-sm-12 text-center">
+                        <h5 class="font-weight-bold">PRICE : RM {{ productPrice | number: '1.2-2' }}</h5>
+                        <!-- <br> -->
+                        
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-xs-12 col-sm-12">
+                        <form action="
+                        ">
+                            <ng-number-picker 
+                            name="inputQty" 
+                            [(ngModel)]="inputQty" 
+                            [(value)]="inputQty" 
+                            [min]="0" [max]="100" 
+                            [postfix]="'unit'" 
+                            [size]="'sm'"></ng-number-picker>
+                        </form>
+                        <!-- <button type="button" class="btn btn-warning btn-block">Add to Cart</button> -->
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col">
+                        <button (click)="addToCart()" type="button" class="btn btn-warning btn-sm btn-block">Add to Cart&nbsp;<fa-icon [icon]="iconCart"></fa-icon></button>
+                    </div>
+                    <div class="col">
+                        <button type="button" class="btn btn-success btn-sm btn-block">Next&nbsp;<fa-icon [icon]="iconBag"></fa-icon></button>
+                    </div>
+                </div>
+                
+            </div>
+            <!-- <div class="col-4" style="background-color: yellowgreen; height: 50px;"></div> -->
+        </div>
+    </div>
+</section>
+

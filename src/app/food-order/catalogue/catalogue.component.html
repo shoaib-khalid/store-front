@@ -106,8 +106,9 @@
                 <div class="card-body" style="font-size: 13px;">
                     <div class="row">
                         <div class="col-4">
-                            <div *ngIf="(item.thumbnailUrl); else noImage">
-                                <img class="card-img-top img-icon" src="{{ item.thumbnailUrl }}" alt="Card image cap">
+                            <div *ngIf="(item.productAssets); else noImage">
+                                <img class="card-img-top img-icon" src="{{ item.productAssets[0].url }}" alt="Card image cap">
+                                <!-- <span>test {{item.productAssets[0].url}}</span> -->
                             </div>
                             <ng-template #noImage>
                                 <img class="card-img-top img-icon" src="assets/image/noimage.jpg" alt="Card image cap">
