@@ -92,7 +92,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
         
         this.checkCart();
 
-        // this.spinner.show();
+        this.spinner.show();
     }
 
     ngAfterViewInit(){
@@ -171,7 +171,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
 
                 let price = allItem.price
 
-                console.log('price: ' + price)
+                // console.log('price: ' + price)
 
                 if(itemCode == allItem.itemCode){
 
@@ -293,7 +293,8 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
         this.trxid = this.datePipe.transform(dateTime, "yyyyMMddhhmmss")
 
         let data = {
-            "customerId": this.senderID,
+            // "customerId": this.senderID,
+            "customerId": "4",
             "customerName": "Nazrul",
             "productCode": "document",
             "systemTransactionId": this.trxid,
@@ -394,7 +395,8 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
         let data = {
 
                 "merchantId": 1,
-                "customerId": this.senderID,
+                // "customerId": this.senderID,
+                "customerId": "4",
                 "productCode": "parcel",
                 "itemType": "parcel",
                 "totalWeightKg": 1,

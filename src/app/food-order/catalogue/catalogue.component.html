@@ -229,7 +229,7 @@
                                 <div style="padding-top: 70px;">
                                     <!-- <h5 id="price">PRICE : RM {{ detailPrice | number: '1.2-2'}}</h5> -->
                                     <h5>PRICE : RM {{ popupPrice | number: '1.2-2' }}</h5>
-                                    <ng-number-picker name="inputQty" [(ngModel)]="inputQty" [(value)]="inputQty" [min]="0" [max]="100" [postfix]="'unit'" [size]="'sm'"></ng-number-picker>
+                                    <ng-number-picker name="inputQty" [(ngModel)]="inputQty" [(value)]="inputQty" [min]="1" [max]="100" [postfix]="'unit'" [size]="'sm'"></ng-number-picker>
                                 </div>
                             </div>
                         </div>
@@ -277,7 +277,7 @@
                                 <div style="padding-top: 20px;">
                                     <!-- <h5>PRICE : {{ price }}</h5> -->
                                     <h5 id="price">PRICE : RM {{ popupPrice | number: '1.2-2'}}</h5>
-                                    <ng-number-picker name="inputQty" [(ngModel)]="inputQty" [(value)]="inputQty" [min]="0" [max]="100" [postfix]="'unit'" [size]="'sm'"></ng-number-picker>
+                                    <ng-number-picker name="inputQty" [(ngModel)]="inputQty" [(value)]="inputQty" [min]="1" [max]="100" [postfix]="'unit'" [size]="'sm'"></ng-number-picker>
                                 </div>
                             </div>
                         </div>

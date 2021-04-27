@@ -12,9 +12,19 @@
 
                 <h5 class="font-weight-bold text-center">{{detailsObj.name | uppercase}}</h5>
                 <div style="padding-top: 25px; padding-bottom: 25px;" class="text-justify">
-                    <span style="font-size: 13px;">
-                        {{detailsObj.description}}
-                    </span>
+                    <div *ngIf="detailsObj.description != null; else noDesc">
+                        <span style="font-size: 13px;">
+                            {{detailsObj.description}}
+                        </span>
+                    </div>
+
+                    <ng-template #noDesc>
+                        <span style="font-size: 13px;">
+                            No provided description
+                        </span>
+                    </ng-template>
+                    
+                    
                 </div>
                 <!-- variant option  -->
                 <fieldset id="{{variant.name}}" *ngFor="let variant of detailsObj.productVariants; let i = index;" style="margin-top: 15px;">
@@ -56,7 +66,7 @@
                             name="inputQty" 
                             [(ngModel)]="inputQty" 
                             [(value)]="inputQty" 
-                            [min]="0" [max]="100" 
+                            [min]="1" [max]="100" 
                             [postfix]="'unit'" 
                             [size]="'sm'"></ng-number-picker>
                         </form>
@@ -66,10 +76,17 @@
                 
                 <div class="row">
                     <div class="col">
-                        <button (click)="addToCart()" type="button" class="btn btn-warning btn-sm btn-block">Add to Cart&nbsp;<fa-icon [icon]="iconCart"></fa-icon></button>
+                        <button (click)="addToCart()" type="button" class="btn btn-warning btn-sm btn-block">
+                            Add to Cart&nbsp;<fa-icon [icon]="iconAddItem"></fa-icon>
+                        </button>
                     </div>
                     <div class="col">
-                        <button type="button" class="btn btn-success btn-sm btn-block">Next&nbsp;<fa-icon [icon]="iconBag"></fa-icon></button>
+                        <!-- <button type="button" class="btn btn-success btn-sm btn-block">Next&nbsp;<fa-icon [icon]="iconBag"></fa-icon></button> -->
+                        <button (click)="goToCheckout()" type="button" class="btn btn-info btn-sm btn-block">
+                            NEXT&nbsp;<fa-icon [icon]="iconBag"></fa-icon> &nbsp;
+                            <span class="badge badge-danger">{{cartLength}}</span>
+                            <!-- <span class="sr-only">unread messages</span> -->
+                        </button>
                     </div>
                 </div>
                 

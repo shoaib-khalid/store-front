@@ -41,6 +41,8 @@ export class ThankyouComponent implements OnInit {
     this.storeID = localStorage.getItem('store_id');
     this.cartID = localStorage.getItem('cart_id');
 
+    console.log(this.senderID + " | " + this.storeID + " | " + this.cartID )
+
     if(this.payStatus == "SUCCESS"){
         Swal.fire({
             title: 'Sweet!',
@@ -50,6 +52,9 @@ export class ThankyouComponent implements OnInit {
             imageHeight: 270,
             imageAlt: 'Custom image',
         })
+
+        // localStorage.removeItem('cart_id')
+        // localStorage.removeItem('anonym_cart_id')
     }else{
         Swal.fire({
             title: 'Ops!',
@@ -59,13 +64,17 @@ export class ThankyouComponent implements OnInit {
             imageHeight: 250,
             imageAlt: 'Custom image',
         })
+
+        // localStorage.removeItem('cart_id')
+        // localStorage.removeItem('anonym_cart_id')
     }
 
     this.updateStatus(this.payStatus)
   }
 
   shopAgain(){
-    this.route.navigateByUrl('/catalogue?referenceId='+this.refID+'&senderId='+this.senderID+'&storeId='+this.storeID);
+    this.route.navigateByUrl('/?&senderId='+this.senderID+'&storeId=a6df650a-3792-4dc8-b3de-92508357276b');
+    // this.route.navigateByUrl('?storeId='+this.storeID);
   }
 
   updateStatus(status){

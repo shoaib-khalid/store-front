@@ -27,6 +27,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { NgPipesModule } from 'ngx-pipes';
 import { ThankyouComponent } from './thankyou/thankyou.component';
 import { ProductDetailsComponent } from './product-details/product-details.component';
+import { NotFoundComponent } from './not-found/not-found.component';
 
 
 @NgModule({
@@ -41,7 +42,8 @@ import { ProductDetailsComponent } from './product-details/product-details.compo
     CheckoutDetailsComponent,
     ModalCartComponent,
     ThankyouComponent,
-    ProductDetailsComponent
+    ProductDetailsComponent,
+    NotFoundComponent
   ],
   imports: [
     CommonModule,

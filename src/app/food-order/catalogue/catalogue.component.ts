@@ -142,7 +142,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
 
         if(this.localURL != null){
             // use this for localhost
-            this.storeID = "a6df650a-3792-4dc8-b3de-92508357276b"
+            let defaultStore = "a6df650a-3792-4dc8-b3de-92508357276b"
             // this.storeID = 'McD'
             this.storeName = "mcd"
 
@@ -150,7 +150,12 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
             this.activatedRoute.queryParams.subscribe(params => {
                 // this.refID = params['referenceId'];
                 this.senderID = params['senderId'];
-                // this.storeID = params['storeId'];
+                this.storeID = params['storeId'];
+
+                if(this.storeID == undefined){
+                    this.storeID = defaultStore
+                }
+
                 console.log(this.refID + "-" + this.senderID + "-" + this.storeID); // Print the parameter to the console. 
             });
 
@@ -289,7 +294,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
                     this.cartitemDetails = res.data.content;
                     this.cartitemDetailsCount = this.cartitemDetails.length;
 
-                    this.inputQty = 0;
+                    this.inputQty = 1;
                 }
 
             }, error => {
@@ -539,7 +544,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
 
         if(qty == 0 || qty == null){
             Swal.fire("", "Quantity required!", "warning")
-            this.inputQty = 0;
+            this.inputQty = 1;
             return false;
         }
 
@@ -563,6 +568,8 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
 
         if(this.cartExist == true){
 
+            console.log('masok cartExist true')
+
             this.apiService.postAddToCart(data).subscribe((res: any) => {
 
                 console.log('add to cart resp: ', res)
@@ -576,7 +583,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
                         this.cartitemDetailsCount = this.cartitemDetails.length;
 
                         Swal.fire("Great!", "Item successfully added to cart", "success")
-                        this.inputQty = 0;
+                        this.inputQty = 1;
 
                     } else {
                         Swal.fire("Great!", "Item failed", "error")
@@ -591,6 +598,8 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
             }) 
 
         }else{
+
+            console.log('masok cartExist false')
 
             if(this.senderID){
 
@@ -905,7 +914,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
         })
 
         // reinstantiate
-        this.inputQty = 0;
+        this.inputQty = 1;
         this.galleryImages = [];
         this.imageCollection = [];
         this.requestParamVariant = []

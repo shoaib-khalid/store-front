@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
+import { PlatformLocation } from "@angular/common";
 import { Router, ActivatedRoute } from '@angular/router';
 import { ApiService } from './../api.service';
 import { NgxGalleryOptions, NgxGalleryImage, NgxGalleryAnimation } from 'ngx-gallery-9';
 import Swal from 'sweetalert2'
 
-import { faEye, faShoppingCart, faShoppingBag, faArrowCircleLeft, faMinusCircle, faPlusCircle, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import { faCartPlus, faEye, faShoppingCart, faShoppingBag, faArrowCircleLeft, faMinusCircle, faPlusCircle, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-product-details',
@@ -20,6 +21,7 @@ export class ProductDetailsComponent implements OnInit {
     iconAdd = faPlusCircle;
     iconMinus = faMinusCircle;
     iconTrash = faTrashAlt;
+    iconAddItem = faCartPlus;
 
     productName: any;
     productId: any;
@@ -46,12 +48,21 @@ export class ProductDetailsComponent implements OnInit {
     cartitemDetailsCount:any;
     senderID:any;
 
+    currBaseURL:any;
+    localURL:any;
+    cartLength:number;
+
     constructor(
         private activatedRoute: ActivatedRoute,
+        private route: Router,
         private apiService: ApiService,
+        private platformLocation: PlatformLocation
         ) {
 
         this.cartID = localStorage.getItem("anonym_cart_id")
+
+        // this.currBaseURL = this.route.url;
+        console.log('Base URL: ' + this.activatedRoute.snapshot.url[2].path)
 
         // url path style e.g http://localhost:4200/catalogue/3
         this.activatedRoute.params.subscribe(params => {
@@ -71,6 +82,10 @@ export class ProductDetailsComponent implements OnInit {
 
         this.productId = ""
 
+
+        this.currBaseURL = (this.platformLocation as any).location.origin;
+        this.localURL = this.currBaseURL.match(/localhost/g);
+
         if(this.storeName === undefined){
             this.storeName = "elo"
         }
@@ -81,7 +96,23 @@ export class ProductDetailsComponent implements OnInit {
 
     async ngOnInit() {
 
-        this.inputQty = 0
+        this.inputQty = 1
+
+        this.cartID = localStorage.getItem("anonym_cart_id")
+        console.log('cart session: ' + this.cartID)
+
+        if(!this.cartID){
+            console.log('cart session not exist!')
+            
+        }else{
+            console.log('cart id exist ' + this.cartID)
+
+            const cartDetails = await this.getItemDetails(this.cartID)
+            console.log("cart item details ", cartDetails)
+            console.log("cart item count is " + cartDetails['length'])
+
+            this.cartLength = cartDetails['length']
+        }
 
         this.galleryOptions = [
             {
@@ -116,18 +147,15 @@ export class ProductDetailsComponent implements OnInit {
 
     }
 
+    goToCheckout(){
+
+        console.log(this.senderID+"-"+this.cartID+"-"+this.storeID)
+
+        this.route.navigate(['checkout']);
+    }
+
     async addToCart(){
-        alert('itemCode: ' + this.productItemCode + "| productID: " + this.productId + "| quantity: " + this.inputQty)
-
-
-        if(this.inputQty == 0){
-            alert('Quantity 0 is not allowed!')
-
-            return false
-        }
-
-        this.cartID = localStorage.getItem("anonym_cart_id")
-        console.log('cart session: ' + this.cartID)
+        // alert('itemCode: ' + this.productItemCode + "| productID: " + this.productId + "| quantity: " + this.inputQty)
 
         if(!this.cartID){
             const created_cart = await this.createCart()
@@ -142,7 +170,68 @@ export class ProductDetailsComponent implements OnInit {
             console.log('cart id exist ' + this.cartID)
         }
 
-        this.inputQty = 0
+        await this.addItemToCart(this.cartID, this.productItemCode, this.productId, this.inputQty)
+
+        const cartDetails = await this.getItemDetails(this.cartID)
+        console.log("cart item details ", cartDetails)
+        console.log("cart item count is " + cartDetails['length'])
+
+        this.cartLength = cartDetails['length']
+
+        this.inputQty = 1
+    }
+
+    getItemDetails(cartID){
+
+        return new Promise(resolve => {
+
+            // check count Item in Cart 
+            this.apiService.getCartItemByCartID(cartID).subscribe((res: any) => {
+                // console.log('cart item by cart ID 3: ', res.data.content)
+
+                resolve(res.data.content)
+
+                if (res.message){
+                    // this.cartitemDetails = res.data.content;
+                    // this.cartitemDetailsCount = this.cartitemDetails.length;
+
+                    // this.inputQty = 1;
+                }
+
+            }, error => {
+                Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
+
+            }) 
+            
+        });
+
+    }
+
+    addItemToCart(cartID, itemCode, productID, qty){
+        console.log("starting to add item to cart...")
+        return new Promise(resolve => {
+
+            let data = {
+                "cartId": cartID,
+                "id": "",
+                "itemCode": itemCode,
+                "productId": productID,
+                "quantity": qty
+            }
+
+            // add to cart 
+            this.apiService.postAddToCart(data).subscribe((res: any) => {
+                
+                resolve(res.data)
+
+                Swal.fire("Great!", "Item successfully added to cart", "success")
+
+            }, error => {
+                Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
+            }) 
+                
+        });
+
     }
 
     createCart(){
