@@ -473,6 +473,15 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
         this.route.navigate(['checkout']);
     }
 
+    goToDetails(prodName){
+
+        // alert(prodName)
+
+        // return false;
+        this.route.navigate(['products/name/'+prodName]);
+        // alert('Hello')
+    }
+
     checkCartItemByID(cartID){
         // check count Item in Cart 
         this.apiService.getCartItemByCartID(cartID).subscribe((res: any) => {
@@ -1065,9 +1074,9 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
         console.log('updated request param: ', this.requestParamVariant)
 
         this.apiService.getUpdatedByVariant(this.storeID, productID, this.requestParamVariant).subscribe((res: any) => {
-            // console.log('cart item by cart ID: ', res.data.content)
+            console.log('cart item by cart ID: ', res.data)
 
-            if (res.message){
+            if (res.data){
                 console.log('getUpdatedByVariant response: ', res.data)
 
                 // this.catalogueList.map(product => {
@@ -1081,6 +1090,8 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
 
                 this.popupPrice = res.data[0].price
                 this.popupItemCode = res.data[0].itemCode
+
+                console.log('update price variant: ' + this.popupPrice)
             } 
 
         }, error => {
