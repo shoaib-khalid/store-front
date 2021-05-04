@@ -5,7 +5,7 @@
     background-size: cover;
     -o-background-size: cover;
     height: 150px;
-    background-image: url('/assets/image/banner-sample9.jpg');
+    /* background-image: url('/assets/image/banner-sample9.jpg'); */
     /* background-color: #FFF7EB; */
 }
 

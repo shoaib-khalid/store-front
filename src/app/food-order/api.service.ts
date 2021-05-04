@@ -71,6 +71,19 @@ export class ApiService {
         return this.http.post(this.userServiceURL + "clients/authenticate", data);
     }
 
+    getStoreAssets(storeID){
+
+        const header = {
+            headers: new HttpHeaders().set("Authorization", `Bearer ${this.token}`),
+        };
+        const url =
+            "stores/" + storeID +
+            "/assets";
+
+            return this.http.get(this.productServiceURL + url, header);
+
+    }
+
     getProductSByStoreID(storeID) {
     const header = {
         headers: new HttpHeaders().set("Authorization", `Bearer ${this.token}`),

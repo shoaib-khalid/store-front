@@ -14,7 +14,8 @@
                 <div id="test" *ngFor="let item of categories; let i = index;">
                     <div class="card" style="border: none; background-color: transparent; height: 150px;">
                         
-                        <div (click)="onGetCategoriesItem(item.id)" *ngIf="item.thumbnailUrl != null; else noImage" class="card-body category shadow-sm" style="margin: 0px; border-radius: 5px; width: 150px; height: 150px; border: 1px solid #ffe259;" [ngStyle]="{'background-image': 'url('+ item.thumbnailUrl +')'}">
+                        <div (click)="onGetCategoriesItem(item.id)" *ngIf="item.thumbnailUrl != null; else noImage" class="card-body category shadow-sm" style="margin: 0px; border-radius: 5px; width: 150px; height: 150px; border: 1px solid #ffe259;" 
+                        [ngStyle]="{'background-image': 'url('+ item.thumbnailUrl +')'}">
                             <span style="margin: 35px;"></span>
                         </div>
 
