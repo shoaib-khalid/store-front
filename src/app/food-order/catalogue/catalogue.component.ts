@@ -545,7 +545,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
         // if option 1 then add single item 
         // if option 2 then use this.inputQty 
 
-        console.log('Change Quantity: ' + this.inputQty);
+        // console.log('Change Quantity: ' + this.inputQty);
         
         let qty = 1;
         // replace qty if option is 2

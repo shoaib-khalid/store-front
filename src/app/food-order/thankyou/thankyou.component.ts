@@ -36,6 +36,8 @@ export class ThankyouComponent implements OnInit {
 
   ngOnInit(): void {
 
+    localStorage.clear();
+    
     this.senderID = localStorage.getItem('sender_id');
     this.refID = localStorage.getItem('ref_id');
     this.storeID = localStorage.getItem('store_id');

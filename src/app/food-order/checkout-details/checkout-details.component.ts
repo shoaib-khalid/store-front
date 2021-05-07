@@ -14,6 +14,7 @@ import { MalihuScrollbarService } from 'ngx-malihu-scrollbar';
 import { totalmem } from 'os';
 import Swal from 'sweetalert2'
 import { forkJoin } from 'rxjs';
+import { PlatformLocation } from "@angular/common";
 
 @Component({
   selector: 'app-checkout-details',
@@ -57,17 +58,30 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
 
     visible:boolean = false;
 
+    currBaseURL:any;
+    providerId: any;
+    // localURL:any;
+
     constructor(
         private _databindService: DataBindService,
         private mScrollbarService: MalihuScrollbarService,
         private route: Router,
         private apiService: ApiService,
         private datePipe: DatePipe,
-        private spinner: NgxSpinnerService
-    ) { }
+        private spinner: NgxSpinnerService,
+        private platformLocation: PlatformLocation
+    ) {
+
+        this.currBaseURL = (this.platformLocation as any).location.origin;
+        // this.localURL = this.currBaseURL.match(/localhost/g);
+
+        console.log('base URL: ' + this.currBaseURL)
+
+     }
 
     ngOnInit(): void {
         console.log('ngOnInit');
+
 
         this.senderID = localStorage.getItem('sender_id');
         this.refID = localStorage.getItem('ref_id');
@@ -136,7 +150,16 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
             "storeId": this.storeID,
             "subTotal": 0,
             "total": this.totalPrice,
-            "updated": ""
+            "updated": "",
+            "deliveryContactName": this.userName,
+            "deliveryAddress": this.userAddress,  
+            "deliveryContactPhone": this.userMsisdn,
+            "deliveryPostcode":this.userPostcode,
+            "deliveryCity": this.userCities,
+            "deliveryState":this.userState,
+            "deliveryCountry":this.userCountries,
+            "deliveryEmail": this.userEmail,
+            "deliveryProviderId": this.providerId
         }
         
         let initOrder = this.apiService.postInitOrder(data)
@@ -299,7 +322,8 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
             "productCode": "document",
             "systemTransactionId": this.trxid,
             "transactionId": this.trxid,	
-            "paymentAmount": this.totalPrice
+            "paymentAmount": this.totalPrice,
+            "callbackUrl" : this.currBaseURL + '/thankyou'
         }
 
         this.apiService.postPaymentLink(data).subscribe((res: any) => {
@@ -317,6 +341,59 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
         }, error => {
             Swal.fire("Payment failed!", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
         }) 
+    }
+
+    async toRepopulate(){
+
+        // alert('email: ' + this.userEmail)
+        // return false
+        const customer = await this.getCustomerInfo(this.userEmail)
+        console.log("customer data...", customer)
+        let uuid = customer['id'];
+
+        console.log('uuid: ' + uuid)
+
+        const details = await this.getPersonalDetails(uuid)
+        console.log("delivery data...", details)
+
+        this.userName = details['name']
+        this.userMsisdn = details['phoneNumber']
+        this.userAddress = details['address']
+        this.userPostcode = details['postCode']
+        this.userCities = details['city']
+        this.userState = details['state']
+        this.userCountries = details['country']
+        // later add function to calculate delivery charges
+    }
+
+    getCustomerInfo(email){
+
+        return new Promise(resolve => {
+            this.apiService.getCustomerProfileByEmail(email).subscribe((res: any) => {
+                resolve(res.data.content[0])
+
+            }, error => {
+                Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
+
+            }) 
+            
+        });
+
+    }
+
+    getPersonalDetails(uuid){
+
+        return new Promise(resolve => {
+            this.apiService.getCustomerProfileById(uuid).subscribe((res: any) => {
+                resolve(res.data.content[0])
+
+            }, error => {
+                Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
+
+            }) 
+            
+        });
+
     }
 
     checkOut(){
@@ -423,6 +500,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
             if (res.message) {
 
                 this.deliveryFee = res.data[0].price;
+                this.providerId = res.data[0].providerId
 
                 // alert('delivery charge: '+this.deliveryFee)
 

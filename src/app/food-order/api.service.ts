@@ -39,7 +39,7 @@ export class ApiService {
 
         if (prodURL != null) {
             // later if we have new production endpoint, kindly change all the endpoint under prodURL section 
-            this.userServiceURL = "http://209.58.160.20:20921/";
+            this.userServiceURL = "https://api.symplified.biz/v1/user-service/";
             this.productServiceURL = "https://api.symplified.biz/v1/product-service/";
             // this.payServiceURL = "https://209.58.160.20:6001/";
             this.payServiceURL = "https://api.symplified.biz/v1/payment-service/"
@@ -48,7 +48,7 @@ export class ApiService {
             this.deliveryServiceURL = "https://api.symplified.biz/v1/delivery-service/";
 
         } else if (stagingURL != null) {
-            this.userServiceURL = "http://209.58.160.20:20921/";
+            this.userServiceURL = "https://api.symplified.biz/v1/user-service/";
             this.productServiceURL = "https://api.symplified.biz/v1/product-service/";
             // this.payServiceURL = "https://209.58.160.20:6001/";
             this.payServiceURL = "https://api.symplified.biz/v1/payment-service/"
@@ -57,7 +57,7 @@ export class ApiService {
             this.deliveryServiceURL = "https://api.symplified.biz/v1/delivery-service/";
 
         } else {
-            this.userServiceURL = "http://209.58.160.20:20921/";
+            this.userServiceURL = "https://api.symplified.biz/v1/user-service/";
             this.productServiceURL = "https://api.symplified.biz/v1/product-service/";
             // this.payServiceURL = "https://209.58.160.20:6001/";
             this.payServiceURL = "https://api.symplified.biz/v1/payment-service/"
@@ -237,6 +237,36 @@ export class ApiService {
         return this.http.get(this.productServiceURL + url, header);
     }
 
+
+    getCustomerProfileByEmail(email) {
+        const header = {
+            headers: new HttpHeaders().set("Authorization", `Bearer ${this.token}`),
+        };
+
+        const url =
+            "customers/?email="+ email +
+            "&page=0" +
+            "&pageSize=20";
+
+        return this.http.get(this.userServiceURL + url, header);
+    }
+
+
+    getCustomerProfileById(uuid) {
+        const header = {
+            headers: new HttpHeaders().set("Authorization", `Bearer ${this.token}`),
+        };
+
+        const url =
+            "customer/" + uuid + "/address/?" +
+            "page=0" +
+            "&pageSize=20";
+
+            // https://api.symplified.biz/v1/user-service/customer/acedr-uvbhnhk-okpbfk-jvhcxxg/address/?page=0&pageSize=20
+
+        return this.http.get(this.userServiceURL + url, header);
+    }
+
     
     postTogetDeliveryFee(data):Observable<any> {
 
@@ -387,5 +417,7 @@ export class ApiService {
         return this.http.delete(url, httpOptions);
 
     }
+
+    
     
 }

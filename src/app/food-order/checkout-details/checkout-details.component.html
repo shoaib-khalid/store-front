@@ -82,9 +82,12 @@
                         <span style="font-weight: bold;">CONTACT INFORMATION</span>
                     </div>
                     <form (submit)="initOrder()" style="color: white; text-align: center; padding: 20px;" ngNativeValidate>
-                        <input type="text" id="name" name="userName" [(ngModel)]="userName" [(value)]="userName" placeholder="Full name" required>
+                        <input type="email" id="email" name="userEmail" [(ngModel)]="userEmail" [(value)]="userEmail" placeholder="Email" (change)="toRepopulate()" required>
+                        <small class="text-muted" style="color: black; font-size: smaller; font-style: italic;">Contact information filled automatically upon entering email for repeat customer</small>
                         <br>
-                        <input type="email" id="email" name="userEmail" [(ngModel)]="userEmail" [(value)]="userEmail" placeholder="Email" required>
+                        <br>
+                        <br>
+                        <input type="text" id="name" name="userName" [(ngModel)]="userName" [(value)]="userName" placeholder="Full name" required>
                         <br>
                         <input type="text" id="msisdn" name="userMsisdn" [(ngModel)]="userMsisdn" [(value)]="userMsisdn" placeholder="Phone No" required>
                         <br>
