@@ -105,6 +105,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
     localURL:any;
 
     has_storeId:boolean = false;
+    popupSKU: any;
 
     constructor(
         private _databindService: DataBindService, 
@@ -252,7 +253,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
 
     }
 
-    async flow_anonymAddToCart(itemCode, productID, qty){
+    async flow_anonymAddToCart(itemCode, productID, qty, price, sku){
 
         console.log("init flow_anonymAddToCart.... ")
 
@@ -269,7 +270,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
             console.log('created cart id: ' + this.cartID)
         }
 
-        const add_item = await this.addItemToCart(this.cartID, itemCode, productID, qty)
+        const add_item = await this.addItemToCart(this.cartID, itemCode, productID, qty, price, sku)
         console.log("item added to cart...")
         console.log("add item details ", add_item )
 
@@ -306,7 +307,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
 
     }
 
-    addItemToCart(cartID, itemCode, productID, qty){
+    addItemToCart(cartID, itemCode, productID, qty, price, sku){
         console.log("starting to add item to cart...")
         return new Promise(resolve => {
 
@@ -316,7 +317,11 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
                 "id": "",
                 "itemCode": itemCode,
                 "productId": productID,
-                "quantity": qty
+                "quantity": qty,
+                "price": price,
+                "productPrice": price,
+                "weight": 0.00,
+                "SKU": sku
             }
 
             // add to cart 
@@ -537,7 +542,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
 
-    addToCart(event, productID, itemCode, option){
+    addToCart(event, productID, itemCode, option, price, sku){
 
         // alert("productID: " + productID + " itemCode: " + itemCode + " option: " + option)
         // return false;
@@ -557,13 +562,25 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
             return false;
         }
 
+        // let data = {
+        //     "cartId": this.cartID,
+        //     "id": "",
+        //     "itemCode": itemCode,
+        //     "productId": productID,
+        //     "quantity": qty
+        // }
         let data = {
             "cartId": this.cartID,
             "id": "",
             "itemCode": itemCode,
             "productId": productID,
-            "quantity": qty
+            "quantity": qty,
+            "price": price,
+            "productPrice": price,
+            "weight": 0.00,
+            "SKU": sku
         }
+
         console.log('let data cart object: ', data)
 
         // pseudo cart 
@@ -690,7 +707,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
 
                 
             }else{
-                this.flow_anonymAddToCart(itemCode, productID, qty)
+                this.flow_anonymAddToCart(itemCode, productID, qty, price, sku)
             }
 
             
@@ -918,6 +935,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.selectedProduct = product
                 this.popupPrice = product.price;
                 this.popupItemCode = product.itemCode;
+                this.popupSKU = product.sku;
                 // return this.popupPrice;
             }
         })

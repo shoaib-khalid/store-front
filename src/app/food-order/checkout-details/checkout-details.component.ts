@@ -321,7 +321,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
             "customerName": "Nazrul",
             "productCode": "document",
             "systemTransactionId": this.trxid,
-            "transactionId": this.trxid,	
+            "transactionId": this.orderId,	
             "paymentAmount": this.totalPrice,
             "callbackUrl" : this.currBaseURL + '/thankyou'
         }

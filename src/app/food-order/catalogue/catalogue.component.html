@@ -136,7 +136,7 @@
                     <div class="row">
                         <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
                             <div *ngFor="let data of catalogueList">
-                                <div *ngIf="item.id == data.productId" (click)="addToCart($event, item.id, data.itemCode, 1)" class="bg-warning rounded btnAddtoCart">
+                                <div *ngIf="item.id == data.productId" (click)="addToCart($event, item.id, data.itemCode, 1, data.price, data.sku)" class="bg-warning rounded btnAddtoCart">
                                     <span style="vertical-align: middle;">Add to cart &nbsp;<fa-icon [icon]="iconCart"></fa-icon></span>
                                 </div>
                             </div>
@@ -194,7 +194,7 @@
             </div>
 
             <!-- <form (submit)="checkQuantity()"> -->
-            <form (submit)="addToCart($event, detailsObj.id, popupItemCode, 2)">
+            <form (submit)="addToCart($event, detailsObj.id, popupItemCode, 2, popupPrice, popupSKU)">
                 <div class="modal-body">
 
                     <!-- Destop/Tablet Layout -->

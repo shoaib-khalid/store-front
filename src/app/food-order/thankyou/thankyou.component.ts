@@ -71,7 +71,8 @@ export class ThankyouComponent implements OnInit {
         // localStorage.removeItem('anonym_cart_id')
     }
 
-    this.updateStatus(this.payStatus)
+    // remove update order status , it will be done by backend 
+    // this.updateStatus(this.payStatus)
   }
 
   shopAgain(){
