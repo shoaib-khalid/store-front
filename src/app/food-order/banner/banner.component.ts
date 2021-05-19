@@ -16,6 +16,7 @@ export class BannerComponent implements OnInit {
     storeName: any;
     has_storeId: boolean = false;
     assets = {};
+    bannerExist: boolean = false;
 
   constructor(
     private apiService: ApiService,
@@ -31,7 +32,8 @@ export class BannerComponent implements OnInit {
 
         if(this.localURL != null){
             // use this for localhost
-            let defaultStore = "McD"
+            // let defaultStore = "McD"
+            let defaultStore = "217cc14c-fbf0-4af7-b927-9328458a61d0"
 
             // get url parameter style e.g http://localhost:4200/catalogue?store_id=3
             this.activatedRoute.queryParams.subscribe(params => {
@@ -82,6 +84,10 @@ export class BannerComponent implements OnInit {
     console.log("asset Data...", assetData)
     this.assets = assetData
     // this.cartID = created_cart['id'];
+
+    if(this.assets != null){
+        this.bannerExist = true;
+    }
 
   }
 

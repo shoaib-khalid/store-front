@@ -1,9 +1,15 @@
-<div class="jumbotron jumbotron-fluid bg-image-full" [ngStyle]="{'background-image': 'url('+ assets['bannerUrl'] +')'}">
+<div class="jumbotron jumbotron-fluid bg-image-full" *ngIf="bannerExist; else noBanner" [ngStyle]="{'background-image': 'url('+ assets['bannerUrl'] +')'}">
     <div class="container">
     </div>
 </div>
 
-
+<ng-template #noBanner>
+    <div class="jumbotron jumbotron-fluid bg-image-full">
+        <div class="container">
+            No Banner Uploaded
+        </div>
+    </div>
+</ng-template>
 
 
 

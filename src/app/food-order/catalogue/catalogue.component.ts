@@ -143,7 +143,8 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
 
         if(this.localURL != null){
             // use this for localhost
-            let defaultStore = "a6df650a-3792-4dc8-b3de-92508357276b"
+            // let defaultStore = "a6df650a-3792-4dc8-b3de-92508357276b"
+            let defaultStore = "217cc14c-fbf0-4af7-b927-9328458a61d0"
             // this.storeID = 'McD'
             this.storeName = "mcd"
 
