@@ -48,6 +48,9 @@ export class BannerComponent implements OnInit {
             });
 
             console.log('Location: Staging')
+
+            this.storeName = "cinema-online"
+
         }else{
             console.log('Location: Prod')
             var host = this.currBaseURL
@@ -79,8 +82,14 @@ export class BannerComponent implements OnInit {
     // alert('storeID: ' + this.storeID)
 
     // return false;
+    const storeInfo = await this.getMerchantInfo(this.storeName)
+    console.log("store info...", storeInfo)
 
-    const assetData = await this.getAssets()
+    this.storeID = storeInfo['id']
+    console.log('storeID REAL: ' + this.storeID)
+    // return false
+
+    const assetData = await this.getAssets(this.storeID)
     console.log("asset Data...", assetData)
     this.assets = assetData
     // this.cartID = created_cart['id'];
@@ -91,12 +100,22 @@ export class BannerComponent implements OnInit {
 
   }
 
-  getAssets(){
+  getMerchantInfo(storename){
+    return new Promise(resolve => {
+        this.apiService.getStoreInfo(storename).subscribe((res: any) => {
+            resolve(res.data.content[0])
+        }), error => {
+
+        }
+    })
+  }
+
+  getAssets(storeID){
 
     return new Promise(resolve => {
 
         // check count Item in Cart 
-        this.apiService.getStoreAssets(this.storeID).subscribe((res: any) => {
+        this.apiService.getStoreAssets(storeID).subscribe((res: any) => {
        
             resolve(res.data)
 
