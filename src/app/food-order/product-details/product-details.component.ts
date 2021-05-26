@@ -64,7 +64,7 @@ export class ProductDetailsComponent implements OnInit {
         // this.currBaseURL = this.route.url;
         console.log('Base URL: ' + this.activatedRoute.snapshot.url[2].path)
 
-        // url path style e.g http://localhost:4200/catalogue/3
+        // url path style e.g http://209.58.160.20:4200/catalogue/3
         this.activatedRoute.params.subscribe(params => {
             this.productName = params['prodName'];
             this.storeName = params['storeName'];

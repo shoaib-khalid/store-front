@@ -116,25 +116,6 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
         private platformLocation: PlatformLocation
     ) { 
         
-        // init clear localStorage
-        // localStorage.clear();
-        
-
-
-        // get url parameter style e.g http://localhost:4200/catalogue?store_id=3
-        // this.activatedRoute.queryParams.subscribe(params => {
-        //     this.refID = params['referenceId'];
-        //     this.senderID = params['senderId'];
-        //     this.storeID = params['storeId'];
-        //     console.log(this.refID + "-" + this.senderID + "-" + this.storeID); // Print the parameter to the console. 
-        // });
-
-        // url path style e.g http://localhost:4200/catalogue/3
-        // this.activatedRoute.params.subscribe(params => {
-        //     let date = params['store_id'];
-        //     console.log(date); // Print the parameter to the console. 
-        // });
-
         // get the store id base on subdomain
         this.currBaseURL = (this.platformLocation as any).location.origin;
         this.localURL = this.currBaseURL.match(/localhost/g);
@@ -142,13 +123,14 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
         console.log('Base URL: ' + this.currBaseURL)
 
         if(this.localURL != null){
+            console.log('Location: Staging, Page Catalogue')
             // use this for localhost
             // let defaultStore = "a6df650a-3792-4dc8-b3de-92508357276b"
             let defaultStore = "217cc14c-fbf0-4af7-b927-9328458a61d0"
             // this.storeID = 'McD'
             this.storeName = "mcd"
 
-            // get url parameter style e.g http://localhost:4200/catalogue?store_id=3
+            // get url parameter style e.g http://209.58.160.20:4200/catalogue?store_id=3
             this.activatedRoute.queryParams.subscribe(params => {
                 // this.refID = params['referenceId'];
                 this.senderID = params['senderId'];
@@ -158,14 +140,13 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
                     this.storeID = defaultStore
                 }
 
-                console.log(this.refID + "-" + this.senderID + "-" + this.storeID); // Print the parameter to the console. 
+                console.log("refID: [" + this.refID + "] - senderID: [" + this.senderID + "] - storeID: [" + this.storeID+"]"); // Print the parameter to the console. 
             });
 
             localStorage.setItem('store_id', this.storeID)
             localStorage.setItem('sender_id', this.senderID)
 
-            console.log('Location: Staging')
-        }else{
+        } else{
             console.log('Location: Prod')
             var host = this.currBaseURL
             var subdomain = host.split('.')[0]
@@ -178,7 +159,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
             // this.storeName = "mcd";
             console.log('storename: ' + this.storeName)
 
-            // get url parameter style e.g http://localhost:4200/catalogue?store_id=3
+            // get url parameter style e.g http://209.58.160.20:4200/catalogue?store_id=3
             this.activatedRoute.queryParams.subscribe(params => {
                 this.senderID = params['senderId'];
                 this.storeID = params['storeId'];
@@ -210,15 +191,19 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
 
             this.getCategory();
 
+            console.log("senderID: "+this.senderID);
+
             if(this.senderID){
                 this.checkCart();
                 console.log('senderId exist!' + this.senderID)
-            }else{
+            } else{
 
                 // sessionStorage = only for current browser, The data survives page refresh, but not closing/opening the tab
                 // localStorage = The data does not expire. It remains after the browser restart and even OS reboot. Shared between all tabs and windows from the same origin.
                 this.cartID = localStorage.getItem("anonym_cart_id")
                 // var sesStoreName = localStorage.getItem('store_name')
+                
+                console.log("cardID: "+this.cartID);
 
                 if(this.cartID){
                     this.getItemDetails(this.cartID)
@@ -229,7 +214,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
                 console.log('you are anonymous')
             }
             
-        }else{
+        } else{
             // Production
             console.log('getMerchantInfo started...')
             
@@ -718,11 +703,11 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
     getCategory(){
         this.apiService.getCategoryByStoreID(this.storeID).subscribe((res: any) => {
 
+            console.log('getCategory method')
             console.log('category obj: ', res)
             
-
             if (res.message){
-
+                console.log("here"+res.data.content.length)
                 if(res.data.content.length > 1){
 
                     // let data = {
@@ -760,7 +745,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
 
         }, error => {
             console.log(error)
-        }) 
+        })
     }
 
     // this function can be used if there is only 1 object inside productInventories 
@@ -818,6 +803,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
 
     getProduct(){
         this.apiService.getProductSByStoreID(this.storeID).subscribe((res: any) => {
+            console.log('getProduct method')
             // console.log('raw resp:', res)
             if (res.message) {
                 this.product = res.data.content;

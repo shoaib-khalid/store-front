@@ -67,12 +67,54 @@ export class ApiService {
         }
     }
 
+    // #############################
+    // Services Method 
+    // ############################# 
+
+    // ===============
+    // user service
+    // ===============
+
+    // Ref : http://209.58.160.20:20921/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config#/clients-controller/authenticateClient
     postAuthenticate(data) {
+        // data sample : { "username": "string", "password": "string"}
         return this.http.post(this.userServiceURL + "clients/authenticate", data);
     }
 
-    getStoreAssets(storeID){
+    // Ref : http://209.58.160.20:20921/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config#/customers-controller/getCustomers_1
+    getCustomerProfileByEmail(email) {
+        const header = {
+            headers: new HttpHeaders().set("Authorization", `Bearer ${this.token}`),
+        };
 
+        const url =
+            "customers/?email="+ email +
+            "&page=0" +
+            "&pageSize=20";
+
+        return this.http.get(this.userServiceURL + url, header);
+    }
+
+    // Ref : http://209.58.160.20:20921/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config#/customer-address-controller/getCustomerAddresss
+    getCustomerProfileById(uuid) {
+        const header = {
+            headers: new HttpHeaders().set("Authorization", `Bearer ${this.token}`),
+        };
+
+        const url =
+            "customer/" + uuid + "/address/?" +
+            "page=0" +
+            "&pageSize=20";
+
+        return this.http.get(this.userServiceURL + url, header);
+    }
+
+    // ===============
+    // product service
+    // ===============
+
+    // Ref : http://209.58.160.20:7071/swagger-ui.html#/store-asset-controller/getStoreAssetsUsingGET
+    getStoreAssets(storeID){
         const header = {
             headers: new HttpHeaders().set("Authorization", `Bearer ${this.token}`),
         };
@@ -81,9 +123,9 @@ export class ApiService {
             "/assets";
 
             return this.http.get(this.productServiceURL + url, header);
-
     }
 
+    // Ref : http://209.58.160.20:7071/swagger-ui.html#/product-controller/getProductUsingGET_1
     getProductSByStoreID(storeID) {
     const header = {
         headers: new HttpHeaders().set("Authorization", `Bearer ${this.token}`),
@@ -97,6 +139,7 @@ export class ApiService {
         return this.http.get(this.productServiceURL + url, header);
     }
 
+    // Ref : http://209.58.160.20:7071/swagger-ui.html#/store-controller/getStoreUsingGET_1
     getStoreInfo(storename) {
         const header = {
             headers: new HttpHeaders().set("Authorization", `Bearer ${this.token}`),
@@ -109,7 +152,7 @@ export class ApiService {
             return this.http.get(this.productServiceURL + url, header);
     }
 
-    // http://symplified.ai:7071/products/BeefBiryani?featured=true&page=0&pageSize=20
+    // Ref : http://209.58.160.20:7071/swagger-ui.html#/product-controller/getProductUsingGET
     getProductSByProductID(productID) {
         const header = {
             headers: new HttpHeaders().set("Authorization", `Bearer ${this.token}`),
@@ -121,8 +164,9 @@ export class ApiService {
             "&pageSize=20";
             
             return this.http.get(this.productServiceURL + url, header);
-        }
+    }
 
+    // Ref : http://209.58.160.20:7071/swagger-ui.html#/store-category-controller/getCategoryUsingGET
     getCategoryByStoreID(storeID){
         const header = {
             headers: new HttpHeaders().set("Authorization", `Bearer ${this.token}`),
@@ -132,9 +176,11 @@ export class ApiService {
             "&pageSize=20" +
             "&storeId=" +
             storeID;
-            return this.http.get(this.productServiceURL + url, header);
+
+        return this.http.get(this.productServiceURL + url, header);
     }
 
+    // Ref : http://209.58.160.20:7071/swagger-ui.html#/product-controller/getProductUsingGET_1
     getProductSByCategory(categoryId, storeID) {
         const header = {
             headers: new HttpHeaders().set("Authorization", `Bearer ${this.token}`),
@@ -151,6 +197,7 @@ export class ApiService {
         return this.http.get(this.productServiceURL + url, header);
     }
 
+    // Ref : http://209.58.160.20:7071/swagger-ui.html#/store-product-controller/getStoreProductsUsingGET
     getProductSByName(name, store_id) {
         const header = {
             headers: new HttpHeaders().set("Authorization", `Bearer ${this.token}`),
@@ -170,46 +217,7 @@ export class ApiService {
         return this.http.get(this.productServiceURL + url, header);
     }
 
-    getCartList(customerID, storeID) {
-        const header = {
-            headers: new HttpHeaders().set("Authorization", `Bearer ${this.token}`),
-        };
-        // http://209.58.160.20:7072/carts?customerId=4&page=0&pageSize=20
-        const url =
-            "carts?customerId="+ customerID +
-            "&page=0" +
-            "&pageSize=20" +
-            "&storeId=" + storeID;
-
-        return this.http.get(this.orderServiceURL + url, header);
-    }
-
-    getOrderId(customerID, storeID){
-        const header = {
-            headers: new HttpHeaders().set("Authorization", `Bearer ${this.token}`),
-        };
-        // http://209.58.160.20:7072/orders?customerId=4&page=0&pageSize=20&storeId=b0c5d5bf-be25-465c-811a-44c20011d025
-        const url =
-            "orders?customerId="+ customerID +
-            "&page=0" +
-            "&pageSize=20" +
-            "&storeId=" + storeID;
-
-        return this.http.get(this.orderServiceURL + url, header);
-    }
-
-    getCartItemByCartID(cartID) {
-        const header = {
-            headers: new HttpHeaders().set("Authorization", `Bearer ${this.token}`),
-        };
-        // http://209.58.160.20:7072/carts/3/items?page=0&pageSize=20
-        const url =
-            "carts/" + cartID + "/items?page=0"+
-            "&pageSize=200";
-
-        return this.http.get(this.orderServiceURL + url, header);
-    }
-
+    // Ref : http://209.58.160.20:7071/swagger-ui.html#/store-product-inventory-controller/getStoreProductInventorysUsingGET
     getUpdatedByVariant(storeId, productId, variantArr){
         const header = {
             headers: new HttpHeaders().set("Authorization", `Bearer ${this.token}`),
@@ -237,41 +245,150 @@ export class ApiService {
         return this.http.get(this.productServiceURL + url, header);
     }
 
+    // ===============
+    // order service
+    // ===============
 
-    getCustomerProfileByEmail(email) {
+    // Ref : http://209.58.160.20:7072/swagger-ui.html#/cart-controller/getCartsUsingGET
+    getCartList(customerID, storeID) {
         const header = {
             headers: new HttpHeaders().set("Authorization", `Bearer ${this.token}`),
         };
-
         const url =
-            "customers/?email="+ email +
+            "carts?customerId="+ customerID +
             "&page=0" +
-            "&pageSize=20";
+            "&pageSize=20" +
+            "&storeId=" + storeID;
 
-        return this.http.get(this.userServiceURL + url, header);
+        return this.http.get(this.orderServiceURL + url, header);
     }
 
-
-    getCustomerProfileById(uuid) {
+    // Ref : http://209.58.160.20:7072/swagger-ui.html#/order-controller/getOrdersUsingGET
+    getOrderId(customerID, storeID){
         const header = {
             headers: new HttpHeaders().set("Authorization", `Bearer ${this.token}`),
         };
-
         const url =
-            "customer/" + uuid + "/address/?" +
-            "page=0" +
-            "&pageSize=20";
+            "orders?customerId="+ customerID +
+            "&page=0" +
+            "&pageSize=20" +
+            "&storeId=" + storeID;
 
-            // https://api.symplified.biz/v1/user-service/customer/acedr-uvbhnhk-okpbfk-jvhcxxg/address/?page=0&pageSize=20
-
-        return this.http.get(this.userServiceURL + url, header);
+        return this.http.get(this.orderServiceURL + url, header);
     }
 
-    
-    postTogetDeliveryFee(data):Observable<any> {
+    // Ref : http://209.58.160.20:7072/swagger-ui.html#/cart-item-controller/getCartItemsUsingGET
+    getCartItemByCartID(cartID) {
+        const header = {
+            headers: new HttpHeaders().set("Authorization", `Bearer ${this.token}`),
+        };
+        const url =
+            "carts/" + cartID + 
+            "/items?page=0"+
+            "&pageSize=200";
 
-        // http://209.58.160.20:5000/orders/getprice
+        return this.http.get(this.orderServiceURL + url, header);
+    }
+
+    // Ref : http://209.58.160.20:7072/swagger-ui.html#/cart-item-controller/postCartItemsUsingPOST
+    postAddToCart(data):Observable<any> {
+        // data sample : { "cartId": "string", "id": "string", "itemCode": "string", "price": 0, "productId": "string", "productPrice": 0, "quantity": 0, "sku": "string", "weight": 0}
+
+        const httpOptions = {
+            headers: new HttpHeaders(
+            { 
+               'Authorization': `Bearer ${this.token}`,
+               'Content-Type': 'application/json'
+            })
+        }
+        const url = this.orderServiceURL + "carts/" + data.cartId + "/items";
+
+        return this.http.post(url, data, httpOptions);
+    }
+
+    // Ref : http://209.58.160.20:7072/swagger-ui.html#/order-item-controller/postOrderItemsUsingPOST
+    postAddItemToOrder(data):Observable<any> {
+        // data sample : { "id": "string", "itemCode": "string", "orderId": "string", "price": 0, "productId": "string", "productPrice": 0, "quantity": 0, "sku": "string", "weight": 0}
+
+        const httpOptions = {
+            headers: new HttpHeaders(
+            { 
+               'Authorization': `Bearer ${this.token}`,
+               'Content-Type': 'application/json'
+            })
+        }
+        const url = this.orderServiceURL + "orders/" + data.orderId + "/items";
+
+        return this.http.post(url, data, httpOptions);
+    }
+    
+    // ref : http://209.58.160.20:7072/swagger-ui.html#/cart-controller/postCartsUsingPOST
+    postCreateCart(data):Observable<any> {
+        // data sample : { "created": "2021-05-26T01:59:19.698Z", "customerId": "string", "id": "string", "isOpen": true, "storeId": "string", "updated": "2021-05-26T01:59:19.699Z"}
+        const httpOptions = {
+            headers: new HttpHeaders(
+            { 
+               'Authorization': `Bearer ${this.token}`,
+               'Content-Type': 'application/json'
+            })
+        }
+        const url = this.orderServiceURL + "carts";
         
+        return this.http.post(url, data, httpOptions);
+    }
+
+    // ref : http://209.58.160.20:7072/swagger-ui.html#/order-controller/postOrdersUsingPOST
+    postInitOrder(data):Observable<any> {
+        // data : { "cartId": "string", "completionStatus": "string", "customerId": "string", "customerNotes": "string", "deliveryAddress": "string", "deliveryCity": "string", "deliveryContactName": "string", "deliveryContactPhone": "string", "deliveryCountry": "string", "deliveryEmail": "string", "deliveryPostcode": "string", "deliveryProviderId": 0, "deliveryState": "string", "paymentStatus": "string", "privateAdminNotes": "string", "storeId": "string", "subTotal": 0, "total": 0}
+        const httpOptions = {
+            headers: new HttpHeaders(
+            { 
+               'Authorization': `Bearer ${this.token}`,
+               'Content-Type': 'application/json'
+            })
+        }
+        const url = this.orderServiceURL + "orders";
+
+        return this.http.post(url, data, httpOptions);
+    }
+
+    // ref : http://209.58.160.20:7072/swagger-ui.html#/order-controller/postOrdersUsingPOST
+    putUpdateOrderStatus(data):Observable<any> {
+        // data : { "cartId": "string", "completionStatus": "string", "customerId": "string", "customerNotes": "string", "deliveryAddress": "string", "deliveryCity": "string", "deliveryContactName": "string", "deliveryContactPhone": "string", "deliveryCountry": "string", "deliveryEmail": "string", "deliveryPostcode": "string", "deliveryProviderId": 0, "deliveryState": "string", "paymentStatus": "string", "privateAdminNotes": "string", "storeId": "string", "subTotal": 0, "total": 0}
+        const httpOptions = {
+            headers: new HttpHeaders(
+            { 
+               'Authorization': `Bearer ${this.token}`,
+               'Content-Type': 'application/json'
+            })
+        }
+        const url = this.orderServiceURL + "orders";
+        
+        return this.http.post(url, data, httpOptions);
+    }
+
+    // ref : http://209.58.160.20:7072/swagger-ui.html#/cart-item-controller/deleteCartItemsByIdUsingDELETE
+    deleteCartItemID(data, id):Observable<any> {
+        const httpOptions = {
+            headers: new HttpHeaders(
+            { 
+               'Authorization': `Bearer ${this.token}`,
+               'Content-Type': 'application/json'
+            }),
+            body: data
+        }
+        const url = this.orderServiceURL + "carts/"+data.cartId+"/items/"+id;
+
+        return this.http.delete(url, httpOptions);
+    }
+
+    // ===============
+    // delivery service
+    // ===============
+    
+    // ref : http://209.58.160.20:5000/swagger-ui.html#/orders-controller/getPriceUsingPOST
+    postTogetDeliveryFee(data):Observable<any> {
+        // data : { "customerId": "string", "delivery": { "deliveryAddress": "string", "deliveryCity": "string", "deliveryContactEmail": "string", "deliveryContactName": "string", "deliveryContactPhone": "string", "deliveryCountry": "string", "deliveryPostcode": "string", "deliveryState": "string" }, "deliveryProviderId": 0, "insurance": true, "itemType": "parcel", "merchantId": 0, "orderId": "string", "pickup": { "parcelReadyTime": "string", "pickupAddress": "string", "pickupCity": "string", "pickupContactEmail": "string", "pickupContactName": "string", "pickupContactPhone": "string", "pickupCountry": "string", "pickupDate": "string", "pickupLocationId": 0, "pickupOption": "string", "pickupPostcode": "string", "pickupState": "string", "pickupTime": "string", "remarks": "string", "trolleyRequired": true, "vehicleType": "CAR" }, "pieces": 0, "productCode": "string", "shipmentContent": "string", "shipmentValue": 0, "storeId": "string", "totalWeightKg": 0, "transactionId": "string"}
         const httpOptions = {
             headers: new HttpHeaders(
             { 
@@ -287,10 +404,9 @@ export class ApiService {
         // return this.http.get(this.payServiceURL + "payments/makePayment", httpOptions);
     }
 
+    // ref : http://209.58.160.20:5000/swagger-ui.html#/orders-controller/submitOrderUsingPOST
     postSubmitDeliveryOrder(data):Observable<any> {
-
-        // http://209.58.160.20:5000/orders/submitorder
-        
+        // data : { "customerId": "string", "delivery": { "deliveryAddress": "string", "deliveryCity": "string", "deliveryContactEmail": "string", "deliveryContactName": "string", "deliveryContactPhone": "string", "deliveryCountry": "string", "deliveryPostcode": "string", "deliveryState": "string" }, "deliveryProviderId": 0, "insurance": true, "itemType": "parcel", "merchantId": 0, "orderId": "string", "pickup": { "parcelReadyTime": "string", "pickupAddress": "string", "pickupCity": "string", "pickupContactEmail": "string", "pickupContactName": "string", "pickupContactPhone": "string", "pickupCountry": "string", "pickupDate": "string", "pickupLocationId": 0, "pickupOption": "string", "pickupPostcode": "string", "pickupState": "string", "pickupTime": "string", "remarks": "string", "trolleyRequired": true, "vehicleType": "CAR" }, "pieces": 0, "productCode": "string", "shipmentContent": "string", "shipmentValue": 0, "storeId": "string", "totalWeightKg": 0, "transactionId": "string"}
         const httpOptions = {
             headers: new HttpHeaders(
             { 
@@ -306,8 +422,14 @@ export class ApiService {
         // return this.http.get(this.payServiceURL + "payments/makePayment", httpOptions);
     }
 
-    postPaymentLink(data):Observable<any> {
 
+    // ===============
+    // pay service
+    // ===============
+
+    // ref : http://209.58.160.20:6001/swagger-ui.html#/payments-controller/makePaymentUsingPOST
+    postPaymentLink(data):Observable<any> {
+        // data : { "callbackUrl": "string", "customerId": 0, "customerName": "string", "paymentAmount": 0, "productCode": "string", "systemTransactionId": "string", "transactionId": "string"}
         const httpOptions = {
             headers: new HttpHeaders(
             { 
@@ -322,102 +444,5 @@ export class ApiService {
         return this.http.post(url, data, httpOptions);
         // return this.http.get(this.payServiceURL + "payments/makePayment", httpOptions);
     }
-
-    postAddToCart(data):Observable<any> {
-
-        const httpOptions = {
-            headers: new HttpHeaders(
-            { 
-               'Authorization': `Bearer ${this.token}`,
-               'Content-Type': 'application/json'
-            })
-        }
-
-        const url = this.orderServiceURL + "carts/" + data.cartId + "/items";
-
-        return this.http.post(url, data, httpOptions);
-
-    }
-
-    postAddItemToOrder(data):Observable<any> {
-
-        const httpOptions = {
-            headers: new HttpHeaders(
-            { 
-               'Authorization': `Bearer ${this.token}`,
-               'Content-Type': 'application/json'
-            })
-        }
-
-        const url = this.orderServiceURL + "orders/" + data.orderId + "/items";
-
-        return this.http.post(url, data, httpOptions);
-
-    }
-    
-    // postAuthenticate(data) {
-    //     return this.http.post(this.userServiceURL + "clients/authenticate", data);
-    // }
-    
-    postCreateCart(data):Observable<any> {
-
-        const httpOptions = {
-            headers: new HttpHeaders(
-            { 
-               'Authorization': `Bearer ${this.token}`,
-               'Content-Type': 'application/json'
-            })
-        }
-        
-        const url = this.orderServiceURL + "carts";
-        return this.http.post(url, data, httpOptions);
-    }
-
-    postInitOrder(data):Observable<any> {
-
-        const httpOptions = {
-            headers: new HttpHeaders(
-            { 
-               'Authorization': `Bearer ${this.token}`,
-               'Content-Type': 'application/json'
-            })
-        }
-        
-        const url = this.orderServiceURL + "orders";
-        return this.http.post(url, data, httpOptions);
-    }
-
-    putUpdateOrderStatus(data):Observable<any> {
-
-        const httpOptions = {
-            headers: new HttpHeaders(
-            { 
-               'Authorization': `Bearer ${this.token}`,
-               'Content-Type': 'application/json'
-            })
-        }
-        
-        const url = this.orderServiceURL + "orders";
-        return this.http.post(url, data, httpOptions);
-    }
-
-    deleteCartItemID(data, id):Observable<any> {
-
-        const httpOptions = {
-            headers: new HttpHeaders(
-            { 
-               'Authorization': `Bearer ${this.token}`,
-               'Content-Type': 'application/json'
-            }),
-            body: data
-        }
-
-        const url = this.orderServiceURL + "carts/"+data.cartId+"/items/"+id;
-
-        return this.http.delete(url, httpOptions);
-
-    }
-
-    
     
 }
