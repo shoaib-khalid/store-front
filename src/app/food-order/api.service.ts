@@ -162,7 +162,7 @@ export class ApiService {
             "&featured=true" +
             "&page=0" +
             "&pageSize=20" +
-            "&name=" +
+            "&seoName=" +
             name;
 
         console.log('URL: ' + this.productServiceURL + url)

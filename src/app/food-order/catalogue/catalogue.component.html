@@ -111,15 +111,15 @@
                     <div class="row">
                         <div class="col-4">
                             <div *ngIf="(item.productAssets); else noImage">
-                                <img (click)="goToDetails(item.name)" class="card-img-top img-icon details" src="{{ item.productAssets[0].url }}" alt="Card image cap">
+                                <img (click)="goToDetails(item.seoName)" class="card-img-top img-icon details" src="{{ item.productAssets[0].url }}" alt="Card image cap">
                                 <!-- <span>test {{item.productAssets[0].url}}</span> -->
                             </div>
                             <ng-template #noImage>
-                                <img (click)="goToDetails(item.name)" class="card-img-top img-icon details" src="assets/image/noimage.jpg" alt="Card image cap">
+                                <img (click)="goToDetails(item.seoName)" class="card-img-top img-icon details" src="assets/image/noimage.jpg" alt="Card image cap">
                             </ng-template>
                         </div>
                         <div class="col-8 text-right">
-                            <h6 (click)="goToDetails(item.name)" class="card-title details">{{ item.name | titlecase}}</h6>
+                            <h6 (click)="goToDetails(item.seoName)" class="card-title details">{{ item.name | titlecase}}</h6>
                             <!-- <h5 id="price">RM {{ item.productInventories[0].price | number: '1.2-2'}}</h5> -->
                             <div *ngFor="let data of catalogueList">
                                 <h5 *ngIf="item.id == data.productId; else noPrice" id="price">RM {{ data.price === 0  ? "0.00" : data.price  | number: '1.2-2'}}</h5>

@@ -1,9 +1,7 @@
-
-
-
 <section class="cover-div">
     <!-- <div class="header"></div> -->
     <div class="container-fluid">
+        <div class="return-back"><button onclick="window.history.back();"><fa-icon [icon]="iconBack"></fa-icon></button></div>
         <div class="row" style="height: 100vh;">
             <div class="col-lg-7 col-md-7 col-xs-12 col-sm-12" style="text-align: center; padding: 50px 0px 25px 0px; background-color: #f9f9f9; ">
                 <ngx-gallery [options]="galleryOptions" [images]="galleryImages"></ngx-gallery>
@@ -13,8 +11,8 @@
                 <h5 class="font-weight-bold text-center">{{detailsObj.name | uppercase}}</h5>
                 <div style="padding-top: 25px; padding-bottom: 25px;" class="text-justify">
                     <div *ngIf="detailsObj.description != null; else noDesc">
-                        <span style="font-size: 13px;">
-                            {{detailsObj.description}}
+                        <span style="font-size: 13px;" [innerHTML]="detailsObj.description" >
+                            
                         </span>
                     </div>
 

@@ -23,7 +23,7 @@ export class ProductDetailsComponent implements OnInit {
     iconTrash = faTrashAlt;
     iconAddItem = faCartPlus;
 
-    productName: any;
+    productSeoName: any;
     productId: any;
 
     detailsObj: any = {};
@@ -66,17 +66,17 @@ export class ProductDetailsComponent implements OnInit {
 
         // url path style e.g http://localhost:4200/catalogue/3
         this.activatedRoute.params.subscribe(params => {
-            this.productName = params['prodName'];
+            this.productSeoName = params['prodSeoName'];
             this.storeName = params['storeName'];
-            console.log('product name before: ' + this.productName); // Print the parameter to the console. 
+            console.log('product name before: ' + this.productSeoName); // Print the parameter to the console. 
 
-            var re = /-/gi; 
-            var str = this.productName;
-            var newstr = str.replace(re, "%20"); 
+            // var re = /-/gi; 
+            // var str = this.productName;
+            // var newstr = str.replace(re, "%20"); 
 
-            this.productName = newstr
+            // this.productName = newstr
 
-            console.log('product name after: ' + this.productName); // Print the parameter to the console. 
+            console.log('product name after: ' + this.productSeoName); // Print the parameter to the console. 
             
         });
 
@@ -85,6 +85,20 @@ export class ProductDetailsComponent implements OnInit {
 
         this.currBaseURL = (this.platformLocation as any).location.origin;
         this.localURL = this.currBaseURL.match(/localhost/g);
+
+        if(this.localURL != null){
+            /** staging */
+            console.log('Location: Staging')
+        } else {
+            console.log('Location: Prod')
+            var host = this.currBaseURL
+            var subdomain = host.split('.')[0]
+
+            console.log('subdomain: ' + subdomain)
+            console.log('removed https: ' + subdomain.replace(/^(https?:|)\/\//, ''))
+
+            this.storeName = subdomain.replace(/^(https?:|)\/\//, '')
+        }
 
         if(this.storeName === undefined){
             this.storeName = "elo"
@@ -274,7 +288,7 @@ export class ProductDetailsComponent implements OnInit {
         this.storeID = storeInfo[0]['id']
         console.log('store id: ' + this.storeID)
 
-        const prodName = await this.getProductDetailsByName(this.productName, this.storeID)
+        const prodName = await this.getProductDetailsByName(this.productSeoName, this.storeID)
 
         console.log('promised prodName details: ', prodName)
 
@@ -291,6 +305,8 @@ export class ProductDetailsComponent implements OnInit {
         this.detailsObj = prodName
 
         this.productAssets = this.detailsObj.productAssets;
+        
+        console.log("detailsObj: "+ prodName['description']);
 
         this.productAssets.forEach( obj => {
             // console.log('productAssets: ', obj.url);
@@ -389,12 +405,12 @@ export class ProductDetailsComponent implements OnInit {
         })
     }
 
-    getProductDetailsByName(product_name, store_id){
-        console.log('getProductDetailsByName(): ' + product_name)
+    getProductDetailsByName(seo_name, store_id){
+        console.log('getProductDetailsByName(): ' + seo_name)
 
         return new Promise( resolve => {
             
-            this.apiService.getProductSByName(product_name, store_id).subscribe((res: any) => {
+            this.apiService.getProductSByName(seo_name, store_id).subscribe((res: any) => {
     
                 if (res.message){
                     resolve(res.data.content[0])

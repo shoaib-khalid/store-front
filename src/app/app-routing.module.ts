@@ -26,8 +26,8 @@ const routes: Routes = [
     //         { path: "name/:prodName", component: ProductDetailsComponent},
     // ]},
 
-    { path: "products/name/:prodName", component: ProductDetailsComponent },
-    { path: "products/name/:prodName/:storeName", component: ProductDetailsComponent },
+    { path: "products/name/:prodSeoName", component: ProductDetailsComponent },
+    { path: "products/name/:prodSeoName/:storeName", component: ProductDetailsComponent },
 
     // { path: "**", redirectTo: ""}
     { path: '**', component: NotFoundComponent },
