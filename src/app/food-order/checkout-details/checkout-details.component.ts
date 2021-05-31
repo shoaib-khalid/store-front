@@ -89,10 +89,10 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
 
         if(this.senderID === 'undefined'){
             this.cartID = localStorage.getItem("anonym_cart_id")
-            console.log('cart id anonymous session' + this.cartID)
+            console.log('cart id anonymous session: ' + this.cartID)
         }else{
             this.cartID = localStorage.getItem('cart_id');
-            console.log('cart id session' + this.cartID)
+            console.log('cart id session: ' + this.cartID)
         }
         
         // this.orderID = localStorage.getItem('order_id')
@@ -329,13 +329,13 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
         this.apiService.postPaymentLink(data).subscribe((res: any) => {
             console.log('raw resp:', res.data.paymentLink)
             if (res.message) {
-
+                console.log("Data from PS: "+res.data);
                 let paymentLink = res.data.paymentLink;
                 // window.open(paymentLink, "_blank");
 
                 // this.visible = false
                 // console.log('goto pay mobi: ' + paymentLink)
-                window.location.href = paymentLink;
+                //window.location.href = paymentLink;
                 
             } 
         }, error => {

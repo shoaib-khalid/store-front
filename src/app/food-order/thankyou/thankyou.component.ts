@@ -20,6 +20,9 @@ export class ThankyouComponent implements OnInit {
     storeID:any;
     cartID:any;
 
+    assets = {};
+    logoExist: boolean = false;
+
   constructor(
     private route: Router,
     private apiService: ApiService,
@@ -34,7 +37,9 @@ export class ThankyouComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
+
+    var temp_storeID = localStorage.getItem('store_id'); // this temp_storeID will be cleared after second referesh
 
     localStorage.clear();
     
@@ -42,6 +47,16 @@ export class ThankyouComponent implements OnInit {
     this.refID = localStorage.getItem('ref_id');
     this.storeID = localStorage.getItem('store_id');
     this.cartID = localStorage.getItem('cart_id');
+
+    // call asset api to get logo
+    const assetData = await this.getAssets(temp_storeID)
+    console.log("asset Data...", assetData)
+    this.assets = assetData
+    // this.cartID = created_cart['id'];
+
+    if(this.assets != null){
+        this.logoExist = true;
+    }
 
     console.log(this.senderID + " | " + this.storeID + " | " + this.cartID )
 
@@ -105,6 +120,22 @@ export class ThankyouComponent implements OnInit {
     }, error => {
         console.log(error)
     }) 
+
+  }
+
+  getAssets(storeID){
+    console.log("storeID: "+storeID);
+    return new Promise(resolve => {
+        // check count Item in Cart 
+        this.apiService.getStoreAssets(storeID).subscribe((res: any) => {
+            
+            resolve(res.data)
+
+        }, error => {
+            // Swals.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
+        }) 
+        
+    });
 
   }
 

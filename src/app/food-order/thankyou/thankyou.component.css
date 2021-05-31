@@ -1,3 +1,7 @@
 .cover-div {
     height: 100vh !important;
+    display: flex;
+    background-color: #FFF7EB;;
+    justify-content: center;
+    align-items: center;
 }   

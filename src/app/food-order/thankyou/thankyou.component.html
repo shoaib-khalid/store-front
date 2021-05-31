@@ -11,6 +11,7 @@
 
 <section class="cover-div">
     <div class="jumbotron text-center" style="background-color: #FFF7EB;">
+
         <!-- desktop  -->
         <div class="d-none d-sm-none d-md-none d-lg-block">
             <h1 class="display-4" style="font-weight: bold;">Thank You!</h1>
@@ -28,23 +29,42 @@
 
         <!-- desktop  -->
         <div class="d-none d-sm-none d-md-none d-lg-block">
-            <img
+            <img *ngIf="logoExist;else defaultImage" 
+                class=""
+                src="{{assets['logoUrl']}}"
+                alt="First slide"
+                style="width: 100%; height: auto; padding: 10px;"
+            />
+
+            <ng-template #defaultImage>
+                <img 
                 class=""
                 src="./assets/image/delivery.jpg"
                 alt="First slide"
                 style="width: 40%; height: auto; padding: 10px;"
-            />
+                />
+            </ng-template>
             <br>
             <br>
         </div>
 
         <div class="d-block d-sm-block d-md-none d-lg-none" style="padding-bottom: 20px;">
-            <img
+            <img *ngIf="logoExist; else defaultImageMobile"
+                class=""
+                src="{{assets['logoUrl']}}"
+                alt="First slide"
+                style="width: 100%; height: auto; padding: 10px;"
+            />
+            <ng-template #defaultImageMobile>
+                <img 
                 class=""
                 src="./assets/image/delivery.jpg"
                 alt="First slide"
                 style="width: 100%; height: auto; padding: 10px;"
-            />
+                />
+            </ng-template>
+            <br>
+            <br>
         </div>
         
         <p class="lead">
