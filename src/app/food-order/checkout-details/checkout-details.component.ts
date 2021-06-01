@@ -31,6 +31,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
     senderID:any;
     refID:any;
     storeID:any;
+    storeName:any;
 
     cartExist:boolean = false;
     cartCount:number;
@@ -74,6 +75,10 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
 
         this.currBaseURL = (this.platformLocation as any).location.origin;
         // this.localURL = this.currBaseURL.match(/localhost/g);
+
+        var host = this.currBaseURL
+        var subdomain = host.split('.')[0]
+        this.storeName = subdomain.replace(/^(https?:|)\/\//, '')
 
         console.log('base URL: ' + this.currBaseURL)
 
@@ -319,10 +324,11 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
             // "customerId": this.senderID,
             "customerId": "4",
             "customerName": "Nazrul",
-            "productCode": "document",
+            "productCode": "parcel",
+            "storeName": this.storeName,
             "systemTransactionId": this.trxid,
             "transactionId": this.orderId,	
-            "paymentAmount": this.totalPrice,
+            "paymentAmount": this.totalPrice.toFixed(2),
             "callbackUrl" : this.currBaseURL + '/thankyou'
         }
 
@@ -335,13 +341,47 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
 
                 // this.visible = false
                 // console.log('goto pay mobi: ' + paymentLink)
-                //window.location.href = paymentLink;
-                
+
+                /**
+                    payment provider id :
+                    senangPay = 2
+                    mobiPay = 1
+                */
+                if (res.data.providerId == 1) {
+                    window.location.href = paymentLink;
+                } else if (res.data.providerId == 2) {
+                    this.postForm(paymentLink, {"detail" : this.storeName, "amount": this.totalPrice.toFixed(2), "order_id": this.orderId, "name": this.userName, "email": this.userEmail, "phone": this.userMsisdn, "hash": res.data.hash },'post');
+                } else {
+                    alert("provider id not configured !!");
+                }
             } 
         }, error => {
             Swal.fire("Payment failed!", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
         }) 
     }
+
+    postForm(path, params, method) {
+        method = method || 'post';
+    
+        var form = document.createElement('form');
+        form.setAttribute('method', method);
+        form.setAttribute('action', path);
+    
+        for (var key in params) {
+            if (params.hasOwnProperty(key)) {
+                var hiddenField = document.createElement('input');
+                hiddenField.setAttribute('type', 'hidden');
+                hiddenField.setAttribute('name', key);
+                hiddenField.setAttribute('value', params[key]);
+    
+                form.appendChild(hiddenField);
+            }
+        }
+    
+        document.body.appendChild(form);
+        form.submit();
+    }
+    
 
     async toRepopulate(){
 
