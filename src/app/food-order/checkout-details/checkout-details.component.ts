@@ -84,7 +84,9 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
 
      }
 
-    ngOnInit(): void {
+    // using async method for javascript function trigger 
+    // allowing to use wait method, one function will wait until previous method is finished
+    async ngOnInit() {
         console.log('ngOnInit');
 
 
@@ -107,9 +109,24 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
         // dummy total, if u delete this view will crash and checkCart() will not be called, later to enhance
         // this.cartList = this._databindService.getCartList();
 
-        this.getProduct();
+        // this.getProduct();
+        // this.checkCart();
+
         
-        this.checkCart();
+        const getProduct = await this.getProduct()
+        console.log("getProduct execute first...", getProduct)
+
+        // checkCart() will wait getProduct() to finished 
+        const checkCart = await this.checkCart()
+        console.log("checkCart execute second...", checkCart)
+
+        this.cartitemDetailsCount = checkCart['length'];
+
+        console.log('cartItemLength: ' + this.cartitemDetailsCount)
+
+        // countPrice() will wait checkCart() to finished 
+        const countTotal = await this.countPrice(this.allProductInventory)
+        console.log("countTotalPrice executed third...")
 
         this.spinner.show();
     }
@@ -238,76 +255,104 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
     }
 
     getProduct(){
-        this.apiService.getProductSByStoreID(this.storeID).subscribe((res: any) => {
-            // console.log('raw resp:', res)
-            if (res.message) {
-                this.product = res.data.content;
-                console.log('getProduct(): ', this.product);
-                // console.log('price: ', this.product[0].productInventories[1]);
 
-                // return false;
+        return new Promise(resolve => {
 
-                let productObj = this.product;
+            console.log("HERE HERE HRE");
 
-                productObj.forEach( obj => {
-                    // console.log(obj);
-                    // let productID = obj.id;
-                    let inventoryArr = obj.productInventories;
+            this.apiService.getProductSByStoreID(this.storeID).subscribe((res: any) => {
+                // console.log('raw resp:', res)
+                if (res.message) {
+                    this.product = res.data.content;
+                    console.log('getProduct(): ', this.product);
+                    // console.log('price: ', this.product[0].productInventories[1]);
 
-                    if(inventoryArr.length !== 0){
+                    // return false;
 
-                        inventoryArr.forEach( inventoryObj => {
-                            // creating a collection of productInventories array to prepare base mapping 
-                            // for logic that related to itemCode
-                            this.allProductInventory.push(inventoryObj);
-                        });
-                    }
-                });
-                
-                console.log('all product inventories: ', this.allProductInventory)
+                    let productObj = this.product;
 
-                //get the price
-                this.countPrice(this.allProductInventory);
+                    productObj.forEach( obj => {
+                        // console.log(obj);
+                        // let productID = obj.id;
+                        let inventoryArr = obj.productInventories;
 
-            } else {
-                // condition if required for different type of response message 
-            }
-        }, error => {
-            console.log(error)
-        }) 
+                        if(inventoryArr.length !== 0){
+
+                            inventoryArr.forEach( inventoryObj => {
+                                // creating a collection of productInventories array to prepare base mapping 
+                                // for logic that related to itemCode
+                                this.allProductInventory.push(inventoryObj);
+                            });
+                        }
+                    });
+                    
+                    console.log('all product inventories: ', this.allProductInventory)
+
+                    resolve(this.allProductInventory)
+
+                    //get the price
+                    // this.countPrice(this.allProductInventory);
+
+                } else {
+                    // condition if required for different type of response message 
+                }
+            }, error => {
+                console.log(error)
+            }) 
+
+        })
+        
     }
 
-
     checkCart(){
-        // check count Item in Cart 
-        this.apiService.getCartItemByCartID(this.cartID).subscribe((res: any) => {
-            console.log('cart item by cart ID: ', res.data.content)
 
-            if (res.message){
-                this.cartitemDetails = res.data.content;
-                this.cartitemDetailsCount = this.cartitemDetails.length;
+        return new Promise(resolve => {
+            // check count Item in Cart 
+            this.apiService.getCartItemByCartID(this.cartID).subscribe((res: any) => {
+                console.log('check cart item: ', res.data.content)
 
-            } else {
-            }
-        }, error => {
-            console.log(error)
-        }) 
+                if (res.message){
+                    this.cartitemDetails = res.data.content;
+                    // this.cartitemDetailsCount = this.cartitemDetails.length;
+
+                    console.log("getCartItemByCartID responded")
+
+                    resolve(this.cartitemDetails)
+
+                } else {
+                }
+            }, error => {
+                console.log(error)
+            }) 
+        })
+        
     }
 
     countPrice(productList:any){
 
         this.subTotal = 0
 
-        this.cartitemDetails.forEach(cartItem => {
+        // console.log('in countPrice Obj: ', this.cartitemDetails)
 
+        // console.log('productList: ' , productList)
+
+        // console.log("this.cartitemDetails: "+this.cartitemDetails);
+
+        this.cartitemDetails.forEach(cartItem => {
             productList.map(allProduct => {
+                console.log("allProduct.itemCode : " + allProduct.itemCode + "cartItem.itemCode : " + cartItem.itemCode);
                 if(allProduct.itemCode == cartItem.itemCode){
-                    this.subTotal = this.subTotal + (allProduct.price * cartItem.quantity)
+                    this.subTotal = this.subTotal + (allProduct.price * cartItem.quantity);
                 }
             })
         });
 
         this.totalPrice = this.subTotal + this.deliveryFee
+
+        console.log("totalPrice : "+this.totalPrice);
+        console.log("subTotal : "+this.subTotal);
+        console.log("deliveryFee : "+this.deliveryFee);
+        
     }
 
     goSkip(e){
