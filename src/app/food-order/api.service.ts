@@ -4,13 +4,13 @@ import { Observable, of } from "rxjs";
 import { PlatformLocation } from "@angular/common";
 // import { createConnection } from 'net';
 
+import { AppConfig } from '../app.config';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ApiService {
 
-    currBaseURL: any;
     // endpointBaseURL: any;
     orderServiceURL: any;
     productServiceURL: any;
@@ -21,6 +21,8 @@ export class ApiService {
     tokenPay:any = 'accessToken';
     variantStr:string = "";
 
+    protected apiServer = AppConfig.settings.serviceUrl;
+
     constructor(
         private http: HttpClient,
         private platformLocation: PlatformLocation
@@ -29,42 +31,11 @@ export class ApiService {
     }
 
     checkBaseUrl() {
-        // console.log("api service loaded");
-        // console.log((this.platformLocation as any).location.origin);
-        this.currBaseURL = (this.platformLocation as any).location.origin;
-
-        let prodURL = this.currBaseURL.match(/symplified.store/g);
-        let stagingURL = this.currBaseURL.match(/sandbox.symplified.ai/g);
-        let localURL = this.currBaseURL.match(/localhost/g);
-
-        if (prodURL != null) {
-            // later if we have new production endpoint, kindly change all the endpoint under prodURL section 
-            this.userServiceURL = "https://api.symplified.biz/v1/user-service/";
-            this.productServiceURL = "https://api.symplified.biz/v1/product-service/";
-            // this.payServiceURL = "https://209.58.160.20:6001/";
-            this.payServiceURL = "https://api.symplified.biz/v1/payment-service/"
-            this.orderServiceURL = "https://api.symplified.biz/v1/order-service/";
-            // this.orderServiceURL = "http://209.58.160.20:7072/";
-            this.deliveryServiceURL = "https://api.symplified.biz/v1/delivery-service/";
-
-        } else if (stagingURL != null) {
-            this.userServiceURL = "https://api.symplified.biz/v1/user-service/";
-            this.productServiceURL = "https://api.symplified.biz/v1/product-service/";
-            // this.payServiceURL = "https://209.58.160.20:6001/";
-            this.payServiceURL = "https://api.symplified.biz/v1/payment-service/"
-            this.orderServiceURL = "https://api.symplified.biz/v1/order-service/";
-            // this.orderServiceURL = "http://209.58.160.20:7072/";
-            this.deliveryServiceURL = "https://api.symplified.biz/v1/delivery-service/";
-
-        } else {
-            this.userServiceURL = "https://api.symplified.biz/v1/user-service/";
-            this.productServiceURL = "https://api.symplified.biz/v1/product-service/";
-            // this.payServiceURL = "https://209.58.160.20:6001/";
-            this.payServiceURL = "https://api.symplified.biz/v1/payment-service/"
-            this.orderServiceURL = "https://api.symplified.biz/v1/order-service/";
-            // this.orderServiceURL = "http://209.58.160.20:7072/";
-            this.deliveryServiceURL = "https://api.symplified.biz/v1/delivery-service/";
-        }
+        this.userServiceURL = AppConfig.settings.serviceUrl.userServiceURL;
+        this.productServiceURL = AppConfig.settings.serviceUrl.productServiceURL;
+        this.payServiceURL = AppConfig.settings.serviceUrl.payServiceURL;
+        this.orderServiceURL = AppConfig.settings.serviceUrl.orderServiceURL;
+        this.deliveryServiceURL = AppConfig.settings.serviceUrl.deliveryServiceURL;
     }
 
     postAuthenticate(data) {
