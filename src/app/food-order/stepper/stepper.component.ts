@@ -23,6 +23,10 @@ export class StepperComponent implements OnInit {
   ngOnInit(): void {
     this.stepper = this._databindService.getStepper();
 
+    if (this.route.url === '/checkout') {
+        this.stepperHighlighter(2);
+    }
+
   }
 
   goTo(event, id) {
@@ -37,19 +41,20 @@ export class StepperComponent implements OnInit {
 
     switch (id) {
       case 1:
-        this.stepperHighlighter(id);
+        // this.stepperHighlighter(id);
+        this.route.navigateByUrl('/');
         // this.route.navigate(['/:referenceId'+this.refID+'/:senderId='+this.senderID+'/:storeId/:'+this.storeID])
-        this.route.navigateByUrl('/catalogue?referenceId='+this.refID+'&senderId='+this.senderID+'&storeId='+this.storeID);
+        // this.route.navigateByUrl('/catalogue?referenceId='+this.refID+'&senderId='+this.senderID+'&storeId='+this.storeID);
         // router.navigateByUrl('/page?id=37&username=jimmy');
         // this.route.navigate(['catalogue']);
         // this.route.navigate(['catalogue', { referenceId: this.refID, senderId: this.senderID, storeId: this.storeID }]);
         break;
       case 2:
-        this.stepperHighlighter(id);
+        // this.stepperHighlighter(id);
         this.route.navigate(['checkout']);
         break
       case 3: 
-        this.stepperHighlighter(id);
+        // this.stepperHighlighter(id);
         break
       default:
         break;
