@@ -104,8 +104,8 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
     storeName:any;
     localURL:any;
 
-    has_storeId:boolean = false;
     popupSKU: any;
+    popupWeight: any;
 
     constructor(
         private _databindService: DataBindService, 
@@ -139,7 +139,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
         this.currBaseURL = (this.platformLocation as any).location.origin;
         this.localURL = this.currBaseURL.match(/localhost/g);
 
-        console.log('Base URL: ' + this.currBaseURL)
+        console.log('Catalogue Base URL: ' + this.currBaseURL)
 
         if(this.localURL != null){
             // use this for localhost
@@ -166,29 +166,28 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
 
             console.log('Location: Staging')
         }else{
-            console.log('Location: Prod')
+            console.log('Catalogue Location: Prod')
             var host = this.currBaseURL
             var subdomain = host.split('.')[0]
 
-            console.log('subdomain: ' + subdomain)
-            console.log('removed https: ' + subdomain.replace(/^(https?:|)\/\//, ''))
+            console.log('Catalogue Subdomain: ' + subdomain)
+            // console.log('removed https: ' + subdomain.replace(/^(https?:|)\/\//, ''))
 
             this.storeName = subdomain.replace(/^(https?:|)\/\//, '')
 
             // this.storeName = "mcd";
-            console.log('storename: ' + this.storeName)
+            console.log('Catalogue Storename: ' + this.storeName)
 
             // get url parameter style e.g http://localhost:4200/catalogue?store_id=3
             this.activatedRoute.queryParams.subscribe(params => {
                 this.senderID = params['senderId'];
                 this.storeID = params['storeId'];
 
-                if(this.storeID){
-                    this.has_storeId = true
-                }
+                console.log('Catalogue SenderID: ' + this.senderID); 
+                console.log('Catalogue StoreID: ' + this.storeID); 
 
-                console.log('has query param store id? ' + this.has_storeId)
-                console.log('customerID: ' + this.senderID); // Print the parameter to the console. 
+                var whatuser = (!this.senderID) ? console.log('Catalogue Customer: Anonymous') : console.log('Catalogue Customer: ' + this.senderID)
+
             });
 
             localStorage.setItem('sender_id', this.senderID)
@@ -198,9 +197,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     ngOnInit(): void {
-
-        console.log('ngOnInit started...');
-
+        console.log('Catalogue On Page Load');
         // this is for initial base setup 
         if(this.localURL != null){
 
@@ -229,18 +226,172 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
                 console.log('you are anonymous')
             }
             
-        }else{
+        } else {
             // Production
-            console.log('getMerchantInfo started...')
             
-            if(this.has_storeId == false){
+            if(!this.storeID){
+                console.log('Catalogue StoreID is '+this.storeID+', calling FUNCTION getMerchantInfo Function')
                 this.getMerchantInfo(this.storeName)
-            }else{
+            } else {
+                console.log('Catalogue StoreID is '+this.storeID+', calling FUNCTION skipMerchantInfo Function')
                 this.skipMerchantInfo()
             }
 
         }
+    }
 
+    getMerchantInfo(storename){
+        console.log('Catalogue Calling BACKEND getStoreInfo');
+        this.apiService.getStoreInfo(storename).subscribe((res: any) => {
+            console.log('Catalogue Receive BACKEND getStoreInfo');
+            console.log('Catalogue Store Information: ', res.data.content)
+
+            let data = res.data.content[0]
+            let exist = data.length
+
+            if (res.message){
+
+                if(exist == 0){
+                    Swal.fire("Ops!", "Store information not exist!", "error")
+
+                    return false
+                }
+
+                this.storeID = data.id;
+
+                this.getProduct()
+
+                // this.getProductNew();
+                this.getCategory();
+
+                // check cart first 
+                // this.checkCart();
+
+                //add block prod here
+
+                if(this.senderID){
+                    this.checkCart();
+                    console.log('senderId exist!' + this.senderID)
+                }else{
+    
+                    // sessionStorage = only for current browser, The data survives page refresh, but not closing/opening the tab
+                    // localStorage = The data does not expire. It remains after the browser restart and even OS reboot. Shared between all tabs and windows from the same origin.
+                    this.cartID = localStorage.getItem("anonym_cart_id")
+                    // var sesStoreName = localStorage.getItem('store_name')
+    
+                    if(this.cartID){
+                        this.getItemDetails(this.cartID)
+                    }else{
+                        this.cartitemDetailsCount = 0;
+                    }
+    
+                    console.log('you are anonymous')
+                }
+
+                console.log('id: ' + this.storeID)
+                localStorage.setItem('store_id', this.storeID);
+
+            } else {
+                Swal.fire("Great!", "Item failed", "error")
+            }
+
+        }, error => {
+            Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
+        }) 
+
+    }
+
+    getProduct() {
+        console.log('Calling Backend getProductSByStoreID');
+        this.apiService.getProductSByStoreID(this.storeID).subscribe((res: any) => {
+            console.log('Receive Backend getProductSByStoreID');
+            if (res.message) {
+                this.product = res.data.content;
+                console.log('getProduct(): ', this.product);
+                // console.log('price: ', this.product[0].productInventories[1]);
+
+                // return false;
+
+                let productObj = this.product;
+
+                productObj.forEach( obj => {
+                    // console.log(obj);
+
+                    let productID = obj.id;
+                    let inventoryArr = obj.productInventories;
+
+                    if(inventoryArr.length !== 0){
+                        
+                        // pseudocode : If this.singleInventoriesMode is true, then select first Object, if false then loop and get min price 
+                        // for food industries is on this.singleInventoriesMode mode for other might be true or false 
+                        if(this.singleInventoriesMode){
+                            this.minVal = inventoryArr[0].price;
+                        }else{
+
+                            // clean back clusterPriceArr  
+                            this.clusterPriceArr = [];
+
+                            inventoryArr.forEach( inventoryObj => {
+                                // creating a collection of price array base on cluster item 
+                                this.clusterPriceArr.push(inventoryObj.price);
+
+                                // creating a collection of productInventories array to prepare base mapping 
+                                // for logic that related to itemCode
+                                this.allProductInventory.push(inventoryObj);
+                            });
+
+                            // get min price among the clusterPriceArr 
+                            this.minVal = this.clusterPriceArr.reduce((a, b)=>Math.min(a, b));
+
+                            let count = false
+
+                            // map and stored the item object with minimum price to be shown on the catalogue list 
+                            inventoryArr.map(item => {
+                                if(item.price == this.minVal && !count){
+                                    // console.log('selected product: ', product);
+
+                                    count = true;
+                                    this.catalogueList.push(item)
+                                    return this.catalogueList;
+                                }
+                            })
+
+                            // map and stored the item object with minimum price to be shown on the catalogue list 
+                            // inventoryArr.map(item => {
+                            //     if(item.price == this.minVal){
+                            //         // console.log('selected product: ', product);
+                            //         this.catalogueList.push(item)
+                            //         return this.catalogueList;
+                            //     }
+                            // })
+                        }
+
+                    }else{
+                        this.minVal = 0;
+                    }
+                
+                    // creating an object of a specific product item 
+                    let data = {
+                        product_id : productID,
+                        minPrice : this.minVal
+                    }
+
+                    // populate product id as identifier of item and its min price into a new final object collection 
+                    this.priceObj.push(data);
+                    
+                    // console.log('Final Object: ', this.priceObj);
+                    
+                });
+                
+                console.log('initial catalogue product: ', this.catalogueList)
+                console.log('all product inventories: ', this.allProductInventory)
+
+            } else {
+                // condition if required for different type of response message 
+            }
+        }, error => {
+            console.log(error)
+        }) 
     }
 
     async flow_anonymCheckCartItem(){
@@ -254,7 +405,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
 
     }
 
-    async flow_anonymAddToCart(itemCode, productID, qty, price, sku){
+    async flow_anonymAddToCart(itemCode, productID, qty, price, weight, sku){
 
         console.log("init flow_anonymAddToCart.... ")
 
@@ -271,7 +422,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
             console.log('created cart id: ' + this.cartID)
         }
 
-        const add_item = await this.addItemToCart(this.cartID, itemCode, productID, qty, price, sku)
+        const add_item = await this.addItemToCart(this.cartID, itemCode, productID, qty, price, weight, sku)
         console.log("item added to cart...")
         console.log("add item details ", add_item )
 
@@ -308,7 +459,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
 
     }
 
-    addItemToCart(cartID, itemCode, productID, qty, price, sku){
+    addItemToCart(cartID, itemCode, productID, qty, price, weight, sku){
         console.log("starting to add item to cart...")
         return new Promise(resolve => {
 
@@ -321,7 +472,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
                 "quantity": qty,
                 "price": price,
                 "productPrice": price,
-                "weight": 0.00,
+                "weight": weight,
                 "SKU": sku
             }
 
@@ -363,66 +514,6 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
             }) 
             
         });
-
-    }
-
-
-    getMerchantInfo(storename){
-
-        this.apiService.getStoreInfo(storename).subscribe((res: any) => {
-            console.log('store information: ', res.data.content)
-
-            let data = res.data.content[0]
-            let exist = data.length
-
-            if (res.message){
-
-                if(exist == 0){
-                    Swal.fire("Ops!", "Store information not exist!", "error")
-
-                    return false
-                }
-
-                this.storeID = data.id;
-
-                this.getProduct();
-                // this.getProductNew();
-                this.getCategory();
-
-                // check cart first 
-                // this.checkCart();
-
-                //add block prod here
-
-                if(this.senderID){
-                    this.checkCart();
-                    console.log('senderId exist!' + this.senderID)
-                }else{
-    
-                    // sessionStorage = only for current browser, The data survives page refresh, but not closing/opening the tab
-                    // localStorage = The data does not expire. It remains after the browser restart and even OS reboot. Shared between all tabs and windows from the same origin.
-                    this.cartID = localStorage.getItem("anonym_cart_id")
-                    // var sesStoreName = localStorage.getItem('store_name')
-    
-                    if(this.cartID){
-                        this.getItemDetails(this.cartID)
-                    }else{
-                        this.cartitemDetailsCount = 0;
-                    }
-    
-                    console.log('you are anonymous')
-                }
-
-                console.log('id: ' + this.storeID)
-                localStorage.setItem('store_id', this.storeID);
-
-            } else {
-                Swal.fire("Great!", "Item failed", "error")
-            }
-
-        }, error => {
-            Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
-        }) 
 
     }
 
@@ -542,8 +633,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
         }) 
     }
 
-
-    addToCart(event, productID, itemCode, option, price, sku){
+    addToCart(event, productID, itemCode, option, price, weight ,sku){
 
         // alert("productID: " + productID + " itemCode: " + itemCode + " option: " + option)
         // return false;
@@ -578,7 +668,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
             "quantity": qty,
             "price": price,
             "productPrice": price,
-            "weight": 0.00,
+            "weight": weight,
             "SKU": sku
         }
 
@@ -708,7 +798,14 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
 
                 
             }else{
-                this.flow_anonymAddToCart(itemCode, productID, qty, price, sku)
+                console.log("flow_anonymAddToCart" +
+                            "\nitemCode: " + itemCode +
+                            "\nproductID: " + productID +
+                            "\nqty: " + qty +
+                            "\nprice: " + price +
+                            "\nweight: " + weight +
+                            "\nsku: " + sku);
+                this.flow_anonymAddToCart(itemCode, productID, qty, price, weight, sku)
             }
 
             
@@ -816,98 +913,6 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
 
     }
 
-    getProduct(){
-        this.apiService.getProductSByStoreID(this.storeID).subscribe((res: any) => {
-            // console.log('raw resp:', res)
-            if (res.message) {
-                this.product = res.data.content;
-                console.log('getProduct(): ', this.product);
-                // console.log('price: ', this.product[0].productInventories[1]);
-
-                // return false;
-
-                let productObj = this.product;
-
-                productObj.forEach( obj => {
-                    // console.log(obj);
-
-                    let productID = obj.id;
-                    let inventoryArr = obj.productInventories;
-
-                    if(inventoryArr.length !== 0){
-                        
-                        // pseudocode : If this.singleInventoriesMode is true, then select first Object, if false then loop and get min price 
-                        // for food industries is on this.singleInventoriesMode mode for other might be true or false 
-                        if(this.singleInventoriesMode){
-                            this.minVal = inventoryArr[0].price;
-                        }else{
-
-                            // clean back clusterPriceArr  
-                            this.clusterPriceArr = [];
-
-                            inventoryArr.forEach( inventoryObj => {
-                                // creating a collection of price array base on cluster item 
-                                this.clusterPriceArr.push(inventoryObj.price);
-
-                                // creating a collection of productInventories array to prepare base mapping 
-                                // for logic that related to itemCode
-                                this.allProductInventory.push(inventoryObj);
-                            });
-
-                            // get min price among the clusterPriceArr 
-                            this.minVal = this.clusterPriceArr.reduce((a, b)=>Math.min(a, b));
-
-                            let count = false
-
-                            // map and stored the item object with minimum price to be shown on the catalogue list 
-                            inventoryArr.map(item => {
-                                if(item.price == this.minVal && !count){
-                                    // console.log('selected product: ', product);
-
-                                    count = true;
-                                    this.catalogueList.push(item)
-                                    return this.catalogueList;
-                                }
-                            })
-
-                            // map and stored the item object with minimum price to be shown on the catalogue list 
-                            // inventoryArr.map(item => {
-                            //     if(item.price == this.minVal){
-                            //         // console.log('selected product: ', product);
-                            //         this.catalogueList.push(item)
-                            //         return this.catalogueList;
-                            //     }
-                            // })
-                        }
-
-                    }else{
-                        this.minVal = 0;
-                    }
-                
-                    // creating an object of a specific product item 
-                    let data = {
-                        product_id : productID,
-                        minPrice : this.minVal
-                    }
-
-                    // populate product id as identifier of item and its min price into a new final object collection 
-                    this.priceObj.push(data);
-                    
-                    // console.log('Final Object: ', this.priceObj);
-                    
-                });
-                
-                console.log('initial catalogue product: ', this.catalogueList)
-                console.log('all product inventories: ', this.allProductInventory)
-
-            } else {
-                // condition if required for different type of response message 
-            }
-        }, error => {
-            console.log(error)
-        }) 
-    }
-
     onGetDetails(productid){
         // console.log('product id: ', productid)
 
@@ -937,6 +942,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.popupPrice = product.price;
                 this.popupItemCode = product.itemCode;
                 this.popupSKU = product.sku;
+                this.popupWeight = product.weight;
                 // return this.popupPrice;
             }
         })
@@ -1137,7 +1143,6 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
   
     }
 
-
     deleteItem(id, productID){
 
         console.log('deleted product_id: ' + productID + "| id: " + id)
@@ -1193,7 +1198,6 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
 
     }
 
-
     getCartItemDetails(){
         
         console.log('masok')
@@ -1242,33 +1246,115 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
 
     }
 
-  onIndexChanged(idx) {
-    this.idx = idx;
-    // console.log('current index: ' + idx);
-  }
+    onIndexChanged(idx) {
+        this.idx = idx;
+        // console.log('current index: ' + idx);
+    }
 
-  onDragScrollInitialized() {
-    // console.log('first demo drag scroll has been initialized.');
-  }
+    onDragScrollInitialized() {
+        // console.log('first demo drag scroll has been initialized.');
+    }
 
-  leftBoundStat(reachesLeftBound: boolean) {
-    this.leftNavDisabled = reachesLeftBound;
-  }
+    leftBoundStat(reachesLeftBound: boolean) {
+        this.leftNavDisabled = reachesLeftBound;
+    }
 
-  rightBoundStat(reachesRightBound: boolean) {
-    this.rightNavDisabled = reachesRightBound;
-  }
+    rightBoundStat(reachesRightBound: boolean) {
+        this.rightNavDisabled = reachesRightBound;
+    }
 
-  onSnapAnimationFinished() {
-    // console.log('snap animation finished');
-  }
+    onSnapAnimationFinished() {
+        // console.log('snap animation finished');
+    }
 
-  onDragStart() {
-    // console.log('drag start');
-  }
+    onDragStart() {
+        // console.log('drag start');
+    }
 
-  onDragEnd() {
-    // console.log('drag end');
-  }
+    onDragEnd() {
+        // console.log('drag end');
+    }
+
+    adjustItem(itemId, productId, itemCode, operation, index){
+        // alert("itemId: "+itemId+
+        //     " \nproductId: " + productId +
+        //     " \nitemCode: " + itemCode +
+        //     " \ncartId: " + this.cartID +
+        //     " \noperation: " + operation +
+        //     " \nindex: " + index);
+
+        // front end quantity
+        let minQtty = 1;
+        let maxQtty = 10;
+        if ((this.cartitemDetails[index].quantity <= minQtty) && operation == "-1") {
+            this.cartitemDetails[index].quantity = minQtty;
+            Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + "Item can't be less than " + minQtty + "</small>", "error")
+        } else if ((this.cartitemDetails[index].quantity >= maxQtty) && operation == "1") {
+            this.cartitemDetails[index].quantity = maxQtty;
+            Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + "Item can't be more than " + maxQtty + "</small>", "error")
+
+        } else {
+            // front end quantity
+            this.cartitemDetails[index].quantity = this.cartitemDetails[index].quantity + operation;
+            // back end quantity
+            // this.updateCartItem(itemId, operation);
+            this.putCartItem(itemId, productId, itemCode , this.cartitemDetails[index].quantity);
+        }
+        
+        // backend quantity
+        // console.log("cartitemDetails: "+ JSON.stringify(this.cartitemDetails[index]))
+    }
+
+    updateCartItem(itemId, operation){
+        // alert("itemId: "+itemId+" | cartId: "+this.cartID+" | operation: "+operation);
+
+        let data = {
+            "cartId": this.cartID,
+            "id": itemId,
+            "quantityChange": operation
+        }
+
+        this.apiService.updateCartItem(data).subscribe((res: any) => {
+            console.log('updateCartItem result: ', res)
+            if (res.message){
+                console.log('operation successfull')
+            } else {
+                console.log('operation failed')
+            }
+        }, error => {
+            console.log(error)
+        }) 
+    }
+
+    putCartItem(itemId, productId, itemCode, quantity){
+        // alert("itemId: "+itemId+" | cartId: "+this.cartID+" | operation: "+operation);
+
+        let data = {
+            "cartId": this.cartID,
+            "id": itemId,
+            "productId": productId,
+            "itemCode": itemCode,
+            "quantity": quantity
+        }
+
+        this.apiService.putCartItem(data).subscribe((res: any) => {
+            console.log('updateCartItem result: ', res)
+            if (res.message){
+                console.log('operation successfull')
+            } else {
+                console.log('operation failed')
+            }
+        }, error => {
+            console.log(error)
+        }) 
+    }
+
+    clearCart(){
+        
+    }
+
+    deleteCartItem(){
+        
+    }
 
 }
