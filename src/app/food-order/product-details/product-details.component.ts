@@ -59,51 +59,38 @@ export class ProductDetailsComponent implements OnInit {
         private platformLocation: PlatformLocation
         ) {
 
-        this.cartID = localStorage.getItem("anonym_cart_id")
-
-        // this.currBaseURL = this.route.url;
-        console.log('Base URL: ' + this.activatedRoute.snapshot.url[2].path)
-
-        // url path style e.g http://localhost:4200/catalogue/3
-        this.activatedRoute.params.subscribe(params => {
-            this.productSeoName = params['prodSeoName'];
-            this.storeName = params['storeName'];
-            console.log('product name before: ' + this.productSeoName); // Print the parameter to the console. 
-
-            // var re = /-/gi; 
-            // var str = this.productName;
-            // var newstr = str.replace(re, "%20"); 
-
-            // this.productName = newstr
-
-            console.log('product name after: ' + this.productSeoName); // Print the parameter to the console. 
-            
-        });
-
-        this.productId = ""
-
-
         this.currBaseURL = (this.platformLocation as any).location.origin;
         this.localURL = this.currBaseURL.match(/localhost/g);
+        console.log('Base URL: ' + this.currBaseURL)
+
 
         if(this.localURL != null){
-            /** staging */
             console.log('Location: Staging')
         } else {
             console.log('Location: Prod')
             var host = this.currBaseURL
             var subdomain = host.split('.')[0]
 
-            console.log('subdomain: ' + subdomain)
+            console.log('Domain: ' + subdomain)
             console.log('removed https: ' + subdomain.replace(/^(https?:|)\/\//, ''))
 
             this.storeName = subdomain.replace(/^(https?:|)\/\//, '')
         }
 
-        if(this.storeName === undefined){
-            this.storeName = "elo"
-        }
 
+        this.activatedRoute.params.subscribe(params => {
+            this.productSeoName = params['prodSeoName'];
+            this.storeName = (params['storeName']) ? params['storeName'] : this.storeName;
+            console.log('product name before: ' + this.productSeoName); // Print the parameter to the console.             
+        });
+
+        // this.productId = ""
+
+        // if(this.storeName === undefined){
+        //     this.storeName = "elo"
+        // }
+
+        this.cartID = localStorage.getItem("anonym_cart_id")
         // this.storeID = "af2cda1a-d4ac-4a9e-b51b-fc5b32578e5a"
         console.log('storeName: ' + this.storeName)
    }
@@ -286,8 +273,10 @@ export class ProductDetailsComponent implements OnInit {
         console.log('promised storeInfo details: ', storeInfo)
 
         this.storeID = storeInfo[0]['id']
-        console.log('store id: ' + this.storeID)
 
+        console.log('store id: ' + this.storeID)
+        localStorage.setItem('store_id', this.storeID);
+        
         const prodName = await this.getProductDetailsByName(this.productSeoName, this.storeID)
 
         console.log('promised prodName details: ', prodName)
