@@ -28,7 +28,7 @@ export class BannerComponent implements OnInit {
         this.currBaseURL = (this.platformLocation as any).location.origin;
         this.localURL = this.currBaseURL.match(/localhost/g);
 
-        console.log('Base URL: ' + this.currBaseURL)
+        console.log('Banner Base URL: ' + this.currBaseURL)
 
         if(this.localURL != null){
             // use this for localhost
@@ -52,17 +52,17 @@ export class BannerComponent implements OnInit {
             this.storeName = "cinema-online"
 
         }else{
-            console.log('Location: Prod')
+            console.log('Banner Location: Prod')
             var host = this.currBaseURL
             var subdomain = host.split('.')[0]
 
-            console.log('subdomain: ' + subdomain)
-            console.log('removed https: ' + subdomain.replace(/^(https?:|)\/\//, ''))
+            console.log('Banner Subdomain: ' + subdomain)
+            // console.log('removed https: ' + subdomain.replace(/^(https?:|)\/\//, ''))
 
             this.storeName = subdomain.replace(/^(https?:|)\/\//, '')
 
             // this.storeName = "mcd";
-            console.log('storename: ' + this.storeName)
+            console.log('Banner Storename: ' + this.storeName)
 
             // get url parameter style e.g http://localhost:4200/catalogue?store_id=3
             this.activatedRoute.queryParams.subscribe(params => {
@@ -79,18 +79,18 @@ export class BannerComponent implements OnInit {
   
   async ngOnInit(){
     
-    // alert('storeID: ' + this.storeID)
-
     // return false;
+    console.log("Banner Calling FUNCTION getMerchantInfo")
     const storeInfo = await this.getMerchantInfo(this.storeName)
-    console.log("store info...", storeInfo)
+    console.log("Banner Receive FUNCTION getMerchantInfo, Store Info: ", storeInfo)
 
     this.storeID = storeInfo['id']
-    console.log('storeID REAL: ' + this.storeID)
+    console.log('Banner StoreID: ' + this.storeID)
     // return false
 
+    console.log("Banner Calling FUNCTION getAssets")
     const assetData = await this.getAssets(this.storeID)
-    console.log("asset Data...", assetData)
+    console.log("Banner Receive FUNCTION getAssets, Data: ", assetData)
     this.assets = assetData
     // this.cartID = created_cart['id'];
 
@@ -101,8 +101,10 @@ export class BannerComponent implements OnInit {
   }
 
   getMerchantInfo(storename){
+    console.log('Banner Calling BACKEND getStoreInfo');
     return new Promise(resolve => {
         this.apiService.getStoreInfo(storename).subscribe((res: any) => {
+            console.log('Banner Receive BACKEND getStoreInfo');
             resolve(res.data.content[0])
         }), error => {
 
@@ -111,17 +113,14 @@ export class BannerComponent implements OnInit {
   }
 
   getAssets(storeID){
-
+    console.log('Banner Calling BACKEND getStoreAssets');
     return new Promise(resolve => {
-
         // check count Item in Cart 
         this.apiService.getStoreAssets(storeID).subscribe((res: any) => {
-       
+            console.log('Banner Receive BACKEND getStoreAssets');
             resolve(res.data)
-
         }, error => {
             // Swals.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
-
         }) 
         
     });
