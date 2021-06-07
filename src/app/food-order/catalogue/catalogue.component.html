@@ -136,7 +136,7 @@
                     <div class="row">
                         <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
                             <div *ngFor="let data of catalogueList">
-                                <div *ngIf="item.id == data.productId" (click)="addToCart($event, item.id, data.itemCode, 1, data.price, data.sku)" class="bg-warning rounded btnAddtoCart">
+                                <div *ngIf="item.id == data.productId" (click)="addToCart($event, item.id, data.itemCode, 1, data.price, item.weight, data.sku)" class="bg-warning rounded btnAddtoCart">
                                     <span style="vertical-align: middle;">Add to cart &nbsp;<fa-icon [icon]="iconCart"></fa-icon></span>
                                 </div>
                             </div>
@@ -194,7 +194,7 @@
             </div>
 
             <!-- <form (submit)="checkQuantity()"> -->
-            <form (submit)="addToCart($event, detailsObj.id, popupItemCode, 2, popupPrice, popupSKU)">
+            <form (submit)="addToCart($event, detailsObj.id, popupItemCode, 2, popupPrice, popupWeight, popupSKU)">
                 <div class="modal-body">
 
                     <!-- Destop/Tablet Layout -->
@@ -345,11 +345,11 @@
                                 </div> -->
                                 <div class="col-3 text-center">
                                     <span>
-                                        <fa-icon [icon]="iconMinus" class="qtyIcon"></fa-icon>
+                                        <fa-icon (click)="adjustItem(item.id, item.productId, item.itemCode, -1, i)"  [icon]="iconMinus" class="qtyIcon"></fa-icon>
                                     </span>
                                     <span style="margin-left: 20px; margin-right: 20px;">{{item.quantity}}</span>
                                     <span>
-                                        <fa-icon [icon]="iconAdd" class="qtyIcon"></fa-icon>
+                                        <fa-icon (click)="adjustItem(item.id, item.productId, item.itemCode, 1, i)" [icon]="iconAdd" class="qtyIcon"></fa-icon>
                                     </span>
                                 </div>
                                 <div class="col-3 text-center">
@@ -384,11 +384,11 @@
                                 </div>
                                 <div class="col-3 text-center">
                                     <span>
-                                        <fa-icon [icon]="iconMinus" class="qtyIcon"></fa-icon>
+                                        <fa-icon (click)="adjustItem(item.id, item.productId, item.itemCode, -1, i)" [icon]="iconMinus" class="qtyIcon"></fa-icon>
                                     </span>
                                     <span style="margin-left: 20px; margin-right: 20px;">{{item.quantity}}</span>
                                     <span>
-                                        <fa-icon [icon]="iconAdd" class="qtyIcon"></fa-icon>
+                                        <fa-icon (click)="adjustItem(item.id, item.productId, item.itemCode, 1, i)" [icon]="iconAdd" class="qtyIcon"></fa-icon>
                                     </span>
                                 </div>
                                 <div class="col-3 text-center">
@@ -409,7 +409,7 @@
 
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-dismiss="modal">Clear cart</button>
+                <button (click)="clearCart()" type="button" class="btn btn-danger" data-dismiss="modal">Clear cart</button>
                 <button type="button" class="btn btn-warning" data-dismiss="modal">Back</button>
             </div>
         </div>
