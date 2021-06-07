@@ -1350,11 +1350,51 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     clearCart(){
-        
+        console.log("clear cart initiated");
+        this.deleteAllCartItem();
+        console.log("clear cart finished");
     }
 
-    deleteCartItem(){
-        
+    deleteAllCartItem(){
+        let data = {
+            "cartId": this.cartID
+        }
+
+        this.apiService.deleteAllCartItem(data).subscribe((res: any) => {
+
+            if (res.message){
+                console.log('deleteAllCartItem response : ', res)
+
+                // Update item count in Cart 
+                this.apiService.getCartItemByCartID(data.cartId).subscribe((res: any) => {
+                    // console.log('cart item by cart ID: ', res.data.content)
+
+                    if (res.message){
+                        this.cartitemDetails = res.data.content;
+                        this.cartitemDetailsCount = this.cartitemDetails.length;
+
+                        Swal.fire({
+                            icon: 'info',
+                            title: 'All Items successfully deleted',
+                            showConfirmButton: false,
+                            timer: 1000
+                        })
+
+                    } else {
+
+                    }
+
+                }, error => {
+                    Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
+                }) 
+
+            } else {
+
+            }
+
+        }, error => {
+            Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
+        }) 
     }
 
 }

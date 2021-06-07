@@ -411,7 +411,7 @@ export class ApiService {
     }
 
     // ref : http://209.58.160.20:7072/swagger-ui.html#/cart-item-controller/deleteCartItemsByIdUsingDELETE
-    deleteCartItem(data, id):Observable<any> {
+    deleteAllCartItem(data):Observable<any> {
         const httpOptions = {
             headers: new HttpHeaders(
             { 
