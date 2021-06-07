@@ -53,16 +53,28 @@ export class ApiService {
     }
 
     // Ref : http://209.58.160.20:20921/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config#/customers-controller/getCustomers_1
-    getCustomerProfileByEmail(email) {
+    getCustomerProfileByEmail(email, storeId) {
+        console.log("XXXX:" +storeId)
         const header = {
             headers: new HttpHeaders().set("Authorization", `Bearer ${this.token}`),
         };
-
         const url =
-            "customers/?email="+ email +
+            "stores/"+ storeId +
+            "/customers/?email="+ email +
             "&page=0" +
             "&pageSize=20";
+        return this.http.get(this.userServiceURL + url, header);
+    }
 
+    getCustomerProfileByMsisdn(msisdn,storeId) {
+        const header = {
+            headers: new HttpHeaders().set("Authorization", `Bearer ${this.token}`),
+        };
+        const url =
+            "stores/"+ storeId +
+            "/customers/?phoneNumber="+ msisdn +
+            "&page=0" +
+            "&pageSize=20";
         return this.http.get(this.userServiceURL + url, header);
     }
 
@@ -359,12 +371,67 @@ export class ApiService {
         return this.http.delete(url, httpOptions);
     }
 
+    // ref : http://209.58.160.20:7072/swagger-ui.html#/cart-item-controller/putCartItemsByIdUsingPUT
+    putCartItem(data):Observable<any> {
+        // data sample : { "cartId": "string", "itemId": "string", "operation": "string" }
+        const httpOptions = {
+            headers: new HttpHeaders(
+            { 
+                'Authorization': `Bearer ${this.token}`,
+                'Content-Type': 'application/json'
+            })
+        }
+
+        const url = this.orderServiceURL + 
+                    "carts/" + data.cartId + 
+                    "/items/" + data.id;
+
+        return this.http.put(url, data, httpOptions);
+
+    }
+
+    // ref : http://209.58.160.20:7072/swagger-ui.html#/cart-item-controller/updateQuantityCartItemsByIdUsingPOST   
+    updateCartItem(data):Observable<any> {
+        // data sample : { "cartId": "string", "itemId": "string", "operation": "string" }
+        const httpOptions = {
+            headers: new HttpHeaders(
+            { 
+               'Authorization': `Bearer ${this.token}`,
+               'Content-Type': 'application/json'
+            })
+        }
+
+        const url = this.orderServiceURL + 
+                    "carts/" + data.cartId + 
+                    "/items/updatequantiy/" + data.id +
+                    "/" + data.quantityChange;
+
+        return this.http.post(url, data, httpOptions);
+
+    }
+
+    // ref : http://209.58.160.20:7072/swagger-ui.html#/cart-item-controller/deleteCartItemsByIdUsingDELETE
+    deleteCartItem(data, id):Observable<any> {
+        const httpOptions = {
+            headers: new HttpHeaders(
+            { 
+               'Authorization': `Bearer ${this.token}`,
+               'Content-Type': 'application/json'
+            }),
+            body: data
+        }
+
+        const url = this.orderServiceURL + "carts/"+data.cartId+"/items/clear";
+
+        return this.http.delete(url, httpOptions);
+    }
+
     // ===============
     // delivery service
     // ===============
 
     // ref : http://209.58.160.20:5000/swagger-ui.html#/orders-controller/getPriceUsingPOST
-    postTogetDeliveryFee(data):Observable<any> {
+    postTogetDeliveryFee(xxx):Observable<any> {
         // data : { "customerId": "string", "delivery": { "deliveryAddress": "string", "deliveryCity": "string", "deliveryContactEmail": "string", "deliveryContactName": "string", "deliveryContactPhone": "string", "deliveryCountry": "string", "deliveryPostcode": "string", "deliveryState": "string" }, "deliveryProviderId": 0, "insurance": true, "itemType": "parcel", "merchantId": 0, "orderId": "string", "pickup": { "parcelReadyTime": "string", "pickupAddress": "string", "pickupCity": "string", "pickupContactEmail": "string", "pickupContactName": "string", "pickupContactPhone": "string", "pickupCountry": "string", "pickupDate": "string", "pickupLocationId": 0, "pickupOption": "string", "pickupPostcode": "string", "pickupState": "string", "pickupTime": "string", "remarks": "string", "trolleyRequired": true, "vehicleType": "CAR" }, "pieces": 0, "productCode": "string", "shipmentContent": "string", "shipmentValue": 0, "storeId": "string", "totalWeightKg": 0, "transactionId": "string"}
         const httpOptions = {
             headers: new HttpHeaders(
@@ -377,7 +444,7 @@ export class ApiService {
         const url = this.deliveryServiceURL + "orders/getprice";
 
         // console.log('get delivery endpoint: ', url, data, httpOptions)
-        return this.http.post(url, data, httpOptions);
+        return this.http.post(url, xxx, httpOptions);
         // return this.http.get(this.payServiceURL + "payments/makePayment", httpOptions);
     }
 
