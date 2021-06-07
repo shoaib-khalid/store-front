@@ -63,6 +63,12 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
     providerId: any;
     // localURL:any;
 
+    initOrderRes:any;
+    hasDeliveryFee:boolean = false;
+    deliveryRef:any;
+
+    allFieldValidated:boolean;
+
     constructor(
         private _databindService: DataBindService,
         private mScrollbarService: MalihuScrollbarService,
@@ -104,7 +110,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
         
         // this.orderID = localStorage.getItem('order_id')
 
-        console.log('session: ' + this.senderID + "-" + this.storeID + "-" + this.cartID);
+        console.log('senderID: ' + this.senderID + "\nstoreID: " + this.storeID + "\ncartID: " + this.cartID);
 
         // dummy total, if u delete this view will crash and checkCart() will not be called, later to enhance
         // this.cartList = this._databindService.getCartList();
@@ -159,109 +165,123 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
         // this.spinner.hide();
     }
 
-    initOrder(){
-        let data = {
-            "cartId": this.cartID,
-            "completionStatus": "",
-            "created": "",
-            "customerId": this.senderID,
-            "customerNotes": "",
-            "id": "",
-            "paymentStatus": "pending",
-            "privateAdminNotes": "",
-            "storeId": this.storeID,
-            "subTotal": 0,
-            "total": this.totalPrice,
-            "updated": "",
-            "deliveryContactName": this.userName,
-            "deliveryAddress": this.userAddress,  
-            "deliveryContactPhone": this.userMsisdn,
-            "deliveryPostcode":this.userPostcode,
-            "deliveryCity": this.userCities,
-            "deliveryState":this.userState,
-            "deliveryCountry":this.userCountries,
-            "deliveryEmail": this.userEmail,
-            "deliveryProviderId": this.providerId
+    async initOrder(){
+
+        // wait for delivery service to get quotation
+        if (this.hasDeliveryFee === false) {
+            Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'> Please wait for us to calculate delivery fee</small>", "error")
+            return false;
         }
+
+        console.log("initOrder initiated:");
         
-        let initOrder = this.apiService.postInitOrder(data)
-        let getOrderId = this.apiService.getOrderId(this.senderID, this.storeID)
+        const orderId = await this.postInitOrder();
+        this.addItemOrder(orderId['id'])
+        this.orderId = orderId['id'];
 
-        forkJoin([initOrder, getOrderId]).subscribe(results => {
+        console.log("initOrder received (orderId):"+ orderId['id']);
 
-        let objGet = results[1]
+        // forkJoin([initOrder, getOrderId]).subscribe(results => {
 
-        // always get latest order id 
-        this.orderId = objGet['data'].content[0].id
+        //     let objGet = results[1]
 
-        // console.log('result 1: ', objPost)
-        console.log('orderID: ', this.orderId)
+        //     // always get latest order id 
+        //     this.orderId = objGet['data'].content[0].id
 
-        this.addItemOrder(this.orderId)
+        //     // console.log('result 1: ', objPost)
+        //     console.log('orderID: ', this.orderId)
 
-        }, error =>{
-            Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
-        });
+        //     this.addItemOrder(this.orderId)
+
+        // }, error =>{
+        //     Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
+        // });
     }
 
-    addItemOrder(orderId){
-
-        this.cartitemDetails.map(cartItem => {
-
+    async addItemOrder(orderId){
+        console.log('cartitemDetails')
+        await this.cartitemDetails.map(async cartItem => {
+            console.log('cartitemDetails in')
+    
+            let realOrderId = orderId;
             let itemCode = cartItem.itemCode
             let productId = cartItem.productId
             let quantity = cartItem.quantity
-
-            this.allProductInventory.forEach( allItem => {
-
+            let sku = cartItem.sku
+            let weight = cartItem.weight
+    
+            
+            // console.log("realOrderId: "+ JSON.stringify(realOrderId) + "")
+            // console.log("realOrderId: "+ JSON.stringify(orderId) + "")
+    
+            await this.allProductInventory.forEach(allItem => {
+    
                 let price = allItem.price
-
-                // console.log('price: ' + price)
-
+    
                 if(itemCode == allItem.itemCode){
-
-                    let data = {
-                        "id": "",
-                        "itemCode": itemCode,
-                        "orderId": orderId,
-                        "price": price,
-                        "productId": productId,
-                        "productPrice": price,
-                        "quantity": quantity,
-                        "sku": "string",
-                        "weight": 0
-                    }
-
-                    this.apiService.postAddItemToOrder(data).subscribe((res: any) => {
-                        console.log('add item to order loop: ', res)
-                        if (res.message){
-                            console.log('item succesfully added: ' + itemCode)
-                        } else {
-                        }
-                    }, error => {
-                        console.log(error)
-                    }) 
                     
-                    // start the loading 
+                    // console.log("itemCode: " + itemCode +
+                    // "\norderId: " + orderId +
+                    // "\nprice: " + price +
+                    // "\nproductId: " + productId +
+                    // "\nproductPrice: " + price +
+                    // "\nquantity: " + quantity +
+                    // "\nsku: " + sku +
+                    // "\nweight: " + weight);
+                    
+                    this.postAddItemToOrder(itemCode,orderId,price,productId,price,quantity,sku,weight);
+    
+                    
+                //     // start the loading 
                     this.visible = true;
-
-                    
                 }
             });
-
+    
         })
-
+    
         this.goPay()
+    }
+    
+    postAddItemToOrder(itemCode,orderId,price,productId,productPrice,quantity,sku,weight) {
+    
+        console.log("itemCode: " + itemCode +
+        "\norderId: " + orderId +
+        "\nprice: " + price +
+        "\nproductId: " + productId +
+        "\nproductPrice: " + price +
+        "\nquantity: " + quantity +
+        "\nsku: " + sku +
+        "\nweight: " + weight);
+    
+        let data = {
+            "itemCode": itemCode,
+            "orderId": orderId,
+            "price": price,
+            "productId": productId,
+            "productPrice": productPrice,
+            "quantity": quantity,
+            "sku": sku,
+            "weight": weight
+        }
+    
+        this.apiService.postAddItemToOrder(data).subscribe((res: any) => {
+            // console.log('add item to order loop: ', res)
+            if (res.message){
+                console.log('item succesfully added: '+ res.data)
+            } else {
+            }
+        }, error => {
+            console.log(error)
+        }) 
     }
 
     getProduct(){
 
         return new Promise(resolve => {
 
-            console.log("HERE HERE HRE");
-
+            console.log("Checkout calling BACKEND getProductSByStoreID");
             this.apiService.getProductSByStoreID(this.storeID).subscribe((res: any) => {
-                // console.log('raw resp:', res)
+                console.log("Checkout receive BACKEND getProductSByStoreID");
                 if (res.message) {
                     this.product = res.data.content;
                     console.log('getProduct(): ', this.product);
@@ -340,7 +360,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
 
         this.cartitemDetails.forEach(cartItem => {
             productList.map(allProduct => {
-                console.log("allProduct.itemCode : " + allProduct.itemCode + "cartItem.itemCode : " + cartItem.itemCode);
+                // console.log("allProduct.itemCode : " + allProduct.itemCode + "\ncartItem.itemCode : " + cartItem.itemCode);
                 if(allProduct.itemCode == cartItem.itemCode){
                     this.subTotal = this.subTotal + (allProduct.price * cartItem.quantity);
                 }
@@ -366,9 +386,8 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
         this.trxid = this.datePipe.transform(dateTime, "yyyyMMddhhmmss")
 
         let data = {
-            // "customerId": this.senderID,
-            "customerId": "4",
-            "customerName": "Nazrul",
+            "customerId": this.senderID,
+            "customerName": this.userName,
             "productCode": "parcel",
             "storeName": this.storeName,
             "systemTransactionId": this.trxid,
@@ -428,13 +447,23 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
     }
     
 
-    async toRepopulate(){
+    async toRepopulate(userinfo){
 
         // alert('email: ' + this.userEmail)
         // return false
-        const customer = await this.getCustomerInfo(this.userEmail)
-        console.log("customer data...", customer)
-        let uuid = customer['id'];
+
+        let uuid = undefined;
+        if (userinfo === 'userEmail'){
+            const customer = await this.getCustomerProfileByEmail(this.userEmail)
+            console.log("customer data...", customer)
+            uuid = customer['id'];
+        } else if (userinfo === 'userMsisdn') {
+            const customer = await this.getCustomerProfileByMsisdn(this.userMsisdn)
+            console.log("customer data...", customer)
+            uuid = customer['id'];
+        } else {
+            Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'> Failed to populate data!!</small>", "error")
+        }
 
         console.log('uuid: ' + uuid)
 
@@ -451,19 +480,41 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
         // later add function to calculate delivery charges
     }
 
-    getCustomerInfo(email){
+    toValidate(){
+        if (this.userEmail && this.userName && this.userMsisdn && this.userAddress && this.userPostcode 
+            && this.userCities && this.userState && this.userCountries) {
+                this.allFieldValidated = true;
+                this.getDeliveryFee()
+                // console.log("All field validated")
+        } else {
+            // console.log("this.userName: " +  this.userName +
+            // "\nthis.userMsisdn: " + this.userMsisdn + 
+            // "\nthis.userAddress: " + this.userAddress + 
+            // "\nthis.userPostcode: " + this.userPostcode + 
+            // "\nthis.userCities: " + this.userCities + 
+            // "\nthisuserState.: " + this.userState + 
+            // "\nthis.userCountries: " + this.userCountries)
+        }
+    }
 
+    getCustomerProfileByEmail(email){
         return new Promise(resolve => {
-            this.apiService.getCustomerProfileByEmail(email).subscribe((res: any) => {
+            this.apiService.getCustomerProfileByEmail(email,this.storeID).subscribe((res: any) => {
                 resolve(res.data.content[0])
-
             }, error => {
                 Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
-
             }) 
-            
         });
+    }
 
+    getCustomerProfileByMsisdn(msisdn){
+        return new Promise(resolve => {
+            this.apiService.getCustomerProfileByMsisdn(msisdn,this.storeID).subscribe((res: any) => {
+                resolve(res.data.content[0])
+            }, error => {
+                Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
+            }) 
+        });
     }
 
     getPersonalDetails(uuid){
@@ -481,6 +532,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
 
     }
 
+    // not used anywhere
     checkOut(){
         // alert('postcode: ' + 
         // this.userPostcode + this.userName + this.userEmail + 
@@ -553,43 +605,51 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
         // this.userMsisdn + this.userAddress + this.userState + 
         // this.userCountries)
 
+        console.log("customerId: "+ this.senderID + // if anonymous
+                    "\ndeliveryProviderId: "+ null+ // current fixed to mr speedy
+                    "\ncartId: "+ this.cartID+
+                    "\nstoreId: "+ this.storeID+
+                    "\ndelivery: "+
+                        "\n\tdeliveryAddress: "+ this.userAddress+
+                        "\n\tdeliveryCity: "+this.userCities+
+                        "\n\tdeliveryContactEmail: "+ this.userEmail+
+                        "\n\tdeliveryContactName: "+ this.userName+
+                        "\n\tdeliveryContactPhone: "+ this.userMsisdn+
+                        "\n\tdeliveryCountry: "+ this.userCountries+
+                        "\n\tdeliveryPostcode: "+ this.userPostcode+
+                        "\n\tdeliveryState: "+ this.userState
+        );
+
         // return false;
         let data = {
+            "customerId": this.senderID, // if anonymous
+            "deliveryProviderId": null, // current fixed to mr speedy
+            "cartId": this.cartID,
+            "storeId": this.storeID,
+            "delivery": {
+              "deliveryAddress": this.userAddress,
+              "deliveryCity": this.userCities,
+              "deliveryContactEmail": this.userEmail,
+              "deliveryContactName": this.userName,
+              "deliveryContactPhone": this.userMsisdn,
+              "deliveryCountry": this.userCountries,
+              "deliveryPostcode": this.userPostcode,
+              "deliveryState": this.userState
+            }
+        }
 
-                "merchantId": 1,
-                // "customerId": this.senderID,
-                "customerId": "4",
-                "productCode": "parcel",
-                "itemType": "parcel",
-                "totalWeightKg": 1,
-                
-                "delivery" : {
-                    "deliveryPostcode": this.userPostcode,
-                    "deliveryAddress": "No 20, Jalan Temasik, Tamago Island, 40150, Nippon",
-                    // "deliveryCity": "Tamago Island",
-                    // "deliveryContactEmail": "nazrul@kalsym.com",
-                    // "deliveryContactName": "nazrul",
-                    // "deliveryContactPhone": "0142217851",
-                    // "deliveryCountry": "Nippon",
-                    // "deliveryState": "Selangor" 
-                },
-                
-                "pickup" : {
-                    "pickupOption":"SHCEDULE",
-                    "vehicleType":"MOTORCYCLE",
-                    "pickupPostcode":"47500"	  
-                }
-            }        
-
+        // console.log("data: "+ JSON.stringify(data));
         this.apiService.postTogetDeliveryFee(data).subscribe((res: any) => {
             if (res.message) {
 
                 this.deliveryFee = res.data[0].price;
-                this.providerId = res.data[0].providerId
+                this.providerId = res.data[0].providerId;
+                this.deliveryRef = res.data[0].refId;
 
                 // alert('delivery charge: '+this.deliveryFee)
 
                 this.totalPrice = this.subTotal + this.deliveryFee
+                this.hasDeliveryFee = true;
 
                 Swal.fire("Delivery Fees", "Additional charges RM " + this.deliveryFee, "info")
             }
@@ -597,6 +657,50 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
             Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
         }) 
 
+    }
+
+    postInitOrder(){
+        return new Promise(resolve => {
+            let data = {
+                "cartId": this.cartID,
+                "completionStatus": "",
+                "created": "",
+                "customerId": this.senderID,
+                "customerNotes": "",
+                "id": "",
+                "paymentStatus": "pending",
+                "privateAdminNotes": "",
+                "storeId": this.storeID,
+                "subTotal": 0,
+                "total": this.totalPrice,
+                "updated": "",
+                "deliveryContactName": this.userName,
+                "deliveryAddress": this.userAddress,  
+                "deliveryContactPhone": this.userMsisdn,
+                "deliveryPostcode":this.userPostcode,
+                "deliveryCity": this.userCities,
+                "deliveryState":this.userState,
+                "deliveryCountry":this.userCountries,
+                "deliveryEmail": this.userEmail,
+                "deliveryProviderId": this.providerId,
+                "deliveryRefId": this.deliveryRef
+            }
+
+            this.apiService.postInitOrder(data).subscribe(async (res: any) => {
+                console.log('updateCartItem result: ', res)
+                if (res.message){
+                    console.log('postInitOrder operation successfull')
+                    console.log("res.data.id: "+ res.data)
+                    resolve(res.data)
+                    // this.initOrderRes = res.data;
+                } else {
+                    console.log('postInitOrder operation failed')
+                }
+            }, error => {
+                console.log(error)
+            })
+            // console.log("result: "+ JSON.stringify(result))
+        })
     }
 
 }
