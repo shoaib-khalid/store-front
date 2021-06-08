@@ -16,6 +16,14 @@ import Swal from 'sweetalert2'
 import { forkJoin } from 'rxjs';
 import { PlatformLocation } from "@angular/common";
 
+import {
+    allPostcodes,
+    getStates,
+    getCities,
+    getPostcodes,
+    findPostcode,
+  } from "malaysia-postcodes";
+
 @Component({
   selector: 'app-checkout-details',
   templateUrl: './checkout-details.component.html',
@@ -68,6 +76,9 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
     deliveryRef:any;
 
     allFieldValidated:boolean;
+
+    // States (Malaysia State)
+    mStates:any;
 
     constructor(
         private _databindService: DataBindService,
@@ -135,6 +146,11 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
         console.log("countTotalPrice executed third...")
 
         this.spinner.show();
+
+        // NEW PART HERE
+        // load states
+        this.mStates = getStates();
+
     }
 
     ngAfterViewInit(){
