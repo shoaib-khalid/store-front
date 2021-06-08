@@ -54,6 +54,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
     modalDataTest:any = [];
     data = {};
     storeID:any = null;
+    storeDeliveryPercentage:any;
     priceObj = [];
     clusterPriceArr = [];
     minVal:any;
@@ -258,6 +259,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
                 }
 
                 this.storeID = data.id;
+                this.storeDeliveryPercentage = data.serviceChargesPercentage;
 
                 this.getProduct()
 
@@ -289,7 +291,9 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
                 }
 
                 console.log('id: ' + this.storeID)
+                console.log('store_delivery_percentage: ' + this.storeDeliveryPercentage)
                 localStorage.setItem('store_id', this.storeID);
+                localStorage.setItem('store_delivery_percentage', this.storeDeliveryPercentage);
 
             } else {
                 Swal.fire("Great!", "Item failed", "error")

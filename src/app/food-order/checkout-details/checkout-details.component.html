@@ -26,7 +26,7 @@
                                             </div>
                                             <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 text-right">
                                                 <div *ngFor="let inventory of allProductInventory">
-                                                    <span *ngIf="item.itemCode == inventory.itemCode" id="price">RM {{ item.quantity * inventory.price }}</span>
+                                                    <span *ngIf="item.itemCode == inventory.itemCode" id="price">RM {{ (item.quantity * inventory.price) | number : '1.2-2' }}</span>
                                                 </div>
                                                 <!-- <span id="price" class="unitprice">{{item.unitprice * item.quantity | number: '1.2-2'}}</span> -->
                                             </div>
@@ -56,7 +56,15 @@
                             <div class="row">
                                 <div class="col">
                                     <div class="col text-left">
-                                        <span class="subtotal">FEE</span>
+                                        <span class="subtotal">SERVICE CHARGES ({{storeDeliveryPercentage}}%)</span>
+                                        <span id="price" style="float: right; padding-right: 38px;">RM {{totalServiceCharges | number: '1.2-2'}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <div class="col text-left">
+                                        <span class="subtotal">DELIVERY CHARGES</span>
                                         <span id="price" style="float: right; padding-right: 38px;">RM {{deliveryFee | number: '1.2-2'}}</span>
                                         <hr class="dotted">
                                     </div>
@@ -107,7 +115,7 @@
                             <div class="col-lg-6 col-md-6 col-xs-12 col-sm-12">
                                 <select name="userCountries" id="countries" [(ngModel)]="userCountries" [(value)]="userCountries" (change)="toValidate()" autocomplete="disabled" required>
                                     <option selected="selected" disabled="disabled">Countries</option>
-                                    <option value="Malaysia" [value]="userCountries">Malaysia</option>
+                                    <option value="Malaysia">Malaysia</option>
                                     <!-- <option value="Malaysia">Pakistan</option>
                                     <option value="Malaysia">Thailand</option> -->
                                 </select>

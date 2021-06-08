@@ -41,6 +41,7 @@ export class ProductDetailsComponent implements OnInit {
     productPrice:any = 0;
     productItemCode: any;
     storeID:any;
+    storeDeliveryPercentage:any;
     storeName:any;
     inputQty:any;
 
@@ -273,9 +274,12 @@ export class ProductDetailsComponent implements OnInit {
         console.log('promised storeInfo details: ', storeInfo)
 
         this.storeID = storeInfo[0]['id']
+        this.storeDeliveryPercentage = storeInfo[0]['serviceChargesPercentage']
 
         console.log('store id: ' + this.storeID)
+        console.log('store_delivery_percentage id: ' + this.storeDeliveryPercentage)
         localStorage.setItem('store_id', this.storeID);
+        localStorage.setItem('store_delivery_percentage', this.storeDeliveryPercentage);
         
         const prodName = await this.getProductDetailsByName(this.productSeoName, this.storeID)
 
@@ -296,6 +300,7 @@ export class ProductDetailsComponent implements OnInit {
         this.productAssets = this.detailsObj.productAssets;
         
         console.log("detailsObj: "+ prodName['description']);
+        console.log("this.productAssets: "+ JSON.stringify(this.productAssets));
 
         this.productAssets.forEach( obj => {
             // console.log('productAssets: ', obj.url);

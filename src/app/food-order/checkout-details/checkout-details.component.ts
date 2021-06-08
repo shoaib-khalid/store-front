@@ -39,6 +39,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
     senderID:any;
     refID:any;
     storeID:any;
+    storeDeliveryPercentage:any;
     storeName:any;
 
     cartExist:boolean = false;
@@ -54,6 +55,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
 
     totalPrice:number = 0;
     subTotal:number = 0;
+    totalServiceCharges:number = 0;
     deliveryFee:number = 0;
 
     userPostcode:any;
@@ -110,6 +112,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
         this.senderID = localStorage.getItem('sender_id');
         this.refID = localStorage.getItem('ref_id');
         this.storeID = localStorage.getItem('store_id');
+        this.storeDeliveryPercentage = localStorage.getItem('store_delivery_percentage');
 
         if(this.senderID === 'undefined'){
             this.cartID = localStorage.getItem("anonym_cart_id")
@@ -367,6 +370,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
     countPrice(productList:any){
 
         this.subTotal = 0
+        this.totalServiceCharges = 0
 
         // console.log('in countPrice Obj: ', this.cartitemDetails)
 
@@ -383,7 +387,10 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
             })
         });
 
-        this.totalPrice = this.subTotal + this.deliveryFee
+        this.totalServiceCharges = (this.storeDeliveryPercentage == 0) ? this.storeDeliveryPercentage : ((this.storeDeliveryPercentage/100) * this.subTotal);
+
+
+        this.totalPrice = this.subTotal + this.deliveryFee + this.totalServiceCharges
 
         console.log("totalPrice : "+this.totalPrice);
         console.log("subTotal : "+this.subTotal);
@@ -501,7 +508,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
             && this.userCities && this.userState && this.userCountries) {
                 this.allFieldValidated = true;
                 this.getDeliveryFee()
-                // console.log("All field validated")
+                console.log("All field validated")
         } else {
             // console.log("this.userName: " +  this.userName +
             // "\nthis.userMsisdn: " + this.userMsisdn + 
@@ -667,7 +674,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
                 this.totalPrice = this.subTotal + this.deliveryFee
                 this.hasDeliveryFee = true;
 
-                Swal.fire("Delivery Fees", "Additional charges RM " + this.deliveryFee, "info")
+                // Swal.fire("Delivery Fees", "Additional charges RM " + this.deliveryFee, "info")
             }
         }, error => {
             Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
@@ -684,7 +691,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
                 "customerId": this.senderID,
                 "customerNotes": "",
                 "id": "",
-                "paymentStatus": "pending",
+                "paymentStatus": "PENDING",
                 "privateAdminNotes": "",
                 "storeId": this.storeID,
                 "subTotal": 0,
@@ -699,7 +706,8 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
                 "deliveryCountry":this.userCountries,
                 "deliveryEmail": this.userEmail,
                 "deliveryProviderId": this.providerId,
-                "deliveryRefId": this.deliveryRef
+                "deliveryQuotationReferenceId": this.deliveryRef,
+                "deliveryQuotationAmount": this.deliveryFee,
             }
 
             this.apiService.postInitOrder(data).subscribe(async (res: any) => {
