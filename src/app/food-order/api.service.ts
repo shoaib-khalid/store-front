@@ -54,13 +54,13 @@ export class ApiService {
 
     // Ref : http://209.58.160.20:20921/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config#/customers-controller/getCustomers_1
     getCustomerProfileByEmail(email, storeId) {
-        console.log("XXXX:" +storeId)
         const header = {
             headers: new HttpHeaders().set("Authorization", `Bearer ${this.token}`),
         };
         const url =
             "stores/"+ storeId +
             "/customers/?email="+ email +
+            "&storeId="+ storeId +
             "&page=0" +
             "&pageSize=20";
         return this.http.get(this.userServiceURL + url, header);
@@ -73,6 +73,7 @@ export class ApiService {
         const url =
             "stores/"+ storeId +
             "/customers/?phoneNumber="+ msisdn +
+            "&storeId="+ storeId +
             "&page=0" +
             "&pageSize=20";
         return this.http.get(this.userServiceURL + url, header);
