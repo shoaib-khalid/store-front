@@ -28,6 +28,7 @@
     "font-awesome": "^4.7.0",
     "hammerjs": "^2.0.8",
     "jquery": "^3.5.1",
+    "malaysia-postcodes": "^1.0.5",
     "ng-number-picker": "^1.1.9",
     "ngx-drag-scroll": "^8.0.0-beta.2",
     "ngx-gallery": "^5.10.0",
