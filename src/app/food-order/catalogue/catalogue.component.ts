@@ -435,6 +435,9 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
         console.log("cart item details ", count_cart)
         console.log("cart item count is " + count_cart['length'])
 
+        // call countPrice to update new
+        // const countTotal = await this.countPrice(this.allProductInventory)
+
     }
 
     getItemDetails(cartID){
@@ -442,7 +445,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
         return new Promise(resolve => {
 
             // check count Item in Cart 
-            this.apiService.getCartItemByCartID(cartID).subscribe((res: any) => {
+            this.apiService.getCartItemByCartID(cartID).subscribe(async (res: any) => {
                 // console.log('cart item by cart ID 3: ', res.data.content)
 
                 resolve(res.data.content)
@@ -450,8 +453,14 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
                 if (res.message){
                     this.cartitemDetails = res.data.content;
                     this.cartitemDetailsCount = this.cartitemDetails.length;
-
                     this.inputQty = 1;
+
+                    this.subTotal = 0;
+
+                    await this.cartitemDetails.forEach(allItem => {
+                        this.subTotal = this.subTotal + (allItem.quantity * allItem.price);
+                        console.log("miqdaad: "+JSON.stringify(allItem.quantity * allItem.price)+"\n");
+                    });
                 }
 
             }, error => {
@@ -489,7 +498,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
 
             }, error => {
                 Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
-            }) 
+            })
                 
         });
 

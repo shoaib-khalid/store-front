@@ -392,9 +392,10 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
 
         this.totalPrice = this.subTotal + this.deliveryFee + this.totalServiceCharges
 
-        console.log("totalPrice : "+this.totalPrice);
-        console.log("subTotal : "+this.subTotal);
-        console.log("deliveryFee : "+this.deliveryFee);
+        console.log("Sub-total : "+this.subTotal);
+        console.log("Service Charges : "+this.subTotal);
+        console.log("Delivery Charges : "+this.deliveryFee);
+        console.log("Grant Total : "+this.totalPrice);
         
     }
 
@@ -662,7 +663,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
         }
 
         // console.log("data: "+ JSON.stringify(data));
-        this.apiService.postTogetDeliveryFee(data).subscribe((res: any) => {
+        this.apiService.postTogetDeliveryFee(data).subscribe(async (res: any) => {
             if (res.message) {
 
                 this.deliveryFee = res.data[0].price;
@@ -671,8 +672,11 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
 
                 // alert('delivery charge: '+this.deliveryFee)
 
-                this.totalPrice = this.subTotal + this.deliveryFee
+                this.totalPrice = this.subTotal + this.deliveryFee;
                 this.hasDeliveryFee = true;
+
+                // calling countPrice again so that deliveryFee included in the FE calculation
+                const countTotal = await this.countPrice(this.allProductInventory)
 
                 // Swal.fire("Delivery Fees", "Additional charges RM " + this.deliveryFee, "info")
             }

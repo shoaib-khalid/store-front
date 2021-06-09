@@ -354,7 +354,7 @@
                                 </div>
                                 <div class="col-3 text-center">
                                     <div *ngFor="let inventory of allProductInventory">
-                                        <span *ngIf="item.itemCode == inventory.itemCode" id="price">RM {{ item.quantity * inventory.price }}</span>
+                                        <span *ngIf="item.itemCode == inventory.itemCode" id="price">RM {{ item.quantity * inventory.price | number: '1.2-2' }}</span>
                                     </div>
                                     <!-- <span id="price">RM {{item.quantity*item.unitprice | number : '1.2-2'}}</span> -->
                                 </div>
@@ -393,7 +393,7 @@
                                 </div>
                                 <div class="col-3 text-center">
                                     <div *ngFor="let inventory of allProductInventory">
-                                        <span *ngIf="item.itemCode == inventory.itemCode" id="price">RM {{ item.quantity * inventory.price }}</span>
+                                        <span *ngIf="item.itemCode == inventory.itemCode" id="price">RM {{item.quantity * inventory.price | number: '1.2-2' }}</span>
                                     </div>
                                     <!-- <span id="price">RM {{item.quantity*item.unitprice | number : '1.2'}}</span> -->
                                 </div>
@@ -426,7 +426,7 @@
             <div class="row">
                 <div class="col">
                     <div style="margin-top: 15px;">
-                        <h5 id="price">TOTAL: <span>MYR 0.00</span></h5>
+                        <h5 id="price">SUB-TOTAL: <span>RM {{subTotal | number: '1.2-2'}}</span></h5>
                     </div>
                 </div>
                 <div class="col"></div>
@@ -446,7 +446,7 @@
             <div class="row">
                 <div class="col-5" style="margin-top: 15px;">
                     <!-- <div style="margin-top: 15px;"> -->
-                        <span class="fontmobile_s" id="price" style="font-size: small;">TOTAL: <span>MYR 0.00</span></span>
+                        <span class="fontmobile_s" id="price" style="font-size: small;">SUB-TOTAL: <span>RM {{subTotal | number: '1.2-2'}}</span></span>
                     <!-- </div> -->
                 </div>
                 <!-- <div class="col"></div> -->
