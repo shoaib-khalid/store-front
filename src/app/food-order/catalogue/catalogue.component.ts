@@ -88,7 +88,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
     inventoryObj: any = {};
     popupItemCode:any = null;
 
-    subTotal:any;
+    subTotal:any = 0;
     totalPrice:any;
     orderId:any;
     priceMapVariant:any;
