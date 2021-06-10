@@ -4,7 +4,7 @@
     },
     "serviceUrl": {
         "userServiceURL": "https://api.symplified.biz/v1/user-service/",
-        "productServiceURL": "https://api.symplified.biz/v1/product-service/",
+        "productServiceURL": "https://api.symplified.biz/product-service/v1/",
         "payServiceURL": "https://api.symplified.biz/v1/payment-service/",
         "orderServiceURL": "https://api.symplified.biz/order-service/v1/",
         "deliveryServiceURL": "https://api.symplified.biz/v1/delivery-service/"
