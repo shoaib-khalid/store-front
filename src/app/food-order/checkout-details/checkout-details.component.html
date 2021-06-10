@@ -79,7 +79,10 @@
                                     </div>
                                 </div>
                             </div>
-
+                            <div *ngIf="showCountDownTime">
+                                {{ showCountDownTime }} <br>
+                                <span><small> Delivery charges validity, the delivery charges may changes after the validity expired</small></span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -89,6 +92,9 @@
                     <div style="padding: 10px; background-color: #ffb347;">
                         <span style="font-weight: bold;">CONTACT INFORMATION</span>
                     </div>
+                    <div *ngIf="inputError" style="  border-radius: 25px;margin-top:10px;padding: 10px; background-color: #fa6a51c6;">
+                            <span tyle="font-weight: bold;color: #a94442;">{{inputError}}</span>
+                        </div>
                     <form (submit)="initOrder()" style="color: white; text-align: center; padding: 20px;" ngNativeValidate>
                         <input type="email" id="email" name="userEmail" [(ngModel)]="userEmail" [(value)]="userEmail" placeholder="Email" (focusout)="toRepopulate('userEmail')" required>
                         <input type="text" id="msisdn" name="userMsisdn" [(ngModel)]="userMsisdn" [(value)]="userMsisdn" autocomplete="disabled" placeholder="Phone No" (focusout)="toRepopulate('userMsisdn')" required>

@@ -259,6 +259,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
                 }
 
                 this.storeID = data.id;
+                // since checkout page does query store service , i passed this storeDeliveryPercentage via local storage.. lol
                 this.storeDeliveryPercentage = data.serviceChargesPercentage;
 
                 this.getProduct()
@@ -1288,7 +1289,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
         // console.log('drag end');
     }
 
-    adjustItem(itemId, productId, itemCode, operation, index){
+    async adjustItem(itemId, productId, itemCode, operation, index){
         // alert("itemId: "+itemId+
         //     " \nproductId: " + productId +
         //     " \nitemCode: " + itemCode +
@@ -1312,6 +1313,14 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
             // back end quantity
             // this.updateCartItem(itemId, operation);
             this.putCartItem(itemId, productId, itemCode , this.cartitemDetails[index].quantity);
+
+            this.subTotal = 0;
+            await this.cartitemDetails.forEach(allItem => {
+                // console.log("itemId: "+itemId+"\n"+"allItem.itemId: "+JSON.stringify(allItem.id)+"\n");
+                this.subTotal = this.subTotal + (allItem.quantity * allItem.price);
+                // console.log("OK OK OK")
+                // console.log("miqdaad: "+JSON.stringify(allItem.quantity * allItem.price)+"\n");
+            });
         }
         
         // backend quantity
@@ -1379,7 +1388,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
                 console.log('deleteAllCartItem response : ', res)
 
                 // Update item count in Cart 
-                this.apiService.getCartItemByCartID(data.cartId).subscribe((res: any) => {
+                this.apiService.getCartItemByCartID(data.cartId).subscribe(async (res: any) => {
                     // console.log('cart item by cart ID: ', res.data.content)
 
                     if (res.message){
@@ -1392,6 +1401,11 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
                             showConfirmButton: false,
                             timer: 1000
                         })
+
+                        this.subTotal = 0;
+                        await this.cartitemDetails.forEach(allItem => {
+                            this.subTotal = this.subTotal + (allItem.quantity * allItem.price);
+                        });
 
                     } else {
 

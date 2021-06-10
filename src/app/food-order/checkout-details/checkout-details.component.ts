@@ -82,6 +82,12 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
     // States (Malaysia State)
     mStates:any;
 
+    inputError:string = undefined;
+
+    deliveryValidUpTo:any;
+    serverDateTime:any;
+    showCountDownTime:any = undefined;
+
     constructor(
         private _databindService: DataBindService,
         private mScrollbarService: MalihuScrollbarService,
@@ -473,18 +479,49 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
 
     async toRepopulate(userinfo){
 
-        // alert('email: ' + this.userEmail)
-        // return false
-
         let uuid = undefined;
-        if (userinfo === 'userEmail'){
-            const customer = await this.getCustomerProfileByEmail(this.userEmail)
-            console.log("customer data...", customer)
-            uuid = customer['id'];
-        } else if (userinfo === 'userMsisdn') {
-            const customer = await this.getCustomerProfileByMsisdn(this.userMsisdn)
-            console.log("customer data...", customer)
-            uuid = customer['id'];
+
+        if (userinfo === 'userMsisdn') {
+            const regex = new RegExp('^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\.\/0-9]*$');
+            if (this.userMsisdn == "" || this.userMsisdn === undefined) {
+                console.log("Phonenumber can't be empty");
+                this.inputError = "Phonenumber can't be empty";
+                return false;
+            } else if (this.userMsisdn.length < 7) {
+                console.log("Not a valid phonenumber format (minimum length does not meet)");
+                this.inputError = "Not a valid phonenumber format (minimum length does not meet)";
+                return false;
+            } else if (!regex.test(this.userMsisdn)){
+                console.log("Not a valid phonenumber format");
+                this.inputError = "Not a valid phonenumber format";
+                return false;
+            } else {
+                this.inputError = undefined;
+                
+                // sanatise input
+                this.userMsisdn = (this.userMsisdn).replace(/[^0-9]/g, '');
+
+                const customer = await this.getCustomerProfileByMsisdn(this.userMsisdn)
+                console.log("customer data...", customer)
+                uuid = customer['id'];
+            }
+        } else if (userinfo === 'userEmail') {
+            const regex = new RegExp('(([^\<\>\/\(\)\[\\\]\.\,\;\:\s\@\"]+(\.[^\<\>\(\)\/\[\\\]\.\,\;\:\s@\"]+)*)|(\".+\"))@(([^\<\>\(\)\[\\\]\.\/\,\;\:\s\@\"]+\.)+[^\<\>\(\)\[\\\]\.\/\,\;\:\s\@\"]{2,})$');
+            if (this.userEmail == "" || this.userEmail === undefined) {
+                console.log("Email can't be empty");
+                this.inputError = "Email can't be empty";
+                return false;
+            } else if (!regex.test(this.userEmail)){
+                console.log("Not a valid email format");
+                this.inputError = "Not a valid email format";
+                return false;
+            } else {
+                this.inputError = undefined;
+
+                const customer = await this.getCustomerProfileByEmail(this.userEmail)
+                console.log("customer data...", customer)
+                uuid = customer['id'];
+            }
         } else {
             Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'> Failed to populate data!!</small>", "error")
         }
@@ -669,11 +706,16 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
                 this.deliveryFee = res.data[0].price;
                 this.providerId = res.data[0].providerId;
                 this.deliveryRef = res.data[0].refId;
+                this.deliveryValidUpTo = res.data[0].validUpTo;
+                this.serverDateTime = res.timestamp;
 
                 // alert('delivery charge: '+this.deliveryFee)
 
                 this.totalPrice = this.subTotal + this.deliveryFee;
                 this.hasDeliveryFee = true;
+
+                console.log("server time now(): "+ this.serverDateTime+"\n"+"this.deliveryValidUpTo: "+this.deliveryValidUpTo);
+                this.timeCounter(this.serverDateTime,this.deliveryValidUpTo);
 
                 // calling countPrice again so that deliveryFee included in the FE calculation
                 const countTotal = await this.countPrice(this.allProductInventory)
@@ -730,5 +772,53 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
             // console.log("result: "+ JSON.stringify(result))
         })
     }
+
+    timeCounter = (nowDate, validityDate) => {
+        
+        let dateToShow;
+        
+        const matchDate:any = new Date(validityDate);
+        const currentDate:any = new Date(nowDate);
+        
+        let distance = matchDate - currentDate;
+
+        let showTime = (callback) => {
+
+          distance = distance - 1000;
+
+          // Time calculations for days, hours, minutes and seconds
+          var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+          var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+          var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+          var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+          let time = minutes + "m " + seconds + "s ";
+          time = (hours >= 1) ? (hours + "h " + time) : time;
+          time = (days >= 1) ? (days + "d " + time) : time;
+
+          console.log("time: "+time)
+
+      
+          return dateToShow = distance < 0 ? false : time;
+        };
+      
+      
+        const logWhenDone = logData => console.log(logData)
+      
+        const timer = setInterval(() => {
+            this.showCountDownTime = showTime(logWhenDone);
+            if (this.showCountDownTime === false){
+                console.log("DONE");
+                // stop current countdown
+                clearInterval(timer);
+                // calling getPrice again
+                this.getDeliveryFee();
+                return false;
+            }
+        }, 1000);
+        
+        // this is just the return value of the setInterval function, which is just a reference to that interval
+        // console.log(showTime(logWhenDone));
+    };
 
 }
