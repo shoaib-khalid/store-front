@@ -460,7 +460,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
 
                     await this.cartitemDetails.forEach(allItem => {
                         this.subTotal = this.subTotal + (allItem.quantity * allItem.price);
-                        console.log("miqdaad: "+JSON.stringify(allItem.quantity * allItem.price)+"\n");
+                        // console.log("miqdaad: "+JSON.stringify(allItem.quantity * allItem.price)+"\n");
                     });
                 }
 

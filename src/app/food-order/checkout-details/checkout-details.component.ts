@@ -796,7 +796,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
           time = (hours >= 1) ? (hours + "h " + time) : time;
           time = (days >= 1) ? (days + "d " + time) : time;
 
-          console.log("time: "+time)
+        //   console.log("time: "+time)
 
       
           return dateToShow = distance < 0 ? false : time;
