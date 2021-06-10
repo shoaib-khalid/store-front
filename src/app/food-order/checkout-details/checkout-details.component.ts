@@ -730,30 +730,67 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
 
     postInitOrder(){
         return new Promise(resolve => {
+            // let data = {
+            //     "cartId": this.cartID,
+            //     "completionStatus": "",
+            //     "created": "",
+            //     "customerId": this.senderID,
+            //     "customerNotes": "",
+            //     "id": "",
+            //     "paymentStatus": "PENDING",
+            //     "privateAdminNotes": "",
+            //     "storeId": this.storeID,
+            //     "subTotal": 0,
+            //     "total": this.totalPrice,
+            //     "updated": "",
+            //     "deliveryContactName": this.userName,
+            //     "deliveryAddress": this.userAddress,  
+            //     "deliveryContactPhone": this.userMsisdn,
+            //     "deliveryPostcode":this.userPostcode,
+            //     "deliveryCity": this.userCities,
+            //     "deliveryState":this.userState,
+            //     "deliveryCountry":this.userCountries,
+            //     "deliveryEmail": this.userEmail,
+            //     "deliveryProviderId": this.providerId,
+            //     "deliveryQuotationReferenceId": this.deliveryRef,
+            //     "deliveryQuotationAmount": this.deliveryFee,
+            // }
+
             let data = {
                 "cartId": this.cartID,
-                "completionStatus": "",
+                "completionStatus": "RECEIVED_AT_STORE",
                 "created": "",
                 "customerId": this.senderID,
                 "customerNotes": "",
                 "id": "",
+                "invoiceId": "", 
+                "orderPaymentDetail": {
+                    "accountName":  this.userName, 
+                    // "couponId": "", 
+                    "deliveryQuotationAmount": this.deliveryFee,
+                    "deliveryQuotationReferenceId": this.deliveryRef,
+                    "gatewayId": "", 
+                    "orderId": null, 
+                    "time": ""
+                },
+                "orderShipmentDetail": {
+                    "address": this.userAddress,  
+                    "city": this.userCities,
+                    "country": this.userCountries,
+                    "deliveryProviderId": this.providerId,
+                    "email": this.userEmail,
+                    "orderId": null, 
+                    "phoneNumber": this.userMsisdn,
+                    "receiverName": this.userName,
+                    "state": this.userState,
+                    "zipcode": this.userPostcode
+                },
                 "paymentStatus": "PENDING",
                 "privateAdminNotes": "",
                 "storeId": this.storeID,
-                "subTotal": 0,
+                "subTotal": this.subTotal,
                 "total": this.totalPrice,
-                "updated": "",
-                "deliveryContactName": this.userName,
-                "deliveryAddress": this.userAddress,  
-                "deliveryContactPhone": this.userMsisdn,
-                "deliveryPostcode":this.userPostcode,
-                "deliveryCity": this.userCities,
-                "deliveryState":this.userState,
-                "deliveryCountry":this.userCountries,
-                "deliveryEmail": this.userEmail,
-                "deliveryProviderId": this.providerId,
-                "deliveryQuotationReferenceId": this.deliveryRef,
-                "deliveryQuotationAmount": this.deliveryFee,
+                "updated": ""
             }
 
             this.apiService.postInitOrder(data).subscribe(async (res: any) => {
