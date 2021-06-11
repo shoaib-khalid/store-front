@@ -87,6 +87,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
     deliveryValidUpTo:any;
     serverDateTime:any;
     showCountDownTime:any = undefined;
+    timerReset:number = 0;
 
     constructor(
         private _databindService: DataBindService,
@@ -715,6 +716,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
                 this.hasDeliveryFee = true;
 
                 console.log("server time now(): "+ this.serverDateTime+"\n"+"this.deliveryValidUpTo: "+this.deliveryValidUpTo);
+                this.timerReset = this.timerReset + 1;
                 this.timeCounter(this.serverDateTime,this.deliveryValidUpTo);
 
                 // calling countPrice again so that deliveryFee included in the FE calculation
@@ -842,6 +844,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
       
         const logWhenDone = logData => console.log(logData)
       
+        let timeReset = this.timerReset;
         const timer = setInterval(() => {
             this.showCountDownTime = showTime(logWhenDone);
             if (this.showCountDownTime === false){
@@ -851,6 +854,9 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
                 // calling getPrice again
                 this.getDeliveryFee();
                 return false;
+            }
+            if (this.timerReset > timeReset){
+                clearInterval(timer);
             }
         }, 1000);
         
