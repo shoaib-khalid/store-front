@@ -92,6 +92,12 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
 
     payDisable:boolean = true;
 
+    disableForm:boolean = false;
+    dayArr = ['SUNDAY', 'MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY'];
+
+    store_close:boolean = true;
+    storeTimingObj:any = {};
+
     constructor(
         private _databindService: DataBindService,
         private mScrollbarService: MalihuScrollbarService,
@@ -142,6 +148,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
         // this.getProduct();
         // this.checkCart();
 
+        this.getStoreHour()
         
         const getProduct = await this.getProduct()
         console.log("getProduct execute first...", getProduct)
@@ -164,6 +171,40 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
         // load states
         this.mStates = getStates();
 
+    }
+
+    getStoreHour(){
+        this.apiService.getStoreHoursByID(this.storeID).subscribe((res: any) => {
+            console.log('store business hour: ', res)
+            if (res.message){
+                console.log('storeTiming : ', res.data.storeTiming)
+
+                const currentDate = new Date();
+
+                var todayDay = this.dayArr[currentDate.getDay()];
+
+                this.storeTimingObj = res.data.storeTiming;
+
+                this.storeTimingObj.forEach( obj => {
+
+                    let dayObj = obj.day;
+
+                    if(dayObj == todayDay){
+                        // console.log('store is open? ' + obj.isOff)
+
+                        this.store_close = obj.isOff
+                        // this.store_close = true //for testing
+                    }
+                });
+                
+
+                // console.log('current day is ' + todayDay + ' and the store are closed? ' + this.store_close)
+
+            } else {
+            }
+        }, error => {
+            console.log(error)
+        }) 
     }
 
     ngAfterViewInit(){

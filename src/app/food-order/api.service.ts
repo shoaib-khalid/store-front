@@ -125,6 +125,17 @@ export class ApiService {
             return this.http.get(this.productServiceURL + url, header);
     }
 
+   
+    getStoreHoursByID(storeID) {
+        const header = {
+            headers: new HttpHeaders().set("Authorization", `Bearer ${this.token}`),
+        };
+        const url =
+            "stores/" + storeID;
+
+            return this.http.get(this.productServiceURL + url, header);
+    }
+
     // Ref : http://209.58.160.20:7071/swagger-ui.html#/store-controller/getStoreUsingGET_1
     getStoreInfo(storename) {
         const header = {
