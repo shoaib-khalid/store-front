@@ -82,12 +82,15 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
     // States (Malaysia State)
     mStates:any;
 
-    inputError:string = undefined;
+    phoneError:any;
+    emailError:any;
 
     deliveryValidUpTo:any;
     serverDateTime:any;
     showCountDownTime:any = undefined;
     timerReset:number = 0;
+
+    payDisable:boolean = true;
 
     constructor(
         private _databindService: DataBindService,
@@ -486,18 +489,18 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
             const regex = new RegExp('^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\.\/0-9]*$');
             if (this.userMsisdn == "" || this.userMsisdn === undefined) {
                 console.log("Phonenumber can't be empty");
-                this.inputError = "Phonenumber can't be empty";
+                this.phoneError = "Phonenumber can't be empty";
                 return false;
             } else if (this.userMsisdn.length < 7) {
                 console.log("Not a valid phonenumber format (minimum length does not meet)");
-                this.inputError = "Not a valid phonenumber format (minimum length does not meet)";
+                this.phoneError = "Not a valid phonenumber format (minimum length does not meet)";
                 return false;
             } else if (!regex.test(this.userMsisdn)){
                 console.log("Not a valid phonenumber format");
-                this.inputError = "Not a valid phonenumber format";
+                this.phoneError = "Not a valid phonenumber format";
                 return false;
             } else {
-                this.inputError = undefined;
+                this.phoneError = undefined;
                 
                 // sanatise input
                 this.userMsisdn = (this.userMsisdn).replace(/[^0-9]/g, '');
@@ -510,14 +513,14 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
             const regex = new RegExp('(([^\<\>\/\(\)\[\\\]\.\,\;\:\s\@\"]+(\.[^\<\>\(\)\/\[\\\]\.\,\;\:\s@\"]+)*)|(\".+\"))@(([^\<\>\(\)\[\\\]\.\/\,\;\:\s\@\"]+\.)+[^\<\>\(\)\[\\\]\.\/\,\;\:\s\@\"]{2,})$');
             if (this.userEmail == "" || this.userEmail === undefined) {
                 console.log("Email can't be empty");
-                this.inputError = "Email can't be empty";
+                this.emailError = "Email can't be empty";
                 return false;
             } else if (!regex.test(this.userEmail)){
                 console.log("Not a valid email format");
-                this.inputError = "Not a valid email format";
+                this.emailError = "Not a valid email format";
                 return false;
             } else {
-                this.inputError = undefined;
+                this.emailError = undefined;
 
                 const customer = await this.getCustomerProfileByEmail(this.userEmail)
                 console.log("customer data...", customer)
@@ -723,6 +726,8 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
                 const countTotal = await this.countPrice(this.allProductInventory)
 
                 // Swal.fire("Delivery Fees", "Additional charges RM " + this.deliveryFee, "info")
+
+                this.payDisable = false;
             }
         }, error => {
             Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
