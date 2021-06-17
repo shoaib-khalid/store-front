@@ -117,7 +117,8 @@ export class ApiService {
             headers: new HttpHeaders().set("Authorization", `Bearer ${this.token}`),
         };
         const url =
-            "products?featured=true" +
+            "stores/" +storeID +
+            "/products?featured=true" +
             "&page=0" +
             "&pageSize=20" +
             "&storeId=" +

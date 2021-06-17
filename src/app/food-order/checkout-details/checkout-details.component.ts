@@ -148,6 +148,8 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
         // this.getProduct();
         // this.checkCart();
 
+        
+
         this.getStoreHour()
         
         const getProduct = await this.getProduct()
@@ -183,6 +185,8 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
 
                 var todayDay = this.dayArr[currentDate.getDay()];
 
+                var browserTime = new Date();
+
                 this.storeTimingObj = res.data.storeTiming;
 
                 this.storeTimingObj.forEach( obj => {
@@ -190,9 +194,33 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
                     let dayObj = obj.day;
 
                     if(dayObj == todayDay){
+                        // true = store closed ; false = store opened
+                        let isOff = obj.isOff;
+
+                        if (isOff == false) {
+                            var openTime = new Date();
+                            openTime.setHours(obj.openTime.split(":")[0], obj.openTime.split(":")[1], 0); 
+                            var closeTime = new Date();
+                            closeTime.setHours(obj.closeTime.split(":")[0], obj.closeTime.split(":")[1], 0); 
+
+                            console.log("happy hour?")
+                            if(browserTime >= openTime && browserTime < closeTime ){
+                                console.log("WE ARE OPEN !");
+                            }else{
+                                console.log("OH No, sorry! between 5.30pm and 6.30pm");
+                                this.store_close = false
+                            }
+
+                        } else {
+                            console.log("WERE ARE CLOSED")
+                            this.store_close = false
+                        }
+
+                        // console.log('dayObj: ' + dayObj + 
+                        //             '\n' +)
                         // console.log('store is open? ' + obj.isOff)
 
-                        this.store_close = obj.isOff
+                        // this.store_close = obj.isOff
                         // this.store_close = true //for testing
                     }
                 });
@@ -279,6 +307,10 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
             let quantity = cartItem.quantity
             let sku = cartItem.sku
             let weight = cartItem.weight
+            let productName = cartItem.productName
+
+
+            console.log("Checkout SKU: "+ sku);
     
             
             // console.log("realOrderId: "+ JSON.stringify(realOrderId) + "")
@@ -299,7 +331,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
                     // "\nsku: " + sku +
                     // "\nweight: " + weight);
                     
-                    this.postAddItemToOrder(itemCode,orderId,price,productId,price,quantity,sku,weight);
+                    this.postAddItemToOrder(itemCode,orderId,price,productId,price,quantity,sku,weight,productName);
     
                     
                 //     // start the loading 
@@ -312,7 +344,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
         this.goPay()
     }
     
-    postAddItemToOrder(itemCode,orderId,price,productId,productPrice,quantity,sku,weight) {
+    postAddItemToOrder(itemCode,orderId,price,productId,productPrice,quantity,sku,weight,productName) {
     
         console.log("itemCode: " + itemCode +
         "\norderId: " + orderId +
@@ -326,12 +358,13 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
         let data = {
             "itemCode": itemCode,
             "orderId": orderId,
-            "price": price,
+            "price": price*quantity,
             "productId": productId,
             "productPrice": productPrice,
             "quantity": quantity,
-            "sku": sku,
-            "weight": weight
+            "SKU": sku,
+            "weight": weight,
+            "productName": productName
         }
     
         this.apiService.postAddItemToOrder(data).subscribe((res: any) => {

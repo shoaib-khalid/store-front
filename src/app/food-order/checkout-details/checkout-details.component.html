@@ -1,13 +1,4 @@
 <div class="container">
-    <div class="position-absolute" *ngIf="!store_close">
-        <div class="fixed-top alert alert-danger alert-dismissible fade show header" role="alert">
-            We are closed now our opening hours are from <strong>8 am to 8 pm daily</strong>
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-
-    </div>
     <div class="card border-0" style="margin-top: 25px; margin-bottom: 50px; background-color: #f9f9f9;">
         <div class="card-body">
             <div class="row">
@@ -181,8 +172,7 @@
                             <p>We are closed now our opening hours are as per below</p>
                             <hr>
                             <div *ngFor="let timing of storeTimingObj" class="text-center">
-                                <span>{{timing.day}} on <strong>{{timing.openTime}} - {{timing.closeTime}}</strong></span>
-                                <br>
+                                <span *ngIf="!timing.isOff">{{timing.day}} on <strong>{{timing.openTime}} - {{timing.closeTime}}</strong><br></span>
                             </div>
                             
                             <!-- <p class="mb-0">Whenever you need to, be sure to use margin utilities to keep things nice and tidy.</p> -->

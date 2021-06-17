@@ -3,10 +3,10 @@
         "name": "prod"
     },
     "serviceUrl": {
-        "userServiceURL": "https://api.symplified.biz/v1/user-service/",
+        "userServiceURL": "https://api.symplified.biz/user-service/v1/",
         "productServiceURL": "https://api.symplified.biz/product-service/v1/",
-        "payServiceURL": "https://api.symplified.biz/v1/payment-service/",
+        "payServiceURL": "https://api.symplified.biz/payment-service/v1/",
         "orderServiceURL": "https://api.symplified.biz/order-service/v1/",
-        "deliveryServiceURL": "https://api.symplified.biz/v1/delivery-service/"
+        "deliveryServiceURL": "https://api.symplified.biz/delivery-service/v1/"
     }
 }
