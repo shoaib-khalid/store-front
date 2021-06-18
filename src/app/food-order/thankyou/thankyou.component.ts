@@ -91,7 +91,10 @@ export class ThankyouComponent implements OnInit {
   }
 
   shopAgain(){
-    this.route.navigateByUrl('/?&senderId='+this.senderID+'&storeId=a6df650a-3792-4dc8-b3de-92508357276b');
+
+    this.route.navigateByUrl('/');
+
+    // this.route.navigateByUrl('/?&senderId='+this.senderID+'&storeId=a6df650a-3792-4dc8-b3de-92508357276b');
     // this.route.navigateByUrl('?storeId='+this.storeID);
   }
 
