@@ -65,7 +65,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
     userAddress:any;
     userCities:any;
     userState:any;
-    userCountries:any;
+    userCountries:any = "Malaysia";
 
     visible:boolean = false;
 
