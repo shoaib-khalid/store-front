@@ -141,7 +141,7 @@
                             <h6 (click)="goToDetails(item.seoName)" class="card-title details">{{ item.name | titlecase}}</h6>
                             <!-- <h5 id="price">RM {{ item.productInventories[0].price | number: '1.2-2'}}</h5> -->
                             <div *ngFor="let data of catalogueList">
-                                <h5 *ngIf="item.id == data.productId; else noPrice" id="price">RM {{ data.price === 0  ? "0.00" : data.price  | number: '1.2-2'}}</h5>
+                                <h5 *ngIf="item.id == data.productId; else noPrice" id="price">{{currencySymbol}} {{ data.price === 0  ? "0.00" : data.price  | number: '1.2-2'}}</h5>
                             </div>
                         </div>
                         <!-- <div class="col-8 text-right">
@@ -251,7 +251,7 @@
                             
                                 <div style="padding-top: 70px;">
                                     <!-- <h5 id="price">PRICE : RM {{ detailPrice | number: '1.2-2'}}</h5> -->
-                                    <h5>PRICE : RM {{ popupPrice | number: '1.2-2' }}</h5>
+                                    <h5>PRICE : {{currencySymbol}} {{ popupPrice | number: '1.2-2' }}</h5>
                                     <ng-number-picker name="inputQty" [(ngModel)]="inputQty" [(value)]="inputQty" [min]="1" [max]="100" [postfix]="'unit'" [size]="'sm'"></ng-number-picker>
                                 </div>
                             </div>
@@ -299,7 +299,7 @@
                             <div class="col text-center">
                                 <div style="padding-top: 20px;">
                                     <!-- <h5>PRICE : {{ price }}</h5> -->
-                                    <h5 id="price">PRICE : RM {{ popupPrice | number: '1.2-2'}}</h5>
+                                    <h5 id="price">PRICE : {{currencySymbol}} {{ popupPrice | number: '1.2-2'}}</h5>
                                     <ng-number-picker name="inputQty" [(ngModel)]="inputQty" [(value)]="inputQty" [min]="1" [max]="100" [postfix]="'unit'" [size]="'sm'"></ng-number-picker>
                                 </div>
                             </div>
@@ -373,7 +373,7 @@
                                 </div>
                                 <div class="col-3 text-center">
                                     <div *ngFor="let inventory of allProductInventory">
-                                        <span *ngIf="item.itemCode == inventory.itemCode" id="price">RM {{ item.quantity * inventory.price | number: '1.2-2' }}</span>
+                                        <span *ngIf="item.itemCode == inventory.itemCode" id="price">{{currencySymbol}} {{ item.quantity * inventory.price | number: '1.2-2' }}</span>
                                     </div>
                                     <!-- <span id="price">RM {{item.quantity*item.unitprice | number : '1.2-2'}}</span> -->
                                 </div>
@@ -412,7 +412,7 @@
                                 </div>
                                 <div class="col-3 text-center">
                                     <div *ngFor="let inventory of allProductInventory">
-                                        <span *ngIf="item.itemCode == inventory.itemCode" id="price">RM {{item.quantity * inventory.price | number: '1.2-2' }}</span>
+                                        <span *ngIf="item.itemCode == inventory.itemCode" id="price">{{currencySymbol}} {{item.quantity * inventory.price | number: '1.2-2' }}</span>
                                     </div>
                                     <!-- <span id="price">RM {{item.quantity*item.unitprice | number : '1.2'}}</span> -->
                                 </div>
@@ -445,7 +445,7 @@
             <div class="row">
                 <div class="col">
                     <div style="margin-top: 15px;">
-                        <h5 id="price">SUB-TOTAL: <span>RM {{subTotal | number: '1.2-2'}}</span></h5>
+                        <h5 id="price">SUB-TOTAL: <span>{{currencySymbol}} {{subTotal | number: '1.2-2'}}</span></h5>
                     </div>
                 </div>
                 <div class="col"></div>
@@ -465,7 +465,7 @@
             <div class="row">
                 <div class="col-5" style="margin-top: 15px;">
                     <!-- <div style="margin-top: 15px;"> -->
-                        <span class="fontmobile_s" id="price" style="font-size: small;">SUB-TOTAL: <span>RM {{subTotal | number: '1.2-2'}}</span></span>
+                        <span class="fontmobile_s" id="price" style="font-size: small;">SUB-TOTAL: <span>{{currencySymbol}} {{subTotal | number: '1.2-2'}}</span></span>
                     <!-- </div> -->
                 </div>
                 <!-- <div class="col"></div> -->

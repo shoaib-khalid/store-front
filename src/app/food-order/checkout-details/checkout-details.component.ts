@@ -98,6 +98,8 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
     store_close:boolean = true;
     storeTimingObj:any = {};
 
+    currencySymbol:string = "";
+
     constructor(
         private _databindService: DataBindService,
         private mScrollbarService: MalihuScrollbarService,
@@ -180,6 +182,10 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
             console.log('store business hour: ', res)
             if (res.message){
                 console.log('storeTiming : ', res.data.storeTiming)
+
+                this.currencySymbol =  res.data.regionCountry.currencySymbol;
+
+                console.log('symbol currency: ', this.currencySymbol)
 
                 const currentDate = new Date();
 

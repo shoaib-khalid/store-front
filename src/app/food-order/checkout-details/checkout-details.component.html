@@ -26,7 +26,7 @@
                                             </div>
                                             <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 text-right">
                                                 <div *ngFor="let inventory of allProductInventory">
-                                                    <span *ngIf="item.itemCode == inventory.itemCode" id="price">RM {{ (item.quantity * inventory.price) | number : '1.2-2' }}</span>
+                                                    <span *ngIf="item.itemCode == inventory.itemCode" id="price">{{currencySymbol}} {{ (item.quantity * inventory.price) | number : '1.2-2' }}</span>
                                                 </div>
                                                 <!-- <span id="price" class="unitprice">{{item.unitprice * item.quantity | number: '1.2-2'}}</span> -->
                                             </div>
@@ -48,7 +48,7 @@
                                 <div class="col">
                                     <div class="col text-left">
                                         <span class="subtotal">SUB-TOTAL</span>
-                                        <span id="price" style="float: right; padding-right: 38px;">RM {{subTotal | number: '1.2-2'}}</span>
+                                        <span id="price" style="float: right; padding-right: 38px;">{{currencySymbol}} {{subTotal | number: '1.2-2'}}</span>
                                         <!-- <hr class="dotted"> -->
                                     </div>
                                 </div>
@@ -57,7 +57,7 @@
                                 <div class="col">
                                     <div class="col text-left">
                                         <span class="subtotal">SERVICE CHARGES ({{storeDeliveryPercentage}}%)</span>
-                                        <span id="price" style="float: right; padding-right: 38px;">RM {{totalServiceCharges | number: '1.2-2'}}</span>
+                                        <span id="price" style="float: right; padding-right: 38px;">{{currencySymbol}} {{totalServiceCharges | number: '1.2-2'}}</span>
                                     </div>
                                 </div>
                             </div>
@@ -65,7 +65,7 @@
                                 <div class="col">
                                     <div class="col text-left">
                                         <span class="subtotal">DELIVERY CHARGES</span>
-                                        <span id="price" style="float: right; padding-right: 38px;">RM {{deliveryFee | number: '1.2-2'}}</span>
+                                        <span id="price" style="float: right; padding-right: 38px;">{{currencySymbol}} {{deliveryFee | number: '1.2-2'}}</span>
                                         <hr class="dotted">
                                     </div>
                                 </div>
@@ -74,7 +74,7 @@
                                 <div class="col">
                                     <div class="col text-left">
                                         <span class="subtotal" id="price" style="font-size: 15px;">GRAND TOTAL</span>
-                                        <span id="price" style="float: right; padding-right: 38px; font-size: 15px;">RM {{totalPrice | number: '1.2-2'}}</span>
+                                        <span id="price" style="float: right; padding-right: 38px; font-size: 15px;">{{currencySymbol}} {{totalPrice | number: '1.2-2'}}</span>
                                         <hr class="dotted">
                                     </div>
                                 </div>

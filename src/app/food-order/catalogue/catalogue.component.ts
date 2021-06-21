@@ -17,6 +17,7 @@ import { NgxGalleryOptions, NgxGalleryImage, NgxGalleryAnimation } from 'ngx-gal
 import Swal from 'sweetalert2'
 
 import { PlatformLocation } from "@angular/common";
+import { not } from '@angular/compiler/src/output/output_ast';
 
 
 
@@ -113,6 +114,8 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
 
     store_close:boolean = true;
     storeTimingObj:any = {};
+
+    currencySymbol:string = "";
 
     constructor(
         private _databindService: DataBindService, 
@@ -244,8 +247,36 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.skipMerchantInfo()
             }
 
+            // this.getStoreCurrency(this.storeID)
+
         }
     }
+
+    // getStoreCurrency(storeID){
+    //     console.log("getStoreCurrency storeID: " + storeID)
+
+    //     // double check if storeID already get, if not, please get it , otherwise default will be RM 
+    //     if(storeID){
+
+    //         this.apiService.getStoreHoursByID(storeID).subscribe((res: any) => {
+    //             console.log('get store currency ', res)
+    
+    //             if (res.message){
+    //                 // this.cartitemDetails = res.data.content;
+    //                 // this.cartitemDetailsCount = this.cartitemDetails.length;
+    //             } else {
+    
+    //             }
+    
+    //         }, error => {
+    //             console.log(error)
+    //         }) 
+
+    //     }else{
+
+    //     }
+
+    // }
 
     getMerchantInfo(storename){
         console.log('Catalogue Calling BACKEND getStoreInfo');
@@ -1442,6 +1473,10 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
             console.log('store business hour: ', res)
             if (res.message){
                 console.log('storeTiming : ', res.data.storeTiming)
+                
+                this.currencySymbol =  res.data.regionCountry.currencySymbol;
+
+                console.log('symbol currency: ', this.currencySymbol)
 
                 const currentDate = new Date();
 
