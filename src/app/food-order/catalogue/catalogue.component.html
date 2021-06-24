@@ -129,13 +129,19 @@
                 <div class="card-body" style="font-size: 13px;">
                     <div class="row">
                         <div class="col-4">
-                            <div *ngIf="(item.productAssets); else noImage">
+                            <div *ngIf="item.productAssets != 0">
                                 <img (click)="goToDetails(item.seoName)" class="card-img-top img-icon details" src="{{ item.productAssets[0].url }}" alt="Card image cap">
                                 <!-- <span>test {{item.productAssets[0].url}}</span> -->
                             </div>
-                            <ng-template #noImage>
+                            <div *ngIf="item.productAssets == 0 && logoImage">
+                                <img (click)="goToDetails(item.seoName)" class="card-img-top img-icon details" src="{{ logoImage }}" alt="Card image cap">
+                            </div>
+                            <div *ngIf="item.productAssets == 0 && !logoImage">
                                 <img (click)="goToDetails(item.seoName)" class="card-img-top img-icon details" src="assets/image/noimage.jpg" alt="Card image cap">
-                            </ng-template>
+                            </div>
+                            <!-- <ng-template #noImage>
+                                
+                            </ng-template> -->
                         </div>
                         <div class="col-8 text-right">
                             <h6 (click)="goToDetails(item.seoName)" class="card-title details">{{ item.name | titlecase}}</h6>

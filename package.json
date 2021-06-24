@@ -1,6 +1,6 @@
 {
-  "name": "simplify-fe",
-  "version": "0.0.0",
+  "name": "store-front",
+  "version": "1.0.1-alpha",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",

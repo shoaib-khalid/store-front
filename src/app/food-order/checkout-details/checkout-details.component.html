@@ -11,74 +11,27 @@
                                     <!-- <hr class="dotted"> -->
                                 </div>
                             </div>
-                            <div style="height: 300px; overflow: scroll;" id="scrollable4">
-                                <!-- <div class="row" *ngFor="let item of cartList; let i = index;"> -->
-                                <div class="row" *ngFor="let item of cartitemDetails; let i = index;">
-                                    <div class="col">
-                                        <div class="row">
-                                            <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12"></div>
-                                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 text-left">
-                                                <span id="price" class="quantity" style="font-size: 13px;">{{item.quantity}}&nbsp;&nbsp;x&nbsp;&nbsp;</span>
-                                                <!-- <span style="font-size: 13px;">{{item.productId}}</span> -->
-                                                <div *ngFor="let product of product">
-                                                    <span *ngIf="item.productId == product.id" style="font-weight: bold; font-size: 13px;">{{product.name | uppercase }}</span>
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 text-right">
-                                                <div *ngFor="let inventory of allProductInventory">
-                                                    <span *ngIf="item.itemCode == inventory.itemCode" id="price">{{currencySymbol}} {{ (item.quantity * inventory.price) | number : '1.2-2' }}</span>
-                                                </div>
-                                                <!-- <span id="price" class="unitprice">{{item.unitprice * item.quantity | number: '1.2-2'}}</span> -->
-                                            </div>
-                                        </div>
-                                        <hr class="nondotted">
+                            <div class="row" *ngFor="let item of cartitemDetails; let i = index;">
+                                <div class="col-9 text-left">
+                                    <span id="price" class="quantity" style="font-size: 13px;">{{item.quantity}}&nbsp;x&nbsp;</span>
+                                    <div *ngFor="let product of product">
+                                        <span *ngIf="item.productId == product.id" style="font-weight: bold; font-size: 13px;">{{product.name | uppercase }}</span>
                                     </div>
                                 </div>
+                                <div class="col-3 text-center">
+                                    <div *ngFor="let inventory of allProductInventory">
+                                        <span *ngIf="item.itemCode == inventory.itemCode" id="price">{{currencySymbol}} {{ (item.quantity * inventory.price) | number : '1.2-2' }}</span>
+                                    </div>
+                                </div>
+                                <hr class="nondotted">
+                            </div>
 
-                                <div class="col" *ngIf="cartitemDetails.length < 1">
-                                    <div class="alert alert-danger" role="alert">
-                                        Cart is Empty!
-                                    </div>
+                            <div class="col" *ngIf="cartitemDetails.length < 1">
+                                <div class="alert alert-danger" role="alert">
+                                    Cart is Empty!
                                 </div>
-                                
                             </div>
                             
-
-                            <div class="row" style="padding-top: 20px;">
-                                <div class="col">
-                                    <div class="col text-left">
-                                        <span class="subtotal">SUB-TOTAL</span>
-                                        <span id="price" style="float: right; padding-right: 38px;">{{currencySymbol}} {{subTotal | number: '1.2-2'}}</span>
-                                        <!-- <hr class="dotted"> -->
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col">
-                                    <div class="col text-left">
-                                        <span class="subtotal">SERVICE CHARGES ({{storeDeliveryPercentage}}%)</span>
-                                        <span id="price" style="float: right; padding-right: 38px;">{{currencySymbol}} {{totalServiceCharges | number: '1.2-2'}}</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col">
-                                    <div class="col text-left">
-                                        <span class="subtotal">DELIVERY CHARGES</span>
-                                        <span id="price" style="float: right; padding-right: 38px;">{{currencySymbol}} {{deliveryFee | number: '1.2-2'}}</span>
-                                        <hr class="dotted">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col">
-                                    <div class="col text-left">
-                                        <span class="subtotal" id="price" style="font-size: 15px;">GRAND TOTAL</span>
-                                        <span id="price" style="float: right; padding-right: 38px; font-size: 15px;">{{currencySymbol}} {{totalPrice | number: '1.2-2'}}</span>
-                                        <hr class="dotted">
-                                    </div>
-                                </div>
-                            </div>
                             <!-- <div *ngIf="showCountDownTime">
                                 {{ showCountDownTime }} <br>
                                 <span><small> Delivery charges validity, the delivery charges may changes after the validity expired</small></span>
@@ -155,15 +108,56 @@
                         
                             <!-- <button (click)="checkLah()"></button> -->
 
+                            <div class="alert alert-warning" role="alert" style="margin-top: 20px;">
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="col text-left">
+                                            <span class="subtotal">SUB-TOTAL</span>
+                                            <span id="price" style="float: right; padding-right: 38px;">{{currencySymbol}} {{subTotal | number: '1.2-2'}}</span>
+                                            <!-- <hr class="dotted"> -->
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="col text-left">
+                                            <span class="subtotal">SERVICE CHARGES ({{storeDeliveryPercentage}}%)</span>
+                                            <span id="price" style="float: right; padding-right: 38px;">{{currencySymbol}} {{totalServiceCharges | number: '1.2-2'}}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="col text-left">
+                                            <span id="price" class="subtotal warning-text">DELIVERY CHARGES</span>
+                                            <span id="price" class="warning-text" style="float: right; padding-right: 38px;">{{currencySymbol}} {{deliveryFee | number: '1.2-2'}}</span>
+                                            <!-- <hr class="dotted"> -->
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="col text-left text-success">
+                                            <span class="subtotal" id="price" style="font-size: 15px;">GRAND TOTAL</span>
+                                            <span id="price" style="float: right; padding-right: 38px; font-size: 15px;">{{currencySymbol}} {{totalPrice | number: '1.2-2'}}</span>
+                                            <!-- <hr class="dotted"> -->
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div *ngIf="showCountDownTime" style="margin-top: 20px;">
+                                    <hr>
+
+                                    <h4 class="alert-heading text-center bolder warning-text">{{ showCountDownTime }}</h4>
+                                    
+                                    <hr>
+                                    <small class="italic">Delivery charges validity, the delivery charges may changes after the validity expired</small>
+                                </div>
+                            </div>
+
                             <button type="submit" class="btn btn-md col-lg-4 col-md-4 col-xs-12 col-sm-12 btn-success" [disabled]="payDisable" style="border-radius: 0;">PAY NOW &nbsp;&nbsp;<fa-icon [icon]="iconMoney"></fa-icon></button>
                             <!-- <button (click)="goSkip($event)" class="btn btn-md col-lg-4 col-md-4 col-xs-12 col-sm-12 btn-success" style="border-radius: 0;">PAY NOW &nbsp;&nbsp;<fa-icon [icon]="iconMoney"></fa-icon></button> -->
                         
-                            <div *ngIf="showCountDownTime" class="alert alert-danger" role="alert" style="margin-top: 20px;">
-                                <h4 class="alert-heading text-center">{{ showCountDownTime }}</h4>
-                                
-                                <hr>
-                                <small>Delivery charges validity, the delivery charges may changes after the validity expired</small>
-                            </div>
                         </form>
                     </div>
 

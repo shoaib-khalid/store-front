@@ -39,7 +39,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
     senderID:any;
     refID:any;
     storeID:any;
-    storeDeliveryPercentage:any;
+    storeDeliveryPercentage:number;
     storeName:any;
 
     cartExist:boolean = false;
@@ -130,7 +130,9 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
         this.senderID = localStorage.getItem('sender_id');
         this.refID = localStorage.getItem('ref_id');
         this.storeID = localStorage.getItem('store_id');
-        this.storeDeliveryPercentage = localStorage.getItem('store_delivery_percentage');
+        // this.storeDeliveryPercentage = localStorage.getItem('store_delivery_percentage');
+
+        // console.log('storeDeliveryPercentage: ', typeof(this.storeDeliveryPercentage))
 
         if(this.senderID === 'undefined'){
             this.cartID = localStorage.getItem("anonym_cart_id")
@@ -184,6 +186,8 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
                 console.log('storeTiming : ', res.data.storeTiming)
 
                 this.currencySymbol =  res.data.regionCountry.currencySymbol;
+
+                this.storeDeliveryPercentage = res.data.serviceChargesPercentage
 
                 console.log('symbol currency: ', this.currencySymbol)
 
@@ -346,6 +350,8 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
             });
     
         })
+
+        // console.log('go Here tak?')
     
         this.goPay()
     }
@@ -482,6 +488,11 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
 
         this.totalPrice = this.subTotal + this.deliveryFee + this.totalServiceCharges
 
+        console.log(typeof(this.totalPrice))
+        console.log(typeof(this.subTotal))
+        console.log(typeof(this.deliveryFee))
+        console.log(typeof(this.totalServiceCharges))
+
         console.log("Sub-total : "+this.subTotal);
         console.log("Service Charges : "+this.subTotal);
         console.log("Delivery Charges : "+this.deliveryFee);
@@ -494,6 +505,8 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
     }
 
     goPay(){
+
+        console.log('MASOK X PAYMENT?')
 
         let dateTime = new Date()
 
@@ -510,11 +523,15 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
             "callbackUrl" : this.currBaseURL + '/thankyou'
         }
 
+        console.log('let data: ', data)
+
         this.apiService.postPaymentLink(data).subscribe((res: any) => {
             console.log('raw resp:', res.data.paymentLink)
             if (res.message) {
                 console.log("Data from PS: "+res.data);
                 let paymentLink = res.data.paymentLink;
+
+                console.log('PAYMENLINK : ' + paymentLink)
                 // window.open(paymentLink, "_blank");
 
                 // this.visible = false
@@ -785,6 +802,8 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
 
         // console.log("data: "+ JSON.stringify(data));
         this.apiService.postTogetDeliveryFee(data).subscribe(async (res: any) => {
+
+            // console.log('RESPONDEDNTAHSADAHSJHADSAS', res)
             if (res.message) {
 
                 this.deliveryFee = res.data[0].price;
@@ -796,6 +815,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
                 // alert('delivery charge: '+this.deliveryFee)
 
                 this.totalPrice = this.subTotal + this.deliveryFee;
+                console.log('total price : ' + this.totalPrice)
                 this.hasDeliveryFee = true;
 
                 console.log("server time now(): "+ this.serverDateTime+"\n"+"this.deliveryValidUpTo: "+this.deliveryValidUpTo);

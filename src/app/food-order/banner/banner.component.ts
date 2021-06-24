@@ -94,6 +94,8 @@ export class BannerComponent implements OnInit {
     this.assets = assetData
     // this.cartID = created_cart['id'];
 
+    // console.log('assets Data: ', this.assets)
+
     if(this.assets != null){
         this.bannerExist = true;
     }

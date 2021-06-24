@@ -101,3 +101,15 @@ input[type=email]:focus, [type=password]:focus, [type=text]:focus, textarea:focu
         margin-left: 20px;
     }
 }
+
+.warning-text{
+    color: #E10600;
+}
+
+.bolder{
+    font-weight: bolder;
+}
+
+.italic{
+    font-style: italic;
+}

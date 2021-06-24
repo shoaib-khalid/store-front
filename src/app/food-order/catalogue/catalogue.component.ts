@@ -116,6 +116,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
     storeTimingObj:any = {};
 
     currencySymbol:string = "";
+    logoImage:any;
 
     constructor(
         private _databindService: DataBindService, 
@@ -245,6 +246,10 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
             } else {
                 console.log('Catalogue StoreID is '+this.storeID+', calling FUNCTION skipMerchantInfo Function')
                 this.skipMerchantInfo()
+
+                // get Assets Data 
+                this.getAssets(this.storeID)
+                // this.assets = assetData
             }
 
             // this.getStoreCurrency(this.storeID)
@@ -252,31 +257,15 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
         }
     }
 
-    // getStoreCurrency(storeID){
-    //     console.log("getStoreCurrency storeID: " + storeID)
+    getAssets(storeID){
+        this.apiService.getStoreAssets(storeID).subscribe((res: any) => {
+            console.log('ASSET Data: ', res)
 
-    //     // double check if storeID already get, if not, please get it , otherwise default will be RM 
-    //     if(storeID){
-
-    //         this.apiService.getStoreHoursByID(storeID).subscribe((res: any) => {
-    //             console.log('get store currency ', res)
-    
-    //             if (res.message){
-    //                 // this.cartitemDetails = res.data.content;
-    //                 // this.cartitemDetailsCount = this.cartitemDetails.length;
-    //             } else {
-    
-    //             }
-    
-    //         }, error => {
-    //             console.log(error)
-    //         }) 
-
-    //     }else{
-
-    //     }
-
-    // }
+            this.logoImage = res.data.logoUrl
+        }, error => {
+            // Swals.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
+        }) 
+    }
 
     getMerchantInfo(storename){
         console.log('Catalogue Calling BACKEND getStoreInfo');
@@ -305,6 +294,8 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.getCategory();
 
                 this.getStoreHour();
+
+                this.getAssets(this.storeID)
 
                 // check cart first 
                 // this.checkCart();
@@ -458,7 +449,10 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
 
         // var sesStoreName = localStorage.getItem('store_name')
 
+        
+
         if(!this.cartID){
+            
             console.log('cart session not exist')
             const created_cart = await this.createCart()
             console.log("creating anonymous cart finished...", created_cart)
@@ -495,15 +489,21 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
 
                 if (res.message){
                     this.cartitemDetails = res.data.content;
-                    this.cartitemDetailsCount = this.cartitemDetails.length;
+                    // this.cartitemDetailsCount = this.cartitemDetails.length;
+                    
                     this.inputQty = 1;
 
                     this.subTotal = 0;
 
+                    var quantity = 0;
                     await this.cartitemDetails.forEach(allItem => {
                         this.subTotal = this.subTotal + (allItem.quantity * allItem.price);
+                        // this.cartitemDetailsCount = this.cartitemDetailsCount + allItem.quantity
+                        quantity = quantity + allItem.quantity
                         // console.log("miqdaad: "+JSON.stringify(allItem.quantity * allItem.price)+"\n");
                     });
+
+                    this.cartitemDetailsCount = quantity
                 }
 
             }, error => {
@@ -644,7 +644,11 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
 
             if (res.message){
                 this.cartitemDetails = res.data.content;
-                this.cartitemDetailsCount = this.cartitemDetails.length;
+                // this.cartitemDetailsCount = this.cartitemDetails.length;
+
+                this.cartitemDetails.forEach(allItem => {
+                    this.cartitemDetailsCount = this.cartitemDetailsCount + allItem.quantity
+                });
 
             } else {
 
@@ -755,7 +759,14 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
 
                     if (res.message){
                         this.cartitemDetails = res.data.content;
-                        this.cartitemDetailsCount = this.cartitemDetails.length;
+
+                        // set back to zero and re-count 
+                        this.cartitemDetailsCount = this.cartitemDetailsCount + qty;
+
+                        // this.cartitemDetails.forEach(allItem => {
+                        //     this.cartitemDetailsCount = this.cartitemDetailsCount + allItem.quantity
+
+                        // });
 
                         Swal.fire("Great!", "Item successfully added to cart", "success")
                         this.inputQty = 1;
@@ -814,7 +825,9 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
                 
                                         if (res.message){
                                             this.cartitemDetails = res.data.content;
-                                            this.cartitemDetailsCount = this.cartitemDetails.length;
+                                            // this.cartitemDetailsCount = this.cartitemDetails.length;
+                                            // set back to zero and re-count 
+                                            this.cartitemDetailsCount = this.cartitemDetailsCount + qty;
             
                                             // add to cart 
                                             this.apiService.postAddToCart(data).subscribe((res: any) => {
@@ -856,6 +869,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
 
                 
             }else{
+
                 console.log("flow_anonymAddToCart" +
                             "\nitemCode: " + itemCode +
                             "\nproductID: " + productID +
@@ -1229,7 +1243,11 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
 
                     if (res.message){
                         this.cartitemDetails = res.data.content;
-                        this.cartitemDetailsCount = this.cartitemDetails.length;
+                        this.cartitemDetailsCount = 0;
+
+                        this.cartitemDetails.forEach(allItem => {
+                            this.cartitemDetailsCount = this.cartitemDetailsCount + allItem.quantity
+                        });
 
                         Swal.fire({
                             icon: 'info',
@@ -1266,7 +1284,11 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
 
             if (res.message){
                 this.cartitemDetails = res.data.content;
-                this.cartitemDetailsCount = this.cartitemDetails.length;
+                // this.cartitemDetailsCount = this.cartitemDetails.length;
+
+                // this.cartitemDetails.forEach(allItem => {
+                //     this.cartitemDetailsCount = this.cartitemDetailsCount + allItem.quantity
+                // });
 
             } else {
 
@@ -1359,12 +1381,15 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
             this.putCartItem(itemId, productId, itemCode , this.cartitemDetails[index].quantity);
 
             this.subTotal = 0;
+            this.cartitemDetailsCount = 0;
             await this.cartitemDetails.forEach(allItem => {
                 // console.log("itemId: "+itemId+"\n"+"allItem.itemId: "+JSON.stringify(allItem.id)+"\n");
                 this.subTotal = this.subTotal + (allItem.quantity * allItem.price);
+                this.cartitemDetailsCount = this.cartitemDetailsCount + allItem.quantity
                 // console.log("OK OK OK")
                 // console.log("miqdaad: "+JSON.stringify(allItem.quantity * allItem.price)+"\n");
             });
+
         }
         
         // backend quantity
@@ -1437,7 +1462,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
 
                     if (res.message){
                         this.cartitemDetails = res.data.content;
-                        this.cartitemDetailsCount = this.cartitemDetails.length;
+                        this.cartitemDetailsCount = 0;
 
                         Swal.fire({
                             icon: 'info',
@@ -1447,9 +1472,10 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
                         })
 
                         this.subTotal = 0;
-                        await this.cartitemDetails.forEach(allItem => {
-                            this.subTotal = this.subTotal + (allItem.quantity * allItem.price);
-                        });
+                        // await this.cartitemDetails.forEach(allItem => {
+                        //     this.subTotal = this.subTotal + (allItem.quantity * allItem.price);
+                        //     this.cartitemDetailsCount = this.cartitemDetailsCount + allItem.quantity
+                        // });
 
                     } else {
 
