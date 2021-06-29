@@ -52,6 +52,7 @@ export class ProductDetailsComponent implements OnInit {
     currBaseURL:any;
     localURL:any;
     cartLength:number;
+    currencySymbol:string = "";
 
     constructor(
         private activatedRoute: ActivatedRoute,
@@ -94,6 +95,7 @@ export class ProductDetailsComponent implements OnInit {
         this.cartID = localStorage.getItem("anonym_cart_id")
         // this.storeID = "af2cda1a-d4ac-4a9e-b51b-fc5b32578e5a"
         console.log('storeName: ' + this.storeName)
+
    }
 
     async ngOnInit() {
@@ -147,6 +149,31 @@ export class ProductDetailsComponent implements OnInit {
 
         await this.getVariantFlow()
 
+        this.getStoreHour();
+
+    }
+
+    async getStoreHour(){
+
+        const storeInfo = await this.getStoreInfo(this.storeName)
+        console.log('getStoreHour storeID: ', storeInfo)
+
+        this.storeID = storeInfo[0]['id']
+
+        this.apiService.getStoreHoursByID(this.storeID).subscribe((res: any) => {
+            console.log('store business hour: ', res)
+            if (res.message){
+                console.log('storeTiming : ', res.data.storeTiming)
+                
+                this.currencySymbol =  res.data.regionCountry.currencySymbol;
+
+                console.log('symbol currency: ', this.currencySymbol)
+
+            } else {
+            }
+        }, error => {
+            console.log(error)
+        }) 
     }
 
     goToCheckout(){

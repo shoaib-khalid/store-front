@@ -337,6 +337,9 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     getProduct() {
+
+        this.catalogueList = []
+
         console.log('Calling Backend getProductSByStoreID');
         this.apiService.getProductSByStoreID(this.storeID).subscribe((res: any) => {
             console.log('Receive Backend getProductSByStoreID');
@@ -387,7 +390,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
 
                                     count = true;
                                     this.catalogueList.push(item)
-                                    return this.catalogueList;
+                                    console.log('catalogueList: ', this.catalogueList)
                                 }
                             })
 
@@ -531,6 +534,8 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
                 "weight": weight,
                 "SKU": sku
             }
+
+            console.log('addItemToCart request data: ' , data)
 
             // add to cart 
             this.apiService.postAddToCart(data).subscribe((res: any) => {
@@ -785,7 +790,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
 
         }else{
 
-            console.log('masok cartExist false')
+            console.log('masok cartExist false' + price)
 
             if(this.senderID){
 
@@ -1244,8 +1249,10 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
                     if (res.message){
                         this.cartitemDetails = res.data.content;
                         this.cartitemDetailsCount = 0;
+                        this.subTotal = 0;
 
                         this.cartitemDetails.forEach(allItem => {
+                            this.subTotal = this.subTotal + (allItem.quantity * allItem.price);
                             this.cartitemDetailsCount = this.cartitemDetailsCount + allItem.quantity
                         });
 
@@ -1305,6 +1312,9 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     onGetCategoriesItem(categoryId){
+
+        // alert('here')
+        
 
         console.log('Category ID: ' + categoryId);
 

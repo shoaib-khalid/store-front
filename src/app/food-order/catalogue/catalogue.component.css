@@ -152,6 +152,36 @@ drag-scroll-item::-webkit-scrollbar-track {
     text-decoration: none;
   }
 
+  .selected{
+    color: black;
+}
+
+  .selected:hover{
+    color: #ffb347 !important;
+}
+
+  .selected:active{
+      color: #ffb347 !important;
+  }
+
+  .selected:focus{
+    color: #ffb347 !important;
+}
+
+.selected:visited{
+    color: #ffb347 !important;
+}
+
+  #allcategory {
+    display: inline-block;
+    color: black;
+    text-align: center;
+    /* padding: 14px; */
+    padding-left: 10px;
+    padding-right: 10px;
+    text-decoration: none;
+  }
+
   .scrollmenu{
       height: 85% !important;
   }
