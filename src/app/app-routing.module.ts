@@ -6,12 +6,15 @@ import { StepCheckoutComponent } from './food-order/layout-checkout/step-checkou
 import { ThankyouComponent } from './food-order/thankyou/thankyou.component';
 import { ProductDetailsComponent } from './food-order/product-details/product-details.component';
 import { NotFoundComponent } from './food-order/not-found/not-found.component'; 
+import { LandingComponent } from './food-order/landing/landing.component';
 // import { Product } from './food-order/models/Product';
 
 const routes: Routes = [
 
     // { path: "", redirectTo: "catalogue", pathMatch: "full" },
-    { path: "", component: StepCatalogueComponent},
+    { path: "", component: LandingComponent},
+    // { path: "catalogue", component: StepCatalogueComponent },
+    { path: "catalogue/:catId", component: StepCatalogueComponent },
     // { path: "query", component: StepCatalogueComponent},
     // { path: "customers/:senderId", component: StepCatalogueComponent },
     { path: ":storeId/:senderId", component: StepCatalogueComponent },

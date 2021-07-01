@@ -28,6 +28,7 @@ import { NgPipesModule } from 'ngx-pipes';
 import { ThankyouComponent } from './thankyou/thankyou.component';
 import { ProductDetailsComponent } from './product-details/product-details.component';
 import { NotFoundComponent } from './not-found/not-found.component';
+import { LandingComponent } from './landing/landing.component';
 
 
 @NgModule({
@@ -43,7 +44,8 @@ import { NotFoundComponent } from './not-found/not-found.component';
     ModalCartComponent,
     ThankyouComponent,
     ProductDetailsComponent,
-    NotFoundComponent
+    NotFoundComponent,
+    LandingComponent
   ],
   imports: [
     CommonModule,

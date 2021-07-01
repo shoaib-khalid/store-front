@@ -22,11 +22,11 @@ import { not } from '@angular/compiler/src/output/output_ast';
 
 
 @Component({
-  selector: 'food-app-catalogue',
-  templateUrl: './catalogue.component.html',
-  styleUrls: ['./catalogue.component.css']
-})
-export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
+    selector: 'app-landing',
+    templateUrl: './landing.component.html',
+    styleUrls: ['./landing.component.css']
+  })
+export class LandingComponent implements OnInit, AfterViewInit, OnDestroy {
 
     // @HostListener("window:onbeforeunload",["$event"])
     // clearLocalStorage(event){
@@ -117,7 +117,8 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
 
     currencySymbol:string = "";
     logoImage:any;
-    catId:any;
+    bannerImage:any;
+    storeInformation:any = [];
 
     constructor(
         private _databindService: DataBindService, 
@@ -191,17 +192,9 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
             console.log('Catalogue Storename: ' + this.storeName)
 
             // get url parameter style e.g http://localhost:4200/catalogue?store_id=3
-            this.activatedRoute.params.subscribe(params => {
+            this.activatedRoute.queryParams.subscribe(params => {
                 this.senderID = params['senderId'];
                 this.storeID = params['storeId'];
-                this.catId = params['catId'];
-
-                // this.activatedRoute.params.subscribe(params => {
-        //     let date = params['store_id'];
-        //     console.log(date); // Print the parameter to the console. 
-        // });
-
-                // alert(this.catId)
 
                 console.log('Catalogue SenderID: ' + this.senderID); 
                 console.log('Catalogue StoreID: ' + this.storeID); 
@@ -223,7 +216,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
 
             //Staging
 
-            this.getProduct(this.catId);
+            this.getProduct();
 
             this.getCategory();
 
@@ -266,15 +259,20 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
         }
     }
 
+    goToCategory(catId){
 
-    goToLanding(){
-        this.route.navigate(['']);
+        // alert(catId)
+
+        // return false;
+        this.route.navigate(['catalogue/'+catId]);
+        // alert('Hello')
     }
 
     getAssets(storeID){
         this.apiService.getStoreAssets(storeID).subscribe((res: any) => {
             console.log('ASSET Data: ', res)
 
+            this.bannerImage = res.data.bannerUrl
             this.logoImage = res.data.logoUrl
         }, error => {
             // Swals.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
@@ -283,12 +281,17 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
 
     getMerchantInfo(storename){
         console.log('Catalogue Calling BACKEND getStoreInfo');
+
+        this.storeInformation = []
+
         this.apiService.getStoreInfo(storename).subscribe((res: any) => {
             console.log('Catalogue Receive BACKEND getStoreInfo');
             console.log('Catalogue Store Information: ', res.data.content)
 
             let data = res.data.content[0]
             let exist = data.length
+
+            this.storeInformation = res.data.content[0]
 
             if (res.message){
 
@@ -302,7 +305,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
                 // since checkout page does query store service , i passed this storeDeliveryPercentage via local storage.. lol
                 this.storeDeliveryPercentage = data.serviceChargesPercentage;
 
-                this.getProduct(this.catId)
+                this.getProduct()
 
                 // this.getProductNew();
                 this.getCategory();
@@ -350,13 +353,12 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
 
     }
 
-    getProduct(categoryId) {
+    getProduct() {
 
         this.catalogueList = []
 
         // console.log('Calling Backend getProductSByStoreID');
-        // this.apiService.getProductSByStoreID(this.storeID).subscribe((res: any) => {
-        this.apiService.getProductSByCategory(categoryId, this.storeID).subscribe((res: any) => {
+        this.apiService.getProductSByStoreID(this.storeID).subscribe((res: any) => {
             // console.log('Receive Backend getProductSByStoreID');
             if (res.message) {
                 this.product = res.data.content;
@@ -596,7 +598,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     skipMerchantInfo(){
-        this.getProduct(this.catId);
+        this.getProduct();
         // this.getProductNew();
         this.getCategory();
 
@@ -1498,7 +1500,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
                     // console.log('cart item by cart ID: ', res.data.content)
 
                     this.cartitemDetails=[]
-
+                    
                     if (res.message){
                         this.cartitemDetails = res.data.content;
                         this.cartitemDetailsCount = 0;
@@ -1588,3 +1590,4 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
 }
+

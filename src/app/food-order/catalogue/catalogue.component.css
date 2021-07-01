@@ -82,7 +82,7 @@
   } */
 
 .category:hover{
-    background-color: #FFF9D6;
+    background-color: #fcf9eb;
     background-blend-mode: multiply;
     cursor: pointer;
 }
@@ -204,6 +204,28 @@ drag-scroll-item::-webkit-scrollbar-track {
 
   	background-blend-mode: multiply;
 }
+
+.category_card{
+    /* border: 1px solid black; */
+    height: 200px;
+    background-position: center center;
+  	background-repeat: no-repeat;
+  	background-size: cover;
+
+}
+
+.center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* height: 200px; */
+    /* border: 3px solid green;  */
+  }
+
+/* .category_card:hover{
+    background: linear-gradient(#ffce9c, #FFF8D6);
+ 
+} */
 
 .btnAddtoCart{
     text-align: center; 

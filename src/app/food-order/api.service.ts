@@ -112,17 +112,32 @@ export class ApiService {
     }
 
     // Ref : http://209.58.160.20:7071/swagger-ui.html#/product-controller/getProductUsingGET_1
+    // old endpoint 
+    // getProductSByStoreID(storeID) {
+    //     const header = {
+    //         headers: new HttpHeaders().set("Authorization", `Bearer ${this.token}`),
+    //     };
+    //     const url =
+    //         "stores/" +storeID +
+    //         "/products?featured=true" +
+    //         "&page=0" +
+    //         "&pageSize=20" +
+    //         "&storeId=" +
+    //         storeID;
+    //         return this.http.get(this.productServiceURL + url, header);
+    // }
+
+    // https://api.symplified.biz/product-service/v1/stores/8913d06f-a63f-4a16-8059-2a30a517663a/products?pageSize=10&page=0&status=ACTIVE
     getProductSByStoreID(storeID) {
         const header = {
             headers: new HttpHeaders().set("Authorization", `Bearer ${this.token}`),
         };
         const url =
             "stores/" +storeID +
-            "/products?featured=true" +
-            "&page=0" +
-            "&pageSize=20" +
-            "&storeId=" +
-            storeID;
+            "/products?pageSize=10" +
+            "&page=0" + 
+            "&status=ACTIVE";
+            
             return this.http.get(this.productServiceURL + url, header);
     }
 
@@ -178,18 +193,34 @@ export class ApiService {
     }
 
     // Ref : http://209.58.160.20:7071/swagger-ui.html#/product-controller/getProductUsingGET_1
+
+    // https://api.symplified.biz/product-service/v1/stores/b91e95f5-4af5-40ff-b7d2-d90b67eb595b/
+    // products?pageSize=10&page=0&status=ACTIVE&categoryId=ad3e14db-54c8-4595-ba57-ee6c450bab99
     getProductSByCategory(categoryId, storeID) {
         const header = {
             headers: new HttpHeaders().set("Authorization", `Bearer ${this.token}`),
         };
 
+        // const url =
+        //     "products?categoryId="+ categoryId +
+        //     "&featured=true" +
+        //     "&page=0" +
+        //     "&pageSize=20" +
+        //     "&storeId=" +
+        //     storeID;
+
         const url =
-            "products?categoryId="+ categoryId +
-            "&featured=true" +
+            "stores/"+storeID+"/products?pageSize=10" +
             "&page=0" +
-            "&pageSize=20" +
-            "&storeId=" +
-            storeID;
+            "&status=ACTIVE" +
+            "&categoryId=" + categoryId;
+            
+            // categoryId="+ categoryId +
+            // "&featured=true" +
+            // "&page=0" +
+            // "&pageSize=20" +
+            // "&storeId=" +
+            // storeID;
 
         return this.http.get(this.productServiceURL + url, header);
     }
