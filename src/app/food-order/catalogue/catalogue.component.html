@@ -312,9 +312,9 @@ data-backdrop="static" data-keyboard="false">
 
                                 <div class="form-group">
                                     <label for="instruction">Special Instruction</label>
-                                    <textarea name="addToInstruction" [(ngModel)]="addToInstruction" [(value)]="addToInstruction" class="form-control form-control-lg" id="instruction" aria-describedby="instruction" cols="30" rows="4"></textarea>
+                                    <textarea name="addToInstruction" [(ngModel)]="addToInstruction" [(value)]="addToInstruction" class="form-control form-control-lg" id="instruction" aria-describedby="instruction" cols="30" rows="4" style="font-size: 12px;"></textarea>
                                     <!-- <input type="text" name="addToInstruction" [(ngModel)]="addToInstruction" [(value)]="addToInstruction" class="form-control form-control-lg" id="instruction" aria-describedby="instruction"> -->
-                                    <small id="emailHelp" class="form-text text-muted">Example ("extra mayonnaise, extra spicy, cut in half and etc...")</small>
+                                    <!-- <small id="emailHelp" class="form-text text-muted">Example ("extra mayonnaise, extra spicy, cut in half and etc...")</small> -->
                                 </div>
                                 
                             </div>
@@ -366,6 +366,13 @@ data-backdrop="static" data-keyboard="false">
                                     <ng-number-picker name="inputQty" [(ngModel)]="inputQty" [(value)]="inputQty" [min]="1" [max]="100" [postfix]="'unit'" [size]="'sm'"></ng-number-picker>
                                 </div>
                             </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="instruction">Special Instruction</label>
+                            <textarea name="addToInstruction" [(ngModel)]="addToInstruction" [(value)]="addToInstruction" class="form-control form-control-lg" id="instruction" aria-describedby="instruction" cols="30" rows="4" style="font-size: 12px;"></textarea>
+                            <!-- <input type="text" name="addToInstruction" [(ngModel)]="addToInstruction" [(value)]="addToInstruction" class="form-control form-control-lg" id="instruction" aria-describedby="instruction"> -->
+                            <!-- <small id="emailHelp" class="form-text text-muted">Example ("extra mayonnaise, extra spicy, cut in half and etc...")</small> -->
                         </div>
                     </div>
     
@@ -447,6 +454,11 @@ data-backdrop="static" data-keyboard="false">
                                     <button type="button" class="close" aria-label="Close">
                                         <span (click)="deleteItem(item.id, item.productId)" aria-hidden="true"><fa-icon [icon]="iconTrash" class="iconStyle"></fa-icon></span>
                                     </button>
+                                </div>
+                            </div>
+                            <div class="row" *ngIf="item.specialInstruction">
+                                <div class="col">
+                                    <small class="text-muted" >Instruction: <strong>{{item.specialInstruction}}</strong></small>
                                 </div>
                             </div>
                         </div>
@@ -574,7 +586,7 @@ data-backdrop="static" data-keyboard="false">
                 <div class="text-center">
                     <img 
                         class="addtocart"
-                        src="./assets/image/addtocart.jpg"
+                        src="./assets/image/addtocart.png"
                         alt="First slide"
                     />
                 </div>
@@ -583,8 +595,8 @@ data-backdrop="static" data-keyboard="false">
 
                 <div class="form-group">
                     <label for="instruction">Special Instruction</label>
-                    <input type="text" name="addToInstruction" [(ngModel)]="addToInstruction" [(value)]="addToInstruction" class="form-control form-control-lg" id="instruction" aria-describedby="instruction">
-                    <small id="emailHelp" class="form-text text-muted">Example ("extra mayonnaise, extra spicy, cut in half and etc...")</small>
+                    <input type="text" name="addToInstruction" [(ngModel)]="addToInstruction" [(value)]="addToInstruction" maxlength="1000" class="form-control form-control-lg" id="instruction" aria-describedby="instruction">
+                    <!-- <small id="emailHelp" class="form-text text-muted">Example ("extra mayonnaise, extra spicy, cut in half and etc...")</small> -->
                 </div>
             
             </div>

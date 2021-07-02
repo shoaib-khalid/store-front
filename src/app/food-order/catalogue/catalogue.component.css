@@ -274,7 +274,7 @@ drag-scroll-item::-webkit-scrollbar-track {
 }
 
 .addtocart{
-    width: 60%; 
+    width: 30%; 
     height: auto; 
     padding: 10px;
 }
@@ -296,7 +296,7 @@ drag-scroll-item::-webkit-scrollbar-track {
 @media (max-width: 767px) {
 
     .addtocart{
-        width: 80% !important;
+        width: 60% !important;
     }
 
     .bg-image-full {

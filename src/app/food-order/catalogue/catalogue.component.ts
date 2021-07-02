@@ -535,7 +535,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
                 }
 
             }, error => {
-                Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
+                // Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
 
             }) 
             
@@ -568,10 +568,10 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
                 
                 resolve(res.data)
 
-                Swal.fire("Great!", "Item successfully added to cart", "success")
+                // Swal.fire("Great!", "Item successfully added to cart", "success")
 
             }, error => {
-                Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
+                // Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
             })
                 
         });
@@ -596,7 +596,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
                 resolve(res.data)
 
             }, error => {
-                Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
+                // Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
                 // console.log('failed at postCreateCart')
             }) 
             
@@ -825,19 +825,19 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
 
                         // });
 
-                        Swal.fire("Great!", "Item successfully added to cart", "success")
+                        // Swal.fire("Great!", "Item successfully added to cart", "success")
                         this.inputQty = 1;
 
                     } else {
-                        Swal.fire("Great!", "Item failed", "error")
+                        // Swal.fire("Great!", "Item failed", "error")
                     }
 
                 }, error => {
-                    Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
+                    // Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
                 }) 
 
             }, error => {
-                Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
+                // Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
             }) 
 
         }else{
@@ -894,7 +894,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
                                             this.apiService.postAddToCart(data).subscribe((res: any) => {
             
                                             }, error => {
-                                                Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
+                                                // Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
                                                 console.log('failed at postAddToCart')
                                             }) 
                 
@@ -903,7 +903,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
                                         }
                 
                                     }, error => {
-                                        Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
+                                        // Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
                                         console.log('failed at getCartItemByCartID')
                                     }) 
                 
@@ -915,7 +915,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
                 
                             }
                         }, error => {
-                            Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
+                            // Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
                             console.log('failed at getCartList')
                         }) 
     
@@ -924,7 +924,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
                     }
     
                 }, error => {
-                    Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
+                    // Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
                     console.log('failed at postCreateCart')
                 }) 
 
