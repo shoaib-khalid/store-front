@@ -18,6 +18,7 @@ import Swal from 'sweetalert2'
 
 import { PlatformLocation } from "@angular/common";
 import { not } from '@angular/compiler/src/output/output_ast';
+import { finished } from 'stream';
 
 
 
@@ -118,6 +119,13 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
     currencySymbol:string = "";
     logoImage:any;
     catId:any;
+    addToItemCode: any;
+    addToProdId: any;
+    addToOption: any;
+    addToPrice: any;
+    addToWeight: any;
+    addToSku: any;
+    addToInstruction: string = "";
 
     constructor(
         private _databindService: DataBindService, 
@@ -458,7 +466,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
 
     }
 
-    async flow_anonymAddToCart(itemCode, productID, qty, price, weight, sku){
+    async flow_anonymAddToCart(itemCode, productID, qty, price, weight, sku, instruction){
 
 
         console.log("the SKU value: "+ sku);
@@ -481,7 +489,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
             console.log('created cart id: ' + this.cartID)
         }
 
-        const add_item = await this.addItemToCart(this.cartID, itemCode, productID, qty, price, weight, sku)
+        const add_item = await this.addItemToCart(this.cartID, itemCode, productID, qty, price, weight, sku, instruction)
         console.log("item added to cart...")
         console.log("add item details ", add_item )
 
@@ -535,7 +543,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
 
     }
 
-    addItemToCart(cartID, itemCode, productID, qty, price, weight, sku){
+    addItemToCart(cartID, itemCode, productID, qty, price, weight, sku, instruction){
         console.log("starting to add item to cart...")
         return new Promise(resolve => {
 
@@ -549,7 +557,8 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
                 "price": price,
                 "productPrice": price,
                 "weight": weight,
-                "SKU": sku
+                "SKU": sku,
+                "specialInstruction": instruction
             }
 
             console.log('addItemToCart request data: ' , data)
@@ -719,8 +728,24 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
         }) 
     }
 
-    addToCart(event, productID, itemCode, option, price, weight ,sku){
+    itemInfo(event, productID, itemCode, option, price, weight ,sku){
 
+        // alert("productID: " + productID + " itemCode: " + itemCode + " option: " + option + " price: " + price + " weight: " + weight + " sku: " + sku)
+
+        this.addToProdId = productID
+        this.addToItemCode = itemCode
+        this.addToOption = option 
+        this.addToPrice = price 
+        this.addToWeight = weight
+        this.addToSku = sku
+
+    }
+
+    addToCart(event, productID, itemCode, option, price, weight ,sku, instruction){
+
+        // alert("productID: " + productID + " itemCode: " + itemCode + " option: " + option + " price: " + price + " weight: " + weight + " sku: " + sku + " instruction: " + instruction)
+        
+        // return false
         // alert("productID: " + productID + " itemCode: " + itemCode + " option: " + option)
         // return false;
         // pseudo quantity & option
@@ -755,10 +780,14 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
             "price": price,
             "productPrice": price,
             "weight": weight,
-            "SKU": sku
+            "SKU": sku,
+            "specialInstruction": instruction
         }
 
-        console.log('let data cart object: ', data)
+        // alert(JSON.stringify(data))
+
+        // return false
+        // console.log('let data cart object: ', data)
 
         // pseudo cart 
         // 1 - If cart exists 
@@ -772,6 +801,8 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
         if(this.cartExist == true){
 
             console.log('masok cartExist true')
+
+            // alert('here: ' + JSON.stringify(data))
 
             this.apiService.postAddToCart(data).subscribe((res: any) => {
 
@@ -810,6 +841,8 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
             }) 
 
         }else{
+
+            // alert('here 2: ' + JSON.stringify(data))
 
             console.log('masok cartExist false' + price)
 
@@ -898,18 +931,27 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
                 
             }else{
 
+                // alert('here 3: ' + JSON.stringify(data))
+
                 console.log("flow_anonymAddToCart" +
                             "\nitemCode: " + itemCode +
                             "\nproductID: " + productID +
                             "\nqty: " + qty +
                             "\nprice: " + price +
                             "\nweight: " + weight +
-                            "\nsku: " + sku);
-                this.flow_anonymAddToCart(itemCode, productID, qty, price, weight, sku)
+                            "\nsku: " + sku +
+                            "\nspecial instruction: " + instruction);
+                this.flow_anonymAddToCart(itemCode, productID, qty, price, weight, sku, instruction)
             }
 
             
         }  
+
+        // after finished, closed modal 
+        option == 2 ? document.getElementById("closeModalButton2").click() : document.getElementById("closeModalButton").click()
+
+        // clear instruction field  
+        this.addToInstruction = ""
     }
 
     getCategory(){
@@ -1315,10 +1357,11 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
             console.log('cart item from Cart Item Details: ', res.data.content)
 
             this.cartitemDetails=[]
+            this.cartitemDetailsCount = 0
 
             if (res.message){
                 this.cartitemDetails = res.data.content;
-                // this.cartitemDetailsCount = this.cartitemDetails.length;
+                this.cartitemDetailsCount = this.cartitemDetails.length;
 
                 // this.cartitemDetails.forEach(allItem => {
                 //     this.cartitemDetailsCount = this.cartitemDetailsCount + allItem.quantity

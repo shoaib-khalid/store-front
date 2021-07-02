@@ -269,17 +269,36 @@ drag-scroll-item::-webkit-scrollbar-track {
     background-color: #FFF9D6;
 }
 
+.modal_width{
+    width: 70%;
+}
+
+.addtocart{
+    width: 60%; 
+    height: auto; 
+    padding: 10px;
+}
+
+.modal-dialog{
+    max-width: 600px !important;
+}
+
 
 /* for mobile */
 @media (min-width: 992px) {
-    .modal-dialog {
-        max-width: 50%;
-    }
+    /* .modal-dialog { */
+        /* max-width: 30%; */
+    /* } */
 }
 
 
 /*Mobile Section*/
 @media (max-width: 767px) {
+
+    .addtocart{
+        width: 80% !important;
+    }
+
     .bg-image-full {
         height: 100px;
     }

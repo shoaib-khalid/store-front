@@ -14,16 +14,24 @@
                             <div class="row" *ngFor="let item of cartitemDetails; let i = index;">
                                 <div class="col-9 text-left">
                                     <span id="price" class="quantity" style="font-size: 13px;">{{item.quantity}}&nbsp;x&nbsp;</span>
-                                    <div *ngFor="let product of product">
+                                    <!-- <div *ngFor="let product of product">
                                         <span *ngIf="item.productId == product.id" style="font-weight: bold; font-size: 13px;">{{product.name | uppercase }}</span>
-                                    </div>
+                                    </div> -->
+                                    <span style="font-weight: bold; font-size: 13px;">{{item.productName | uppercase }}</span>
                                 </div>
                                 <div class="col-3 text-center">
-                                    <div *ngFor="let inventory of allProductInventory">
+                                    <!-- <div *ngFor="let inventory of allProductInventory">
                                         <span *ngIf="item.itemCode == inventory.itemCode" id="price">{{currencySymbol}} {{ (item.quantity * inventory.price) | number : '1.2-2' }}</span>
-                                    </div>
+                                    </div> -->
+                                    <span id="price">{{currencySymbol}} {{ (item.quantity * item.productPrice) | number : '1.2-2' }}</span>
                                 </div>
-                                <hr class="nondotted">
+                                <div class="col-12 text-left" *ngIf="item.specialInstruction">
+                                    <small class="text-muted" >Instruction: <strong>{{item.specialInstruction}}</strong></small>
+                                </div>
+                                <div class="col-12">
+                                    <hr class="nondotted">
+                                </div>
+                                
                             </div>
 
                             <div class="col" *ngIf="cartitemDetails.length < 1">

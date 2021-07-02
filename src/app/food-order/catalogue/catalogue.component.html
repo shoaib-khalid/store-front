@@ -205,7 +205,11 @@
                         <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
                             <div *ngFor="let data of catalogueList">
                                 <!-- {{item.id}} X {{data.productId}} -->
-                                <div *ngIf="item.id == data.productId" (click)="addToCart($event, item.id, data.itemCode, 1, data.price, item.weight, data.sku)" class="bg-warning rounded btnAddtoCart">
+                                <!-- <div *ngIf="item.id == data.productId" (click)="addToCart($event, item.id, data.itemCode, 1, data.price, item.weight, data.sku)" class="bg-warning rounded btnAddtoCart" data-toggle="modal" data-target="#staticBackdrop">
+                                    <span style="vertical-align: middle;">Add to cart &nbsp;<fa-icon [icon]="iconCart"></fa-icon></span>
+                                </div> -->
+
+                                <div *ngIf="item.id == data.productId" (click)="itemInfo($event, item.id, data.itemCode, 1, data.price, item.weight, data.sku)" class="bg-warning rounded btnAddtoCart" data-toggle="modal" data-target="#staticBackdrop">
                                     <span style="vertical-align: middle;">Add to cart &nbsp;<fa-icon [icon]="iconCart"></fa-icon></span>
                                 </div>
                             </div>
@@ -252,18 +256,19 @@
 ></app-modal-product> -->
 
 <!-- Product Modal Popup -->
-<div class="modal fade" id="modalProduct" tabindex="-1" role="dialog" aria-labelledby="modalProduct" aria-hidden="true">
+<div class="modal fade" id="modalProduct" tabindex="-1" role="dialog" aria-labelledby="modalProduct" aria-hidden="true"
+data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
-            <div class="modal-header">
+            <div class="modal-header bg-warning">
                 <h5 class="modal-title" id="exampleModalLongTitle">{{ detailsObj.name | titlecase }}</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
-                </button>
+                </button> -->
             </div>
 
             <!-- <form (submit)="checkQuantity()"> -->
-            <form (submit)="addToCart($event, detailsObj.id, popupItemCode, 2, popupPrice, popupWeight, popupSKU)">
+            <form (submit)="addToCart($event, detailsObj.id, popupItemCode, 2, popupPrice, popupWeight, popupSKU, addToInstruction)">
                 <div class="modal-body">
 
                     <!-- Destop/Tablet Layout -->
@@ -304,6 +309,14 @@
                                     <h5>PRICE : {{currencySymbol}} {{ popupPrice | number: '1.2-2' }}</h5>
                                     <ng-number-picker name="inputQty" [(ngModel)]="inputQty" [(value)]="inputQty" [min]="1" [max]="100" [postfix]="'unit'" [size]="'sm'"></ng-number-picker>
                                 </div>
+
+                                <div class="form-group">
+                                    <label for="instruction">Special Instruction</label>
+                                    <textarea name="addToInstruction" [(ngModel)]="addToInstruction" [(value)]="addToInstruction" class="form-control form-control-lg" id="instruction" aria-describedby="instruction" cols="30" rows="4"></textarea>
+                                    <!-- <input type="text" name="addToInstruction" [(ngModel)]="addToInstruction" [(value)]="addToInstruction" class="form-control form-control-lg" id="instruction" aria-describedby="instruction"> -->
+                                    <small id="emailHelp" class="form-text text-muted">Example ("extra mayonnaise, extra spicy, cut in half and etc...")</small>
+                                </div>
+                                
                             </div>
                         </div>
                     </div>
@@ -361,6 +374,7 @@
                     <button type="button" class="btn btn-danger" data-dismiss="modal"><fa-icon [icon]="iconBack"></fa-icon>&nbsp;Close</button>
                     <button type="submit" class="btn btn-warning">Add to cart&nbsp;<fa-icon [icon]="iconCart"></fa-icon></button>
                     <!-- <button type="submit" class="btn btn-warning" >check Quantity&nbsp;<fa-icon [icon]="iconCart"></fa-icon></button> -->
+                    <button id="closeModalButton2" [hidden]="true" data-dismiss="modal">Close Modal</button>
                 </div>
 
             </form>
@@ -391,7 +405,7 @@
             <div class="modal-body" id="scrollable3">
                 
                 <!-- Destop/Tablet Layout -->
-                <div class="col" *ngIf="cartitemDetails.length < 1">
+                <div class="col" *ngIf="cartitemDetailsCount == 0">
                     <div class="alert alert-danger" role="alert">
                         Cart Empty!
                     </div>
@@ -405,9 +419,11 @@
                                     <span>{{ i + 1 }}.&nbsp;</span>
                                 </div>
                                 <div class="col-4 text-left">
-                                    <div *ngFor="let product of product">
+                                    <!-- <div *ngFor="let product of product">
                                         <span *ngIf="item.productId == product.id" style="font-weight: bold; font-size: 13px;">{{product.name | uppercase }}</span>
-                                    </div>
+                                    </div> -->
+
+                                    <span style="font-weight: bold; font-size: 13px;">{{item.productName | uppercase }}</span>
                                 </div>
                                 <!-- <div class="col-4 text-left" *ngFor="let product of product">
                                     <span *ngIf="item.productId == product.id" style="font-weight: bold; font-size: 10px;">{{product.name | uppercase }}</span>
@@ -422,10 +438,10 @@
                                     </span>
                                 </div>
                                 <div class="col-3 text-center">
-                                    <div *ngFor="let inventory of allProductInventory">
+                                    <!-- <div *ngFor="let inventory of allProductInventory">
                                         <span *ngIf="item.itemCode == inventory.itemCode" id="price">{{currencySymbol}} {{ item.quantity * inventory.price | number: '1.2-2' }}</span>
-                                    </div>
-                                    <!-- <span id="price">RM {{item.quantity*item.unitprice | number : '1.2-2'}}</span> -->
+                                    </div> -->
+                                    <span id="price">{{currencySymbol}} {{item.quantity*item.price | number : '1.2-2'}}</span>
                                 </div>
                                 <div class="col-1 text-right">
                                     <button type="button" class="close" aria-label="Close">
@@ -500,8 +516,8 @@
                 </div>
                 <div class="col"></div>
                 <div class="col">
-                    <button (click)="goToCheckout()" class="btn btn-lg" style="float: right; margin: 5px; border: 1px solid black; width: 150px; border-radius: 0; background-color: #A9E538;">NEXT&nbsp;<fa-icon [icon]="iconBag"></fa-icon></button>
-                    <button (click)="getCartItemDetails()" class="btn btn-warning btn-lg" style="float: right; margin: 5px; border: 1px solid black; border-radius: 0;" data-toggle="modal" data-target="#modalCart">CART LIST - <span id="price">{{cartitemDetailsCount}}</span></button>
+                    <button (click)="goToCheckout()" class="btn btn-lg" style="float: right; margin: 5px; border: 1px solid black; width: 150px; border-radius: 0; background-color: #A9E538; font-size: 16px;">CHECKOUT&nbsp;<fa-icon [icon]="iconBag"></fa-icon></button>
+                    <button (click)="getCartItemDetails()" class="btn btn-warning btn-lg" style="float: right; margin: 5px; border: 1px solid black; border-radius: 0; font-size: 16px;" data-toggle="modal" data-target="#modalCart">CART LIST - <span id="price">{{cartitemDetailsCount}}</span></button>
                 </div>
             </div>
         </div>
@@ -521,7 +537,7 @@
                 <!-- <div class="col"></div> -->
                 <div class="col-7 removepadding" style="padding-top: 10px; text-align: center;">
                     <button (click)="getCartItemDetails()" class="btn btn-warning btn-sm footerfont cartlistm" data-toggle="modal" data-target="#modalCart">CART LIST - <span id="price">{{cartitemDetailsCount}}</span></button>
-                    <button (click)="goToCheckout()" class="btn btn-sm footerfont nextm">NEXT&nbsp;<fa-icon [icon]="iconBag"></fa-icon></button>
+                    <button (click)="goToCheckout()" class="btn btn-sm footerfont nextm">CHECKOUT&nbsp;<fa-icon [icon]="iconBag"></fa-icon></button>
                 </div>
             </div>
         </div>
@@ -544,3 +560,45 @@
         </div>
     </div>
 </div> -->
+
+
+<!-- popup add to cart  -->
+
+<div class="modal fade" id="staticBackdrop" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header bg-warning">
+                <h5 class="modal-title" id="exampleModalLongTitle">Item Added To Cart</h5>
+            </div>
+            <div class="modal-body">
+                <div class="text-center">
+                    <img 
+                        class="addtocart"
+                        src="./assets/image/addtocart.jpg"
+                        alt="First slide"
+                    />
+                </div>
+
+                <!-- <textarea name="" id="" cols="30" rows="10">{{addToProdId}} | {{addToItemCode}} | {{addToOption}} | {{addToPrice}} | {{addToWeight}} | {{addToSku}}</textarea> -->
+
+                <div class="form-group">
+                    <label for="instruction">Special Instruction</label>
+                    <input type="text" name="addToInstruction" [(ngModel)]="addToInstruction" [(value)]="addToInstruction" class="form-control form-control-lg" id="instruction" aria-describedby="instruction">
+                    <small id="emailHelp" class="form-text text-muted">Example ("extra mayonnaise, extra spicy, cut in half and etc...")</small>
+                </div>
+            
+            </div>
+            <div class="modal-footer">
+                <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> -->
+                <button type="button" class="btn btn-success" style="width: 150px;" 
+                (click)="addToCart($event, addToProdId, addToItemCode, 1, addToPrice, addToWeight, addToSku, addToInstruction)">OK</button>
+
+                <!-- close modal  -->
+                <button id="closeModalButton" [hidden]="true" data-dismiss="modal">Close Modal</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+  
+  
