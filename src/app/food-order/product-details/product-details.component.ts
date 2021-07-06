@@ -53,6 +53,7 @@ export class ProductDetailsComponent implements OnInit {
     localURL:any;
     cartLength:number;
     currencySymbol:string = "";
+    addToInstruction: string = "";
 
     constructor(
         private activatedRoute: ActivatedRoute,
@@ -183,7 +184,7 @@ export class ProductDetailsComponent implements OnInit {
         this.route.navigate(['checkout']);
     }
 
-    async addToCart(){
+    async addToCart(productPrice){
         // alert('itemCode: ' + this.productItemCode + "| productID: " + this.productId + "| quantity: " + this.inputQty)
 
         if(!this.cartID){
@@ -199,7 +200,7 @@ export class ProductDetailsComponent implements OnInit {
             console.log('cart id exist ' + this.cartID)
         }
 
-        await this.addItemToCart(this.cartID, this.productItemCode, this.productId, this.inputQty)
+        await this.addItemToCart(this.cartID, this.productItemCode, this.productId, this.inputQty, productPrice, this.addToInstruction)
 
         const cartDetails = await this.getItemDetails(this.cartID)
         console.log("cart item details ", cartDetails)
@@ -236,16 +237,34 @@ export class ProductDetailsComponent implements OnInit {
 
     }
 
-    addItemToCart(cartID, itemCode, productID, qty){
+    addItemToCart(cartID, itemCode, productID, qty, price, instruction){
         console.log("starting to add item to cart...")
+
+        // alert(instruction)
+
+        // return false;
         return new Promise(resolve => {
+
+            // let data = {
+            //     "cartId": cartID,
+            //     "id": "",
+            //     "itemCode": itemCode,
+            //     "productId": productID,
+            //     "quantity": qty,
+            //     "specialInstruction": instruction
+            // }
 
             let data = {
                 "cartId": cartID,
                 "id": "",
                 "itemCode": itemCode,
                 "productId": productID,
-                "quantity": qty
+                "quantity": qty,
+                "price": price,
+                "productPrice": price,
+                // "weight": weight,
+                // "SKU": sku,
+                "specialInstruction": instruction
             }
 
             // add to cart 

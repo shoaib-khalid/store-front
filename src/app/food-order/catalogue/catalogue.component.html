@@ -209,15 +209,15 @@
                                     <span style="vertical-align: middle;">Add to cart &nbsp;<fa-icon [icon]="iconCart"></fa-icon></span>
                                 </div> -->
 
-                                <div *ngIf="item.id == data.productId" (click)="itemInfo($event, item.id, data.itemCode, 1, data.price, item.weight, data.sku)" class="bg-warning rounded btnAddtoCart" data-toggle="modal" data-target="#staticBackdrop">
+                                <!-- <div *ngIf="item.id == data.productId" (click)="itemInfo($event, item.id, data.itemCode, 1, data.price, item.weight, data.sku)" class="bg-warning rounded btnAddtoCart" data-toggle="modal" data-target="#staticBackdrop">
                                     <span style="vertical-align: middle;">Add to cart &nbsp;<fa-icon [icon]="iconCart"></fa-icon></span>
-                                </div>
+                                </div> -->
                             </div>
                         </div>
                         <!-- <div class="col-lg-2 col-md-12 col-sm-12 col-xs-12"></div> -->
                         <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
                             <div class="rounded btnSeeMore" (click)="onGetDetails(item.id)" data-toggle="modal" data-target="#modalProduct">
-                                <span style="vertical-align: middle;">Quick View &nbsp;<fa-icon [icon]="iconEye"></fa-icon></span>
+                                <span style="vertical-align: middle;">Add to cart &nbsp;<fa-icon [icon]="iconCart"></fa-icon></span>
                             </div>
                         </div>
                         <!-- <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12" style="text-align: center;">
@@ -518,7 +518,7 @@ data-backdrop="static" data-keyboard="false">
 
 <!-- footer desktop -->
 <div class="d-none d-sm-none d-md-block d-lg-block d-xl-block">
-    <div class="footer">
+    <div class="footer fixed-bottom">
         <div class="container-fluid">
             <div class="row">
                 <div class="col">
@@ -538,7 +538,7 @@ data-backdrop="static" data-keyboard="false">
 
 <!-- footer mobile-->
 <div class="d-block d-sm-block d-md-none d-lg-none d-xl-none">
-    <div class="footer">
+    <div class="footer fixed-bottom">
         <div class="container-fluid">
             <div class="row">
                 <div class="col-5" style="margin-top: 15px;">

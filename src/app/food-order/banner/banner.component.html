@@ -1,15 +1,36 @@
-<div class="jumbotron jumbotron-fluid bg-image-full" *ngIf="bannerExist; else noBanner" [ngStyle]="{'background-image': 'url('+ assets['bannerUrl'] +')'}">
+<!-- <div class="jumbotron jumbotron-fluid bg-image-full" *ngIf="bannerExist; else noBanner" [ngStyle]="{'background-image': 'url('+ assets['bannerUrl'] +')'}">
     <div class="container">
+    </div>
+</div> -->
+
+<!-- <div class="jumbotron jumbotron-fluid img-fluid" *ngIf="bannerExist; else noBanner"> -->
+    
+<!-- </div> -->
+
+<!-- <div class="container-fluid">
+    <img src="{{assets['bannerUrl']}}" class="img-fluid" alt="...">
+</div> -->
+
+<div id="carouselExampleSlidesOnly">
+    <div class="carousel-inner">
+      <div class="carousel-item active">
+        <img *ngIf="bannerExist; else noBanner" src="{{assets['bannerUrl']}}" class="d-block w-100" alt="..."  style="max-height: 250px;">
+        <ng-template #noBanner>
+            <div class="position-relative text-center" style="padding: 50px;">
+                <strong>No Banner Uploaded</strong>
+            </div>
+        </ng-template>
+      </div>
     </div>
 </div>
 
-<ng-template #noBanner>
+<!-- <ng-template #noBanner>
     <div class="jumbotron jumbotron-fluid bg-image-full">
         <div class="container">
             No Banner Uploaded
         </div>
     </div>
-</ng-template>
+</ng-template> -->
 
 
 

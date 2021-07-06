@@ -104,6 +104,7 @@ export class LandingComponent implements OnInit, AfterViewInit, OnDestroy {
 
     currBaseURL:any;
     storeName:any;
+    storeContact:any;
     localURL:any;
 
     popupSKU: any;
@@ -302,6 +303,8 @@ export class LandingComponent implements OnInit, AfterViewInit, OnDestroy {
                 }
 
                 this.storeID = data.id;
+
+                this.storeContact = data.phoneNumber;
                 // since checkout page does query store service , i passed this storeDeliveryPercentage via local storage.. lol
                 this.storeDeliveryPercentage = data.serviceChargesPercentage;
 

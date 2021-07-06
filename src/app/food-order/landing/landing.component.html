@@ -59,26 +59,26 @@
 					</ul>
 				</nav>
 			</div> -->
-            <section style="background-color: white; padding-top: 50px;">
-                <!-- <div class="row tm-paging-links">
+            <section style="background-color: white; padding-top: 50px; padding-bottom: 50px;">
+                <div class="row tm-paging-links">
                     <div class="col text-center">
-                        <h4>CATEGORIES</h4>
+                        <h4>Please select one of the categories</h4>
                     </div>
-                </div> -->
+                </div>
 
                 <!-- Gallery -->
                 <div class="tm-gallery">
                     <!-- gallery page 1 -->
                     <div id="tm-gallery-page-pizza" class="tm-gallery-page">
-                        <article *ngFor="let item of categories; let i = index;" class="col-lg-3 col-md-4 col-sm-6 col-12 tm-gallery-item figure" style="margin-bottom: 100px;">
+                        <article *ngFor="let item of categories; let i = index;" class="col-lg-3 col-md-4 col-sm-6 col-12 tm-gallery-item figure" style="margin-bottom: 0px;">
                             <figure >
                                 <div *ngIf="item.thumbnailUrl != null; else noImage" class="text-center" (click)="goToCategory(item.id)">
-                                    <img src="{{item.thumbnailUrl}}" alt="Image" class="img-fluid tm-gallery-img" />
+                                    <img src="{{item.thumbnailUrl}}" alt="Image" class="img-fluid tm-gallery-img" style="height: 150px; width: 150px;"/>
                                 </div>
 
                                 <ng-template #noImage>
                                     <div class="text-center">
-                                        <img src="{{logoImage}}" (click)="goToCategory(item.id)" alt="Image" class="img-fluid tm-gallery-img" />
+                                        <img src="{{logoImage}}" (click)="goToCategory(item.id)" alt="Image" class="img-fluid tm-gallery-img" style="height: 150px; width: 150px;"/>
                                     </div>
                                 </ng-template>
                                 
@@ -103,7 +103,15 @@
             </section>
 		</main>
 
-		<footer class="tm-footer text-center" style="background-color: #FFE45C;">
+		<!-- <footer class="tm-footer text-center fixed-bottom" style="background-color: #FFE45C;">
 			<p>Registered &reg; 2021 <strong>{{storeName}}.symplified.store</strong></p>
-		</footer>
+		</footer> -->
+
+        <div class="position-relative">
+            <!-- <div class="position-absolute top-100 start-50 translate-middle"></div> -->
+            <footer class="tm-footer text-center fixed-bottom position-absolute" style="background-color: #FFE45C;">
+                <p><strong>{{storeName}}</strong></p>
+                <p *ngIf=(storeContact)><strong>Contact us: {{storeContact}}</strong></p>
+            </footer>
+        </div>
 	</div>
