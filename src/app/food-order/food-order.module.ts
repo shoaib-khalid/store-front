@@ -29,6 +29,7 @@ import { ThankyouComponent } from './thankyou/thankyou.component';
 import { ProductDetailsComponent } from './product-details/product-details.component';
 import { NotFoundComponent } from './not-found/not-found.component';
 import { LandingComponent } from './landing/landing.component';
+import { RedirectionComponent } from './redirection/redirection.component';
 
 
 @NgModule({
@@ -45,7 +46,8 @@ import { LandingComponent } from './landing/landing.component';
     ThankyouComponent,
     ProductDetailsComponent,
     NotFoundComponent,
-    LandingComponent
+    LandingComponent,
+    RedirectionComponent
   ],
   imports: [
     CommonModule,

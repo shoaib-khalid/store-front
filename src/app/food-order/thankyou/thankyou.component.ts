@@ -22,6 +22,10 @@ export class ThankyouComponent implements OnInit {
 
     assets = {};
     logoExist: boolean = false;
+    status_id: any;
+    msg: any;
+    successPay: boolean = false;
+    failed_msg: string = "";
 
   constructor(
     private route: Router,
@@ -29,12 +33,32 @@ export class ThankyouComponent implements OnInit {
     private activatedRoute: ActivatedRoute
   ) {
         // get url parameter style e.g http://209.58.160.20:8090/thankyou?txid=PY160321055629630e&refId=R123123111&status=SUCCESS
-        this.activatedRoute.queryParams.subscribe(params => {
-        this.payTxID = params['txid'];
-        this.payRefID = params['refId'];
-        this.payStatus = params['status'];
+        this.activatedRoute.params.subscribe(params => {
+        this.status_id = params['status_id']
+        this.msg = params['msg']
+        // this.payStatus = params['status'];
         // console.log(this.payTxID + "-" + this.payRefID + "-" + this.payStatus); 
-    });
+        });
+
+        // alert(this.status_id + " | " + this.msg)
+
+        if(this.status_id == "SUCCESS"){
+
+            this.successPay = true
+            // alert('here')
+        }
+        
+        if(this.status_id == "FAILED"){
+
+            const msgraw = this.msg
+            this.failed_msg = msgraw.replace(/_/g, " ");
+    
+            // alert(this.failed_msg)
+            
+        }
+
+        
+        
   }
 
   async ngOnInit(): Promise<void> {
@@ -59,32 +83,6 @@ export class ThankyouComponent implements OnInit {
     }
 
     console.log(this.senderID + " | " + this.storeID + " | " + this.cartID )
-
-    if(this.payStatus == "SUCCESS"){
-        Swal.fire({
-            title: 'Sweet!',
-            text: 'Your payment successfully!',
-            imageUrl: './assets/image/paid.jpg',
-            imageWidth: 270,
-            imageHeight: 270,
-            imageAlt: 'Custom image',
-        })
-
-        // localStorage.removeItem('cart_id')
-        // localStorage.removeItem('anonym_cart_id')
-    }else{
-        Swal.fire({
-            title: 'Ops!',
-            text: 'Your payment failed!',
-            imageUrl: './assets/image/payfail.jpg',
-            imageWidth: 270,
-            imageHeight: 250,
-            imageAlt: 'Custom image',
-        })
-
-        // localStorage.removeItem('cart_id')
-        // localStorage.removeItem('anonym_cart_id')
-    }
 
     // remove update order status , it will be done by backend 
     // this.updateStatus(this.payStatus)

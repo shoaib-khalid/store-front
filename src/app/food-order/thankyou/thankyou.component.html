@@ -13,19 +13,40 @@
     <div class="jumbotron text-center" style="background-color: #FFF7EB;">
 
         <!-- desktop  -->
-        <div class="d-none d-sm-none d-md-none d-lg-block">
-            <h1 class="display-4" style="font-weight: bold;">Thank You!</h1>
-        </div>
+        <section id="success" *ngIf="successPay; else failedPay">
+            <div class="d-none d-sm-none d-md-none d-lg-block">
+                <h1 class="display-4" style="font-weight: bold;">Thank You!</h1>
+            </div>
+    
+            <div class="d-block d-sm-block d-md-none d-lg-none" style="padding-bottom: 20px;">
+                <h1 class="display-6" style="font-weight: bold;">Thank You!</h1>
+            </div>
+            
+            <p class="lead"><strong>Please check your email</strong> for your payment receipt.</p>
+            <hr>
+            
+            <!-- <br> -->
+            <p class="lead">Your order are on its way!</p>
+        </section>
+        
+        <ng-template #failedPay>
 
-        <div class="d-block d-sm-block d-md-none d-lg-none" style="padding-bottom: 20px;">
-            <h1 class="display-6" style="font-weight: bold;">Thank You!</h1>
-        </div>
+            <div class="d-none d-sm-none d-md-none d-lg-block">
+                <h1 class="display-4" style="font-weight: bold;">Ops, Order Failed!</h1>
+            </div>
+    
+            <div class="d-block d-sm-block d-md-none d-lg-none" style="padding-bottom: 20px;">
+                <h1 class="display-6" style="font-weight: bold;">Ops, Order Failed!</h1>
+            </div>
+            
+            <p class="lead">{{failed_msg}}</p>
+            <hr>
+            
+            <!-- <br> -->
+            <!-- <p class="lead">Your order are on its way!</p> -->
+
+        </ng-template>
         
-        <p class="lead"><strong>Please check your email</strong> for your payment receipt.</p>
-        <hr>
-        
-        <!-- <br> -->
-        <p class="lead">Your order are on its way!</p>
 
         <!-- desktop  -->
         <div class="d-none d-sm-none d-md-none d-lg-block">

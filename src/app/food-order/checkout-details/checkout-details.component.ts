@@ -99,6 +99,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
     storeTimingObj:any = {};
 
     currencySymbol:string = "";
+    storeDomain: any;
 
     constructor(
         private _databindService: DataBindService,
@@ -186,6 +187,9 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
                 console.log('storeTiming : ', res.data.storeTiming)
 
                 this.currencySymbol =  res.data.regionCountry.currencySymbol;
+
+                this.storeDomain = res.data.domain
+                localStorage.setItem('subdomain', this.storeDomain);
 
                 this.storeDeliveryPercentage = res.data.serviceChargesPercentage
 

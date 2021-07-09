@@ -475,9 +475,10 @@ data-backdrop="static" data-keyboard="false">
                                     <span style="font-size: 10px;">{{ i + 1 }}&nbsp;</span>
                                 </div>
                                 <div class="col-4 text-left">
-                                    <div *ngFor="let product of product">
+                                    <!-- <div *ngFor="let product of product">
                                         <span *ngIf="item.productId == product.id" style="font-weight: bold; font-size: 13px;">{{product.name | uppercase }}</span>
-                                    </div>
+                                    </div> -->
+                                    <span style="font-weight: bold; font-size: 13px;">{{item.productName | uppercase }}</span>
                                 </div>
                                 <div class="col-3 text-center">
                                     <span>
@@ -489,15 +490,21 @@ data-backdrop="static" data-keyboard="false">
                                     </span>
                                 </div>
                                 <div class="col-3 text-center">
-                                    <div *ngFor="let inventory of allProductInventory">
+                                    <!-- <div *ngFor="let inventory of allProductInventory">
                                         <span *ngIf="item.itemCode == inventory.itemCode" id="price">{{currencySymbol}} {{item.quantity * inventory.price | number: '1.2-2' }}</span>
-                                    </div>
+                                    </div> -->
                                     <!-- <span id="price">RM {{item.quantity*item.unitprice | number : '1.2'}}</span> -->
+                                    <span id="price">{{currencySymbol}} {{item.quantity*item.price | number : '1.2-2'}}</span>
                                 </div>
                                 <div class="col-1 text-right">
                                     <button type="button" class="close" aria-label="Close">
                                         <span (click)="deleteItem(item.id, item.productId)" aria-hidden="true"><fa-icon [icon]="iconTrash" class="iconStyle"></fa-icon></span>
                                     </button>
+                                </div>
+                            </div>
+                            <div class="row" *ngIf="item.specialInstruction">
+                                <div class="col">
+                                    <small class="text-muted" >Instruction: <strong>{{item.specialInstruction}}</strong></small>
                                 </div>
                             </div>
                         </div>
