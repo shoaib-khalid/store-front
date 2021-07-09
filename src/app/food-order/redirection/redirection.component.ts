@@ -88,11 +88,11 @@ export class RedirectionComponent implements OnInit {
 
 
         const url = "https://" + this.subDomain + ".simplified.store/thankyou/"+this.status_id+"/"+this.msg
-        const testurl = "http://" + this.subDomain + ".test:4200/thankyou/"+this.status_id+"/"+this.msg
+        // const testurl = "http://" + this.subDomain + ".test:4200/thankyou/"+this.status_id+"/"+this.msg
 
         // alert(url)
 
-        window.location.href = testurl;
+        window.location.href = url;
 
         // this.route.navigate(['thankyou/'+prodName]);
 
