@@ -69,6 +69,11 @@ export class RedirectionComponent implements OnInit {
         console.log("getStore Data", getOrdersByID)
 
         this.storeID = getOrdersByID['storeId'];
+        this.cartID = getOrdersByID['cartId'];
+
+        // set back the cartID 
+        localStorage.setItem('cart_id', this.storeID)
+        localStorage.setItem('anonym_cart_id', this.storeID)
 
         // checkCart() will wait getProduct() to finished 
         const getMerchantInfo = await this.getMerchantInfo(this.storeID)
