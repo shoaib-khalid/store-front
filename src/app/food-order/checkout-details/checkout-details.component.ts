@@ -195,7 +195,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
 
                 // localStorage.setItem('subdomain', this.storeDomain);
 
-                alert('subdomain cookie created: ' + this.cookieService.get('subdomain'))
+                // alert('subdomain cookie created: ' + this.cookieService.get('subdomain'))
 
                 this.storeDeliveryPercentage = res.data.serviceChargesPercentage
 
@@ -328,6 +328,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
             let sku = cartItem.sku
             let weight = cartItem.weight
             let productName = cartItem.productName
+            let specialInstruction = cartItem.specialInstruction
 
 
             console.log("Checkout SKU: "+ sku);
@@ -351,7 +352,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
                     // "\nsku: " + sku +
                     // "\nweight: " + weight);
                     
-                    this.postAddItemToOrder(itemCode,orderId,price,productId,price,quantity,sku,weight,productName);
+                    this.postAddItemToOrder(itemCode,orderId,price,productId,price,quantity,sku,weight,productName,specialInstruction);
     
                     
                 //     // start the loading 
@@ -366,7 +367,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
         this.goPay()
     }
     
-    postAddItemToOrder(itemCode,orderId,price,productId,productPrice,quantity,sku,weight,productName) {
+    postAddItemToOrder(itemCode,orderId,price,productId,productPrice,quantity,sku,weight,productName,specialInstruction) {
     
         console.log("itemCode: " + itemCode +
         "\norderId: " + orderId +
@@ -375,7 +376,8 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
         "\nproductPrice: " + price +
         "\nquantity: " + quantity +
         "\nsku: " + sku +
-        "\nweight: " + weight);
+        "\nweight: " + weight) +
+        "\nspecialInstruction: " + specialInstruction;
     
         let data = {
             "itemCode": itemCode,
@@ -386,7 +388,8 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
             "quantity": quantity,
             "SKU": sku,
             "weight": weight,
-            "productName": productName
+            "productName": productName,
+            "specialInstruction": specialInstruction
         }
     
         this.apiService.postAddItemToOrder(data).subscribe((res: any) => {

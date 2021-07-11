@@ -111,6 +111,18 @@ export class ApiService {
         return this.http.get(this.productServiceURL + url, header);
     }
 
+    // Ref : https://api.symplified.biz/product-service/v1/stores/McD
+
+    getStoreInfoByID(storeID){
+        const header = {
+            headers: new HttpHeaders().set("Authorization", `Bearer ${this.token}`),
+        };
+        const url =
+            "stores/" + storeID;
+
+        return this.http.get(this.productServiceURL + url, header);
+    }
+
     // Ref : http://209.58.160.20:7071/swagger-ui.html#/product-controller/getProductUsingGET_1
     // old endpoint 
     // getProductSByStoreID(storeID) {
@@ -316,6 +328,19 @@ export class ApiService {
         const url =
             "carts/" + cartID + "/items?page=0"+
             "&pageSize=200";
+
+        return this.http.get(this.orderServiceURL + url, header);
+    }
+
+
+    // Ref : https://api.symplified.biz/order-service/v1/orders/000e0d1a-ed1a-4741-8a55-d5e598421364
+    getOrdersByID(order_id) {
+        const header = {
+            headers: new HttpHeaders().set("Authorization", `Bearer ${this.token}`),
+        };
+
+        const url =
+            "orders/" + order_id;
 
         return this.http.get(this.orderServiceURL + url, header);
     }
