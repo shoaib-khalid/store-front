@@ -77,10 +77,10 @@ export class RedirectionComponent implements OnInit {
         this.subDomain = getMerchantInfo['domain']
 
 
-        const url = "https://" + this.subDomain + ".simplified.store/thankyou/"+this.status_id+"/"+this.msg
+        const url = "https://" + this.subDomain + ".symplified.store/thankyou/"+this.status_id+"/"+this.msg
         // const testurl = "http://" + this.subDomain + ".test:4200/thankyou/"+this.status_id+"/"+this.msg
 
-        window.location.href = url;
+        window.open(url);
         
   }
 
