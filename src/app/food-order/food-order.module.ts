@@ -31,6 +31,8 @@ import { NotFoundComponent } from './not-found/not-found.component';
 import { LandingComponent } from './landing/landing.component';
 import { RedirectionComponent } from './redirection/redirection.component';
 
+import { CookieService } from 'ngx-cookie-service';
+
 
 @NgModule({
   declarations: [
@@ -77,7 +79,8 @@ import { RedirectionComponent } from './redirection/redirection.component';
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [
       DataBindService,
-      DatePipe
+      DatePipe,
+      CookieService 
     ]
 })
 export class FoodOrderModule { }

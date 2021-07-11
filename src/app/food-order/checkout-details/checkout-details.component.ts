@@ -15,6 +15,7 @@ import { totalmem } from 'os';
 import Swal from 'sweetalert2'
 import { forkJoin } from 'rxjs';
 import { PlatformLocation } from "@angular/common";
+import { CookieService } from 'ngx-cookie-service';
 
 import {
     allPostcodes,
@@ -108,7 +109,8 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
         private apiService: ApiService,
         private datePipe: DatePipe,
         private spinner: NgxSpinnerService,
-        private platformLocation: PlatformLocation
+        private platformLocation: PlatformLocation,
+        private cookieService: CookieService
     ) {
 
         this.currBaseURL = (this.platformLocation as any).location.origin;
@@ -126,7 +128,6 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
     // allowing to use wait method, one function will wait until previous method is finished
     async ngOnInit() {
         console.log('ngOnInit');
-
 
         this.senderID = localStorage.getItem('sender_id');
         this.refID = localStorage.getItem('ref_id');
@@ -189,7 +190,12 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
                 this.currencySymbol =  res.data.regionCountry.currencySymbol;
 
                 this.storeDomain = res.data.domain
-                localStorage.setItem('subdomain', this.storeDomain);
+
+                this.cookieService.set( 'subdomain', this.storeDomain );
+
+                // localStorage.setItem('subdomain', this.storeDomain);
+
+                alert('subdomain cookie created: ' + this.cookieService.get('subdomain'))
 
                 this.storeDeliveryPercentage = res.data.serviceChargesPercentage
 
@@ -816,22 +822,33 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
                 this.deliveryValidUpTo = res.data[0].validUpTo;
                 this.serverDateTime = res.timestamp;
 
+                const isError = res.data[0].isError;
+                const errorMessage = res.data[0].message;
+
                 // alert('delivery charge: '+this.deliveryFee)
 
                 this.totalPrice = this.subTotal + this.deliveryFee;
                 console.log('total price : ' + this.totalPrice)
-                this.hasDeliveryFee = true;
 
-                console.log("server time now(): "+ this.serverDateTime+"\n"+"this.deliveryValidUpTo: "+this.deliveryValidUpTo);
-                this.timerReset = this.timerReset + 1;
-                this.timeCounter(this.serverDateTime,this.deliveryValidUpTo);
+                if(isError){
 
-                // calling countPrice again so that deliveryFee included in the FE calculation
-                const countTotal = await this.countPrice(this.allProductInventory)
+                    Swal.fire("Oops...", errorMessage, "error")
 
-                // Swal.fire("Delivery Fees", "Additional charges RM " + this.deliveryFee, "info")
+                }else{
+                    this.hasDeliveryFee = true;
 
-                this.payDisable = false;
+                    console.log("server time now(): "+ this.serverDateTime+"\n"+"this.deliveryValidUpTo: "+this.deliveryValidUpTo);
+                    this.timerReset = this.timerReset + 1;
+                    this.timeCounter(this.serverDateTime,this.deliveryValidUpTo);
+
+                    // calling countPrice again so that deliveryFee included in the FE calculation
+                    const countTotal = await this.countPrice(this.allProductInventory)
+
+                    // Swal.fire("Delivery Fees", "Additional charges RM " + this.deliveryFee, "info")
+
+                    this.payDisable = false;
+                }
+                
             }
         }, error => {
             Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")

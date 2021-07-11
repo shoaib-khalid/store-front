@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, ParamMap  } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { CookieService } from 'ngx-cookie-service';
 
 @Component({
   selector: 'app-redirection',
@@ -28,6 +29,7 @@ export class RedirectionComponent implements OnInit {
   constructor(
     private route: Router,
     private activatedRoute: ActivatedRoute,
+    private cookieService: CookieService
   ) {
 
     // { path: "return/:name/:email/:phone/:amount/:hash/:status_id/:order_id/:transaction_id/:msg", component: RedirectionComponent },
@@ -48,6 +50,12 @@ export class RedirectionComponent implements OnInit {
     });
 
     // alert(this.msg)
+
+    const allCookies: {} = this.cookieService.getAll();
+
+    console.log('All cookies: ', allCookies)
+
+    alert('subdomain cookie created: ' + this.cookieService.get('subdomain'))
 
    }
 
@@ -90,9 +98,8 @@ export class RedirectionComponent implements OnInit {
         const url = "https://" + this.subDomain + ".simplified.store/thankyou/"+this.status_id+"/"+this.msg
         // const testurl = "http://" + this.subDomain + ".test:4200/thankyou/"+this.status_id+"/"+this.msg
 
-        // alert(url)
-
         window.location.href = url;
+        
 
         // this.route.navigate(['thankyou/'+prodName]);
 

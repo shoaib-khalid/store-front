@@ -1,6 +1,6 @@
 {
   "name": "store-front",
-  "version": "1.2.0-alpha",
+  "version": "1.2.1-alpha",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -30,6 +30,7 @@
     "jquery": "^3.5.1",
     "malaysia-postcodes": "^1.0.5",
     "ng-number-picker": "^1.1.9",
+    "ngx-cookie-service": "^12.0.0",
     "ngx-drag-scroll": "^8.0.0-beta.2",
     "ngx-gallery": "^5.10.0",
     "ngx-gallery-9": "^1.0.6",
