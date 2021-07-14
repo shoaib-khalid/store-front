@@ -213,6 +213,7 @@ export class LandingComponent implements OnInit, AfterViewInit, OnDestroy {
     ngOnInit(): void {
         console.log('Catalogue On Page Load');
         // this is for initial base setup 
+
         if(this.localURL != null){
 
             //Staging

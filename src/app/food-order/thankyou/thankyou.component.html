@@ -87,10 +87,20 @@
             <br>
             <br>
         </div>
+
+        <section id="success" *ngIf="successPay; else checkoutAgain">
+            <p class="lead">
+                <a (click)="shopAgain()" class="btn btn-warning btn-sm" role="button">Shop Again?</a>
+            </p>
+        </section>
+
+        <ng-template #checkoutAgain>
+            <p class="lead">
+                <a (click)="backToCheckout()" class="btn btn-warning btn-sm" role="button">Back to Checkout</a>
+            </p>
+        </ng-template>
         
-        <p class="lead">
-          <a (click)="shopAgain()" class="btn btn-warning btn-sm" role="button">Shop Again?</a>
-        </p>
+        
 
         <!-- <br> -->
         <!-- <p class="lead">

@@ -47,7 +47,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
     cartCount:number;
     cart:any;
     cartitemDetails:any;
-    cartitemDetailsCount:number;
+    cartitemDetailsCount:number = 0;
     cartItemCount:number;
     cartID:any;
     product:any;

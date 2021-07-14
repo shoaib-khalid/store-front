@@ -34,7 +34,7 @@
                                 
                             </div>
 
-                            <div class="col" *ngIf="cartitemDetails.length < 1">
+                            <div class="col" *ngIf="cartitemDetailsCount < 1">
                                 <div class="alert alert-danger" role="alert">
                                     Cart is Empty!
                                 </div>
@@ -51,130 +51,133 @@
                 <div class="col-lg-5 col-md-5 col-sm-12 col-xs-12 text-center border" id="mobilespacer" style="padding: 10px; background-color: white;">
 
                     <div *ngIf="store_close; else storeClosed">
-                        <!-- Now Its Working! -->
-                        <div style="padding: 10px; background-color: #ffb347;">
-                            <span style="font-weight: bold;">CONTACT INFORMATION</span>
-                        </div>
-                        <!-- <div *ngIf="inputError" style="  border-radius: 25px;margin-top:10px;padding: 10px; background-color: #fa6a51c6;">
-                                <span tyle="font-weight: bold;color: #a94442;">{{inputError}}</span>
-                            </div> -->
-                        
-                        <form (submit)="initOrder()" style="color: white; text-align: center; padding: 20px;" ngNativeValidate>
-                            <input type="email" class="is-invalid" id="email" aria-describedby="emailFeedback" name="userEmail" [(ngModel)]="userEmail" [(value)]="userEmail" placeholder="Email" (focusout)="toRepopulate('userEmail')" required>
-                            <div id="emailFeedback" class="invalid-feedback">
-                                {{emailError}}
+                        <ng-container *ngIf="cartitemDetailsCount > 0 ;else emptyCartItem">
+                            <!-- Now Its Working! -->
+                            <div style="padding: 10px; background-color: #ffb347;">
+                                <span style="font-weight: bold;">CONTACT INFORMATION</span>
                             </div>
-
-                            <input type="text" id="msisdn" name="userMsisdn" aria-describedby="phoneFeedback" [(ngModel)]="userMsisdn" [(value)]="userMsisdn" autocomplete="disabled" placeholder="Phone No" (focusout)="toRepopulate('userMsisdn')" required>
-                            <div id="phoneFeedback" class="invalid-feedback">
-                                {{phoneError}}
-                            </div>
-                            <!-- <div class="alert alert-warning alert-dismissible fade show" role="alert" style="margin-top: 10px;">
-                                <small class="text-muted" style="color: #856404 !important; font-size: smaller; font-style: italic;;">
-                                    Contact information filled automatically upon entering email for repeated customer
-                                </small>
-                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div> -->
-                            <div class="form-group form-check">
-                                <input type="checkbox" class="form-check-input" id="save_future">
-                                <label class="form-check-label" for="save_future" style="color: black;">Save my information for futures order</label>
-                            </div>
-                            <br>
-                            <input type="text" id="name" name="userName" [(ngModel)]="userName" [(value)]="userName" (change)="toValidate()" autocomplete="disabled" placeholder="Full name" required>
-                            <br>
-                            <br>
-                            <textarea name="userAddress" id="address" [(ngModel)]="userAddress" [(value)]="userAddress" (change)="toValidate()" autocomplete="disabled" placeholder="Address" cols="30" rows="4" required></textarea>
-                            <br>
-                            <input type="text" name="userPostcode" [(ngModel)]="userPostcode" [(value)]="userPostcode" (change)="toValidate()" autocomplete="disabled" placeholder="Postcode" required>
-                            <br>
-                            <input type="text" name="userCities" [(ngModel)]="userCities" [(value)]="userCities" (change)="toValidate()" autocomplete="disabled" placeholder="Cities" required>
-                            <br>
-                            <div class="row">
-                                <div class="col-lg-6 col-md-6 col-xs-12 col-sm-12">
-                                    <select name="userState" id="state" [(ngModel)]="userState" [(value)]="userState" (change)="toValidate()" autocomplete="disabled" required>
-                                        <option selected="selected" disabled="disabled">States</option>
-                                        <option *ngFor="let mState of mStates" [value]="mState">
-                                            {{mState}}
-                                        </option>
-                                    </select>
+                            <!-- <div *ngIf="inputError" style="  border-radius: 25px;margin-top:10px;padding: 10px; background-color: #fa6a51c6;">
+                                    <span tyle="font-weight: bold;color: #a94442;">{{inputError}}</span>
+                                </div> -->
+                            
+                            <form (submit)="initOrder()" style="color: white; text-align: center; padding: 20px;" ngNativeValidate>
+                                <input type="email" class="is-invalid" id="email" aria-describedby="emailFeedback" name="userEmail" [(ngModel)]="userEmail" [(value)]="userEmail" placeholder="Email" (focusout)="toRepopulate('userEmail')" required>
+                                <div id="emailFeedback" class="invalid-feedback">
+                                    {{emailError}}
                                 </div>
-                                <div class="col-lg-6 col-md-6 col-xs-12 col-sm-12">
-                                    <select name="userCountries" id="countries" [(ngModel)]="userCountries" [(value)]="userCountries" (change)="toValidate()" autocomplete="disabled" required>
-                                        <option selected="selected" disabled="disabled">Countries</option>
-                                        <option value="Malaysia">Malaysia</option>
-                                        <!-- Default value to malaysia in checkout-details.components.ts (this.userCountries) -->
-                                        <!-- <option value="Malaysia">Pakistan</option>
-                                        <option value="Malaysia">Thailand</option> -->
-                                    </select>
+
+                                <input type="text" id="msisdn" name="userMsisdn" aria-describedby="phoneFeedback" [(ngModel)]="userMsisdn" [(value)]="userMsisdn" autocomplete="disabled" placeholder="Phone No" (focusout)="toRepopulate('userMsisdn')" required>
+                                <div id="phoneFeedback" class="invalid-feedback">
+                                    {{phoneError}}
                                 </div>
-                            </div>
-    
-                            <br>
-                            <br>
-                            <!-- <button type="button" class="btn btn-danger" style="margin-bottom: 50px;">Daftar</button> -->
-                            <!-- <button (click)="goPay($event)" class="btn btn-md col-lg-4 col-md-4 col-xs-12 col-sm-12 btn-success" style="border-radius: 0;">PAY NOW &nbsp;&nbsp;<fa-icon [icon]="iconMoney"></fa-icon></button> -->
-
-                            <!-- <button class="btn btn-md col-lg-4 col-md-4 col-xs-12 col-sm-12 btn-warning" style="border-radius: 0;">MAIN MENU &nbsp;&nbsp;<fa-icon [icon]="iconMoney"></fa-icon></button> -->
-                        
-                            <!-- <button (click)="checkLah()"></button> -->
-
-                            <div class="alert alert-warning" role="alert" style="margin-top: 20px;">
+                                <!-- <div class="alert alert-warning alert-dismissible fade show" role="alert" style="margin-top: 10px;">
+                                    <small class="text-muted" style="color: #856404 !important; font-size: smaller; font-style: italic;;">
+                                        Contact information filled automatically upon entering email for repeated customer
+                                    </small>
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div> -->
+                                <div class="form-group form-check">
+                                    <input type="checkbox" class="form-check-input" id="save_future">
+                                    <label class="form-check-label" for="save_future" style="color: black;">Save my information for futures order</label>
+                                </div>
+                                <br>
+                                <input type="text" id="name" name="userName" [(ngModel)]="userName" [(value)]="userName" (change)="toValidate()" autocomplete="disabled" placeholder="Full name" required>
+                                <br>
+                                <br>
+                                <textarea name="userAddress" id="address" [(ngModel)]="userAddress" [(value)]="userAddress" (change)="toValidate()" autocomplete="disabled" placeholder="Address" cols="30" rows="4" required></textarea>
+                                <br>
+                                <input type="text" name="userPostcode" [(ngModel)]="userPostcode" [(value)]="userPostcode" (change)="toValidate()" autocomplete="disabled" placeholder="Postcode" required>
+                                <br>
+                                <input type="text" name="userCities" [(ngModel)]="userCities" [(value)]="userCities" (change)="toValidate()" autocomplete="disabled" placeholder="Cities" required>
+                                <br>
                                 <div class="row">
-                                    <div class="col">
-                                        <div class="col text-left">
-                                            <span class="subtotal">SUB-TOTAL</span>
-                                            <span id="price" style="float: right; padding-right: 38px;">{{currencySymbol}} {{subTotal | number: '1.2-2'}}</span>
-                                            <!-- <hr class="dotted"> -->
-                                        </div>
+                                    <div class="col-lg-6 col-md-6 col-xs-12 col-sm-12">
+                                        <select name="userState" id="state" [(ngModel)]="userState" [(value)]="userState" (change)="toValidate()" autocomplete="disabled" required>
+                                            <option selected="selected" disabled="disabled">States</option>
+                                            <option *ngFor="let mState of mStates" [value]="mState">
+                                                {{mState}}
+                                            </option>
+                                        </select>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-xs-12 col-sm-12">
+                                        <select name="userCountries" id="countries" [(ngModel)]="userCountries" [(value)]="userCountries" (change)="toValidate()" autocomplete="disabled" required>
+                                            <option selected="selected" disabled="disabled">Countries</option>
+                                            <option value="Malaysia">Malaysia</option>
+                                            <!-- Default value to malaysia in checkout-details.components.ts (this.userCountries) -->
+                                            <!-- <option value="Malaysia">Pakistan</option>
+                                            <option value="Malaysia">Thailand</option> -->
+                                        </select>
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col">
-                                        <div class="col text-left">
-                                            <span class="subtotal">SERVICE CHARGES ({{storeDeliveryPercentage}}%)</span>
-                                            <span id="price" style="float: right; padding-right: 38px;">{{currencySymbol}} {{totalServiceCharges | number: '1.2-2'}}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col">
-                                        <div class="col text-left">
-                                            <span id="price" class="subtotal warning-text">DELIVERY CHARGES</span>
-                                            <span id="price" class="warning-text" style="float: right; padding-right: 38px;">{{currencySymbol}} {{deliveryFee | number: '1.2-2'}}</span>
-                                            <!-- <hr class="dotted"> -->
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col">
-                                        <div class="col text-left text-success">
-                                            <span class="subtotal" id="price" style="font-size: 15px;">GRAND TOTAL</span>
-                                            <span id="price" style="float: right; padding-right: 38px; font-size: 15px;">{{currencySymbol}} {{totalPrice | number: '1.2-2'}}</span>
-                                            <!-- <hr class="dotted"> -->
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <div *ngIf="showCountDownTime" style="margin-top: 20px;">
-                                    <hr>
+        
+                                <br>
+                                <br>
+                                <!-- <button type="button" class="btn btn-danger" style="margin-bottom: 50px;">Daftar</button> -->
+                                <!-- <button (click)="goPay($event)" class="btn btn-md col-lg-4 col-md-4 col-xs-12 col-sm-12 btn-success" style="border-radius: 0;">PAY NOW &nbsp;&nbsp;<fa-icon [icon]="iconMoney"></fa-icon></button> -->
 
-                                    <h4 class="alert-heading text-center bolder warning-text">{{ showCountDownTime }}</h4>
+                                <!-- <button class="btn btn-md col-lg-4 col-md-4 col-xs-12 col-sm-12 btn-warning" style="border-radius: 0;">MAIN MENU &nbsp;&nbsp;<fa-icon [icon]="iconMoney"></fa-icon></button> -->
+                            
+                                <!-- <button (click)="checkLah()"></button> -->
+
+                                <div class="alert alert-warning" role="alert" style="margin-top: 20px;">
+                                    <div class="row">
+                                        <div class="col">
+                                            <div class="col text-left">
+                                                <span class="subtotal">SUB-TOTAL</span>
+                                                <span id="price" style="float: right; padding-right: 38px;">{{currencySymbol}} {{subTotal | number: '1.2-2'}}</span>
+                                                <!-- <hr class="dotted"> -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col">
+                                            <div class="col text-left">
+                                                <span class="subtotal">SERVICE CHARGES ({{storeDeliveryPercentage}}%)</span>
+                                                <span id="price" style="float: right; padding-right: 38px;">{{currencySymbol}} {{totalServiceCharges | number: '1.2-2'}}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col">
+                                            <div class="col text-left">
+                                                <span id="price" class="subtotal warning-text">DELIVERY CHARGES</span>
+                                                <span id="price" class="warning-text" style="float: right; padding-right: 38px;">{{currencySymbol}} {{deliveryFee | number: '1.2-2'}}</span>
+                                                <!-- <hr class="dotted"> -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col">
+                                            <div class="col text-left text-success">
+                                                <span class="subtotal" id="price" style="font-size: 15px;">GRAND TOTAL</span>
+                                                <span id="price" style="float: right; padding-right: 38px; font-size: 15px;">{{currencySymbol}} {{totalPrice | number: '1.2-2'}}</span>
+                                                <!-- <hr class="dotted"> -->
+                                            </div>
+                                        </div>
+                                    </div>
                                     
-                                    <hr>
-                                    <small class="italic">Delivery charges validity, the delivery charges may changes after the validity expired</small>
-                                </div>
-                            </div>
+                                    <div *ngIf="showCountDownTime" style="margin-top: 20px;">
+                                        <hr>
 
-                            <button type="submit" class="btn btn-md col-lg-4 col-md-4 col-xs-12 col-sm-12 btn-success" [disabled]="payDisable" style="border-radius: 0;">PAY NOW &nbsp;&nbsp;<fa-icon [icon]="iconMoney"></fa-icon></button>
-                            <!-- <button (click)="goSkip($event)" class="btn btn-md col-lg-4 col-md-4 col-xs-12 col-sm-12 btn-success" style="border-radius: 0;">PAY NOW &nbsp;&nbsp;<fa-icon [icon]="iconMoney"></fa-icon></button> -->
+                                        <h4 class="alert-heading text-center bolder warning-text">{{ showCountDownTime }}</h4>
+                                        
+                                        <hr>
+                                        <small class="italic">Delivery charges validity, the delivery charges may changes after the validity expired</small>
+                                    </div>
+                                </div>
+
+                                <button type="submit" class="btn btn-md col-lg-4 col-md-4 col-xs-12 col-sm-12 btn-success" [disabled]="payDisable" style="border-radius: 0;">PAY NOW &nbsp;&nbsp;<fa-icon [icon]="iconMoney"></fa-icon></button>
+                                <!-- <button (click)="goSkip($event)" class="btn btn-md col-lg-4 col-md-4 col-xs-12 col-sm-12 btn-success" style="border-radius: 0;">PAY NOW &nbsp;&nbsp;<fa-icon [icon]="iconMoney"></fa-icon></button> -->
+                            
+                            </form>
+                        </ng-container>
                         
-                        </form>
                     </div>
 
                     <ng-template #storeClosed>
-                        <div class="alert alert-warning" role="alert">
+                        <div class="alert alert-danger" role="alert">
                             <h4 class="alert-heading">We are closed!</h4>
                             <p>We are closed now our opening hours are as per below</p>
                             <hr>
@@ -183,7 +186,14 @@
                             </div>
                             
                             <!-- <p class="mb-0">Whenever you need to, be sure to use margin utilities to keep things nice and tidy.</p> -->
-                          </div>
+                        </div>
+                    </ng-template>
+
+                    <ng-template #emptyCartItem>
+                        <div class="alert alert-warning" role="alert">
+                            <h4 class="alert-heading">Cart is empty!</h4>
+                            <p>Please add item to cart to proceed...</p>
+                        </div>
                     </ng-template>
                     
                 </div>

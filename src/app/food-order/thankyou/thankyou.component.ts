@@ -96,6 +96,10 @@ export class ThankyouComponent implements OnInit {
     // this.route.navigateByUrl('?storeId='+this.storeID);
   }
 
+  backToCheckout(){
+    this.route.navigateByUrl('/checkout')
+  }
+
   updateStatus(status){
       console.log('Masok')
 
