@@ -123,6 +123,17 @@ export class ApiService {
         return this.http.get(this.productServiceURL + url, header);
     }
 
+    // REf : https://api.symplified.biz/product-service/v1/region-country-state?id=MYS
+    getStateByCountryID(countryID){
+        const header = {
+            headers: new HttpHeaders().set("Authorization", `Bearer ${this.token}`),
+        };
+        const url =
+            "region-country-state?regionCountryId=" + countryID;
+
+        return this.http.get(this.productServiceURL + url, header);
+    }
+
     // Ref : http://209.58.160.20:7071/swagger-ui.html#/product-controller/getProductUsingGET_1
     // old endpoint 
     // getProductSByStoreID(storeID) {

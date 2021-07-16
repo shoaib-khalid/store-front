@@ -102,6 +102,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
     selectedOption:any;
     variantOption:any;
     requestParamVariant:any = [];
+    requestParamVariantNew:any = [];
 
     currBaseURL:any;
     storeName:any;
@@ -1204,6 +1205,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
                                 }
 
                                 this.requestParamVariant.push(data)
+                                
                             }
                         })
 
@@ -1226,7 +1228,8 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
 
     onChangeVariant(id, type, productID){
 
-        // alert(id + "|" + type)
+        // alert(id + "|" + type + "|" + productID)
+        
 
         this.requestParamVariant.map( variant => {
             if(variant.basename == type && variant.variantID != id){
@@ -1238,7 +1241,19 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
             
         })
 
-        console.log('updated request param: ', this.requestParamVariant)
+        this.requestParamVariantNew = []        
+
+        this.requestParamVariant.forEach(el => {
+
+            this.requestParamVariantNew.push(el.variantID)
+            
+        });
+
+        console.log('updated request param: ', this.requestParamVariantNew)
+
+        this.findInventory(productID)
+
+        return false;
 
         this.apiService.getUpdatedByVariant(this.storeID, productID, this.requestParamVariant).subscribe((res: any) => {
             console.log('cart item by cart ID: ', res.data)
@@ -1246,14 +1261,6 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
             if (res.data){
                 console.log('getUpdatedByVariant response: ', res.data)
 
-                // this.catalogueList.map(product => {
-                //     if(product.productId == productID){
-                //         console.log('selected product: ', product);
-                //         this.selectedProduct = product
-                //         this.popupPrice = product.price;
-                //         this.popupItemCode = product.itemCode;
-                //     }
-                // })
 
                 this.popupPrice = res.data[0].price
                 this.popupItemCode = res.data[0].itemCode
@@ -1265,6 +1272,50 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
             Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
         }) 
 
+    }
+
+    findInventory(productID) {
+        var toFind = this.requestParamVariantNew
+
+        var productArr = this.product.filter(function (content) {
+            return content.id == productID;
+        });
+
+        console.log('product: ', productArr)
+
+        var inventories = productArr[0]['productInventories']
+
+        console.log('inventories: ', inventories)
+        var flag = true;
+        var selectedItem;
+
+        var productInventoryItems;
+        
+        for (let i = 0; i < inventories.length; i++) {
+            flag=true;
+            selectedItem = inventories[i]
+
+            productInventoryItems = inventories[i]['productInventoryItems']
+
+            for (let j = 0; j < productInventoryItems.length; j++) {
+                if(toFind.includes(productInventoryItems[j].productVariantAvailableId)){
+                    continue;
+                }else{
+                    flag=false;
+                    break;
+                }
+            }
+
+            if(flag){
+                console.log('selected item: ', selectedItem)
+
+                this.popupPrice = selectedItem.price
+                this.popupItemCode = selectedItem.itemCode
+
+                console.log('popup details: ' + this.popupPrice + " | " + this.popupItemCode)
+            }
+            
+        }
     }
 
     getItemByVariant(event, id){

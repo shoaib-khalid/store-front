@@ -95,21 +95,25 @@
                                 <div class="row">
                                     <div class="col-lg-6 col-md-6 col-xs-12 col-sm-12">
                                         <select name="userState" id="state" [(ngModel)]="userState" [(value)]="userState" (change)="toValidate()" autocomplete="disabled" required>
-                                            <option selected="selected" disabled="disabled">States</option>
-                                            <option *ngFor="let mState of mStates" [value]="mState">
-                                                {{mState}}
+                                            <option selected="true" disabled="">Choose States</option>
+                                            <option *ngFor="let mState of mStates" [value]="mState.name">
+                                                {{mState.name}}
                                             </option>
                                         </select>
                                     </div>
+
                                     <div class="col-lg-6 col-md-6 col-xs-12 col-sm-12">
+                                        <input type="text" name="userCountries" [(ngModel)]="userCountries" [(value)]="userCountries" (change)="toValidate()" autocomplete="disabled" readonly placeholder="Countries" required>
+                                    </div>
+                                    <!-- <div class="col-lg-6 col-md-6 col-xs-12 col-sm-12">
                                         <select name="userCountries" id="countries" [(ngModel)]="userCountries" [(value)]="userCountries" (change)="toValidate()" autocomplete="disabled" required>
                                             <option selected="selected" disabled="disabled">Countries</option>
-                                            <option value="Malaysia">Malaysia</option>
+                                            <option value="Malaysia">Malaysia</option> -->
                                             <!-- Default value to malaysia in checkout-details.components.ts (this.userCountries) -->
                                             <!-- <option value="Malaysia">Pakistan</option>
                                             <option value="Malaysia">Thailand</option> -->
-                                        </select>
-                                    </div>
+                                        <!-- </select>
+                                    </div> -->
                                 </div>
         
                                 <br>
@@ -168,7 +172,7 @@
                                     </div>
                                 </div>
 
-                                <button type="submit" class="btn btn-md col-lg-4 col-md-4 col-xs-12 col-sm-12 btn-success" [disabled]="payDisable" style="border-radius: 0;">PAY NOW &nbsp;&nbsp;<fa-icon [icon]="iconMoney"></fa-icon></button>
+                                <button type="submit" class="btn btn-md col-lg-6 col-md-6 col-xs-12 col-sm-12 btn-success text-center" [disabled]="payDisable" style="border-radius: 0;">{{btnString}} &nbsp;&nbsp;<fa-icon [icon]="iconMoney"></fa-icon></button>
                                 <!-- <button (click)="goSkip($event)" class="btn btn-md col-lg-4 col-md-4 col-xs-12 col-sm-12 btn-success" style="border-radius: 0;">PAY NOW &nbsp;&nbsp;<fa-icon [icon]="iconMoney"></fa-icon></button> -->
                             
                             </form>

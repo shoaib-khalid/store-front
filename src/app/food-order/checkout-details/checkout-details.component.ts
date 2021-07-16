@@ -65,8 +65,8 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
     userMsisdn:any;
     userAddress:any;
     userCities:any;
-    userState:any;
-    userCountries:any = "Malaysia";
+    userState:string = "Choose States";
+    userCountries:any = "";
 
     visible:boolean = false;
 
@@ -101,6 +101,10 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
 
     currencySymbol:string = "";
     storeDomain: any;
+    CountryID: any;
+    btnString: string = "CONFIRM ORDER";
+    paymentType: string = "COD";
+    // storeCountries: string = "";
 
     constructor(
         private _databindService: DataBindService,
@@ -177,82 +181,103 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
 
         // NEW PART HERE
         // load states
-        this.mStates = getStates();
+        // this.mStates = getStates(); // no longer depend on json by miqdaad
 
     }
 
-    getStoreHour(){
-        this.apiService.getStoreHoursByID(this.storeID).subscribe((res: any) => {
-            console.log('store business hour: ', res)
-            if (res.message){
-                console.log('storeTiming : ', res.data.storeTiming)
+    async getStoreHour(){
+        // get list of statest 
+        const storeInfo = await this.getStoreInfoByID(this.storeID);
+        console.log('store business hour: ', storeInfo)
 
-                this.currencySymbol =  res.data.regionCountry.currencySymbol;
+        this.currencySymbol =  storeInfo['regionCountry']['currencySymbol'];
 
-                this.storeDomain = res.data.domain
+        this.storeDomain = storeInfo['domain']
 
-                this.cookieService.set( 'subdomain', this.storeDomain );
+        this.cookieService.set( 'subdomain', this.storeDomain );
 
-                // localStorage.setItem('subdomain', this.storeDomain);
+        // set userCountries by default of store countries 
+        this.userCountries = storeInfo['regionCountry']['name']
+        this.CountryID = storeInfo['regionCountry']['id']
+        this.paymentType = storeInfo['regionCountry']['id']
+        this.storeDeliveryPercentage = storeInfo['serviceChargesPercentage']
 
-                // alert('subdomain cookie created: ' + this.cookieService.get('subdomain'))
+        if(this.paymentType == "ONLINEPAYMENT"){
+            this.btnString = "PAY NOW"
+        }
 
-                this.storeDeliveryPercentage = res.data.serviceChargesPercentage
+        console.log('symbol currency: ', this.currencySymbol)
 
-                console.log('symbol currency: ', this.currencySymbol)
+        const currentDate = new Date();
+        var todayDay = this.dayArr[currentDate.getDay()];
+        var browserTime = new Date();
 
-                const currentDate = new Date();
+        this.storeTimingObj = storeInfo['storeTiming']
 
-                var todayDay = this.dayArr[currentDate.getDay()];
+        this.storeTimingObj.forEach( obj => {
 
-                var browserTime = new Date();
+            let dayObj = obj.day;
+            if(dayObj == todayDay){
+                // true = store closed ; false = store opened
+                let isOff = obj.isOff;
 
-                this.storeTimingObj = res.data.storeTiming;
+                if (isOff == false) {
+                    var openTime = new Date();
+                    openTime.setHours(obj.openTime.split(":")[0], obj.openTime.split(":")[1], 0); 
+                    var closeTime = new Date();
+                    closeTime.setHours(obj.closeTime.split(":")[0], obj.closeTime.split(":")[1], 0); 
 
-                this.storeTimingObj.forEach( obj => {
-
-                    let dayObj = obj.day;
-
-                    if(dayObj == todayDay){
-                        // true = store closed ; false = store opened
-                        let isOff = obj.isOff;
-
-                        if (isOff == false) {
-                            var openTime = new Date();
-                            openTime.setHours(obj.openTime.split(":")[0], obj.openTime.split(":")[1], 0); 
-                            var closeTime = new Date();
-                            closeTime.setHours(obj.closeTime.split(":")[0], obj.closeTime.split(":")[1], 0); 
-
-                            console.log("happy hour?")
-                            if(browserTime >= openTime && browserTime < closeTime ){
-                                console.log("WE ARE OPEN !");
-                            }else{
-                                console.log("OH No, sorry! between 5.30pm and 6.30pm");
-                                this.store_close = false
-                            }
-
-                        } else {
-                            console.log("WERE ARE CLOSED")
-                            this.store_close = false
-                        }
-
-                        // console.log('dayObj: ' + dayObj + 
-                        //             '\n' +)
-                        // console.log('store is open? ' + obj.isOff)
-
-                        // this.store_close = obj.isOff
-                        // this.store_close = true //for testing
+                    console.log("happy hour?")
+                    if(browserTime >= openTime && browserTime < closeTime ){
+                        console.log("WE ARE OPEN !");
+                    }else{
+                        console.log("OH No, sorry! between 5.30pm and 6.30pm");
+                        this.store_close = false
                     }
-                });
-                
-
-                // console.log('current day is ' + todayDay + ' and the store are closed? ' + this.store_close)
-
-            } else {
+                } else {
+                    console.log("WERE ARE CLOSED")
+                    this.store_close = false
+                }
             }
-        }, error => {
-            console.log(error)
-        }) 
+        });
+
+        // get list of statest 
+        const statesList = await this.getStatesByID(this.CountryID);
+
+        console.log('list of states: ', statesList)
+
+        this.mStates = statesList
+    }
+
+    getStatesByID(countryID){
+
+        return new Promise(resolve => {
+            this.apiService.getStateByCountryID(countryID).subscribe(async (res: any) => {
+                if (res.message){
+                    resolve(res.data.content)
+                } else {
+                    console.log('getStateByCountryID operation failed')
+                }
+            }, error => {
+                console.log(error)
+            })
+        })
+        
+    }
+
+    getStoreInfoByID(storeID){
+        return new Promise(resolve => {
+            this.apiService.getStoreHoursByID(storeID).subscribe((res: any) => {
+                if (res.message){
+                    resolve(res.data)
+                } else {
+                    console.log('getStoreHoursByID operation failed')
+                }
+            }, error => {
+                console.log(error)
+            })
+
+        })
     }
 
     ngAfterViewInit(){
@@ -651,7 +676,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
         this.userPostcode = details['postCode']
         this.userCities = details['city']
         this.userState = details['state']
-        this.userCountries = details['country']
+        // this.userCountries = details['country']  //userCountries need to get from store countries
         // later add function to calculate delivery charges
     }
 
@@ -661,6 +686,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
                 this.allFieldValidated = true;
                 this.getDeliveryFee()
                 console.log("All field validated")
+
         } else {
             // console.log("this.userName: " +  this.userName +
             // "\nthis.userMsisdn: " + this.userMsisdn + 
