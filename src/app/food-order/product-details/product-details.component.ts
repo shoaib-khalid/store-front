@@ -27,6 +27,7 @@ export class ProductDetailsComponent implements OnInit {
     productId: any;
 
     detailsObj: any = {};
+    product:any[] = [];
     productAssets:any;
 
     galleryOptions: NgxGalleryOptions[];
@@ -36,7 +37,8 @@ export class ProductDetailsComponent implements OnInit {
 
     itemWithinProduct:any;
 
-    requestParamVariant:any;
+    requestParamVariant:any = [];
+    requestParamVariantNew:any = [];
     variantOfSelected: any;
     productPrice:any = 0;
     productItemCode: any;
@@ -54,6 +56,7 @@ export class ProductDetailsComponent implements OnInit {
     cartLength:number;
     currencySymbol:string = "";
     addToInstruction: string = "";
+    productSku: any;
 
     constructor(
         private activatedRoute: ActivatedRoute,
@@ -200,7 +203,7 @@ export class ProductDetailsComponent implements OnInit {
             console.log('cart id exist ' + this.cartID)
         }
 
-        await this.addItemToCart(this.cartID, this.productItemCode, this.productId, this.inputQty, productPrice, this.addToInstruction)
+        await this.addItemToCart(this.cartID, this.productItemCode, this.productId, this.inputQty, productPrice, this.productSku, this.addToInstruction)
 
         const cartDetails = await this.getItemDetails(this.cartID)
         console.log("cart item details ", cartDetails)
@@ -237,7 +240,7 @@ export class ProductDetailsComponent implements OnInit {
 
     }
 
-    addItemToCart(cartID, itemCode, productID, qty, price, instruction){
+    addItemToCart(cartID, itemCode, productID, qty, price, sku, instruction){
         console.log("starting to add item to cart...")
 
         // alert(instruction)
@@ -263,7 +266,7 @@ export class ProductDetailsComponent implements OnInit {
                 "price": price,
                 "productPrice": price,
                 // "weight": weight,
-                // "SKU": sku,
+                "SKU": sku,
                 "specialInstruction": instruction
             }
 
@@ -331,7 +334,7 @@ export class ProductDetailsComponent implements OnInit {
 
         console.log('promised prodName details: ', prodName)
 
-        this.productId = prodName['id']
+        this.productId = prodName[0]['id']
         // this.productId = '676d58ce-5561-482f-a024-0728ef40b173'
         // this.productId = '2803e270-0e8c-40c0-8af5-98275dcf5894'
         // this.productId = 'b7b956ab-5a3d-46ee-a82d-ad520ed85c4e'
@@ -341,29 +344,15 @@ export class ProductDetailsComponent implements OnInit {
 
         // console.log('promised prod details: ' , prodDetails)
 
-        this.detailsObj = prodName
+        this.detailsObj = prodName[0]
+        this.product = prodName[0]
 
         this.productAssets = this.detailsObj.productAssets;
         
-        console.log("detailsObj: "+ prodName['description']);
-        console.log("this.productAssets: "+ JSON.stringify(this.productAssets));
+        console.log("detailsObj: "+ prodName[0]['description']);
+        console.log("this.productAssets: ", this.productAssets);
 
-        this.productAssets.forEach( obj => {
-            // console.log('productAssets: ', obj.url);
-
-            let img_obj = {
-                small: ''+obj.url+'',
-                medium: ''+obj.url+'',
-                big: ''+obj.url+''
-            }
-
-            this.imageCollection.push(img_obj)
-        });
-
-        console.log('imageCollection: ', this.imageCollection);
-        this.galleryImages = this.imageCollection
-
-
+    
         // Variant logic
 
         this.itemWithinProduct = this.detailsObj.productInventories
@@ -379,6 +368,7 @@ export class ProductDetailsComponent implements OnInit {
         this.variantOfSelected = minimum_item.productInventoryItems
         this.productPrice = minimum_item.price;
         this.productItemCode = minimum_item.itemCode;
+        this.productSku = minimum_item.sku;
 
 
         this.variantOfSelected.forEach(variants => {
@@ -390,6 +380,41 @@ export class ProductDetailsComponent implements OnInit {
 
         console.log('current variant obj:', this.currentVariant)
         // end of redundant code activity 
+
+        // image collection logic 
+
+        this.productAssets.forEach( obj => {
+            // console.log('productAssets: ', obj.url);
+
+            let img_obj = {
+                small: ''+obj.url+'',
+                medium: ''+obj.url+'',
+                big: ''+obj.url+''
+            }
+
+            console.log(obj.itemCode + " |||| " + this.productItemCode)
+            if(obj.itemCode != this.productItemCode){
+                this.imageCollection.push(img_obj)
+            }
+            
+        });
+
+        this.productAssets.forEach( obj => {
+            // console.log('productAssets: ', obj.url);
+            let img_obj = {
+                small: ''+obj.url+'',
+                medium: ''+obj.url+'',
+                big: ''+obj.url+''
+            }
+            
+            if(obj.itemCode == this.productItemCode){
+                this.imageCollection.unshift(img_obj)
+            }
+            
+        });
+
+        console.log('imageCollection: ', this.imageCollection);
+        this.galleryImages = this.imageCollection
 
         // logic to extract current selected variant and to reconstruct new object with its string identifier 
         let allVariantObjBase = this.detailsObj.productVariants
@@ -453,7 +478,8 @@ export class ProductDetailsComponent implements OnInit {
             this.apiService.getProductSByName(seo_name, store_id).subscribe((res: any) => {
     
                 if (res.message){
-                    resolve(res.data.content[0])
+                    // resolve(res.data.content[0])
+                    resolve(res.data.content)
                 } 
     
             }, error => {
@@ -480,7 +506,9 @@ export class ProductDetailsComponent implements OnInit {
     }
 
     onChangeVariant(id, type, productID){
+
         // alert(id + "|" + type + "|" + productID)
+        
 
         this.requestParamVariant.map( variant => {
             if(variant.basename == type && variant.variantID != id){
@@ -492,21 +520,125 @@ export class ProductDetailsComponent implements OnInit {
             
         })
 
-        console.log('updated request param: ', this.requestParamVariant)
+        this.requestParamVariantNew = []        
 
-        this.apiService.getUpdatedByVariant(this.storeID, productID, this.requestParamVariant).subscribe((res: any) => {
-            // console.log('cart item by cart ID: ', res.data.content)
+        this.requestParamVariant.forEach(el => {
 
-            if (res.message){
-                console.log('getUpdatedByVariant response: ', res.data)
+            this.requestParamVariantNew.push(el.variantID)
+            
+        });
 
-                this.productPrice = res.data[0].price
-                this.productItemCode = res.data[0].itemCode
-            } 
+        console.log('updated request param: ', this.requestParamVariantNew)
 
-        }, error => {
-            // Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
-        }) 
+        this.findInventory(productID)
+
+        // return false;
+
+        // this.apiService.getUpdatedByVariant(this.storeID, productID, this.requestParamVariant).subscribe((res: any) => {
+        //     console.log('cart item by cart ID: ', res.data)
+
+        //     if (res.data){
+        //         console.log('getUpdatedByVariant response: ', res.data)
+
+
+        //         this.popupPrice = res.data[0].price
+        //         this.popupItemCode = res.data[0].itemCode
+
+        //         console.log('update price variant: ' + this.popupPrice)
+        //     } 
+
+        // }, error => {
+        //     Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
+        // }) 
+
+    }
+
+    findInventory(productID) {
+        var toFind = this.requestParamVariantNew
+
+        console.log('test: ', productID)
+        var productArr = this.detailsObj
+
+        console.log('product: ', productArr)
+
+        var inventories = productArr.productInventories
+
+        var assetsArr = productArr.productAssets
+
+        console.log('inventories: ', inventories)
+        var flag = true;
+        var selectedItem;
+
+        var productInventoryItems;
+        
+        for (let i = 0; i < inventories.length; i++) {
+            flag=true;
+            selectedItem = inventories[i]
+
+            productInventoryItems = inventories[i]['productInventoryItems']
+
+            for (let j = 0; j < productInventoryItems.length; j++) {
+                if(toFind.includes(productInventoryItems[j].productVariantAvailableId)){
+                    continue;
+                }else{
+                    flag=false;
+                    break;
+                }
+            }
+
+            if(flag){
+                console.log('selected item: ', selectedItem)
+
+                this.productPrice = selectedItem.price
+                this.productItemCode = selectedItem.itemCode
+                this.productSku = selectedItem.sku
+
+                // reorder image collection 
+
+                this.galleryImages = [];
+                this.imageCollection = [];
+
+                this.productAssets = assetsArr;
+
+                // rearrange imageCollection 
+                this.productAssets.forEach( obj => {
+                    // console.log('productAssets: ', obj.url);
+                    let img_obj = {
+                        small: ''+obj.url+'',
+                        medium: ''+obj.url+'',
+                        big: ''+obj.url+''
+                    }
+                    
+                    if(obj.itemCode != this.productItemCode){
+                        this.imageCollection.push(img_obj)
+                    }
+                    
+                });
+
+                this.productAssets.forEach( obj => {
+                    // console.log('productAssets: ', obj.url);
+                    let img_obj = {
+                        small: ''+obj.url+'',
+                        medium: ''+obj.url+'',
+                        big: ''+obj.url+''
+                    }
+                    
+                    if(obj.itemCode == this.productItemCode){
+                        this.imageCollection.unshift(img_obj)
+                    }
+                    
+                });
+
+
+                console.log('new imageCollection: ', this.imageCollection);
+                
+                this.galleryImages = this.imageCollection
+                // end of reorder image collection
+
+                console.log('popup details: ' + this.productPrice + " | " + this.productItemCode + " | " + this.productSku)
+            }
+            
+        }
     }
 
 }

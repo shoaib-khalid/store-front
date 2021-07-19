@@ -1151,7 +1151,23 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
                         big: ''+obj.url+''
                     }
 
-                    this.imageCollection.push(img_obj)
+                    if(obj.itemCode != this.popupItemCode){
+                        this.imageCollection.unshift(img_obj)
+                    }
+                });
+
+                this.productAssets.forEach( obj => {
+                    // console.log('productAssets: ', obj.url);
+                    let img_obj = {
+                        small: ''+obj.url+'',
+                        medium: ''+obj.url+'',
+                        big: ''+obj.url+''
+                    }
+                    
+                    if(obj.itemCode == this.popupItemCode){
+                        this.imageCollection.unshift(img_obj)
+                    }
+                    
                 });
 
                 console.log('imageCollection: ', this.imageCollection);
@@ -1253,24 +1269,24 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
 
         this.findInventory(productID)
 
-        return false;
+        // return false;
 
-        this.apiService.getUpdatedByVariant(this.storeID, productID, this.requestParamVariant).subscribe((res: any) => {
-            console.log('cart item by cart ID: ', res.data)
+        // this.apiService.getUpdatedByVariant(this.storeID, productID, this.requestParamVariant).subscribe((res: any) => {
+        //     console.log('cart item by cart ID: ', res.data)
 
-            if (res.data){
-                console.log('getUpdatedByVariant response: ', res.data)
+        //     if (res.data){
+        //         console.log('getUpdatedByVariant response: ', res.data)
 
 
-                this.popupPrice = res.data[0].price
-                this.popupItemCode = res.data[0].itemCode
+        //         this.popupPrice = res.data[0].price
+        //         this.popupItemCode = res.data[0].itemCode
 
-                console.log('update price variant: ' + this.popupPrice)
-            } 
+        //         console.log('update price variant: ' + this.popupPrice)
+        //     } 
 
-        }, error => {
-            Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
-        }) 
+        // }, error => {
+        //     Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
+        // }) 
 
     }
 
@@ -1284,6 +1300,8 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
         console.log('product: ', productArr)
 
         var inventories = productArr[0]['productInventories']
+
+        var assetsArr = productArr[0]['productAssets']
 
         console.log('inventories: ', inventories)
         var flag = true;
@@ -1311,8 +1329,51 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
 
                 this.popupPrice = selectedItem.price
                 this.popupItemCode = selectedItem.itemCode
+                this.popupSKU = selectedItem.sku
 
-                console.log('popup details: ' + this.popupPrice + " | " + this.popupItemCode)
+                // reorder image collection 
+
+                this.galleryImages = [];
+                this.imageCollection = [];
+
+                this.productAssets = assetsArr;
+
+                // rearrange imageCollection 
+                this.productAssets.forEach( obj => {
+                    // console.log('productAssets: ', obj.url);
+                    let img_obj = {
+                        small: ''+obj.url+'',
+                        medium: ''+obj.url+'',
+                        big: ''+obj.url+''
+                    }
+                    
+                    if(obj.itemCode != this.popupItemCode){
+                        this.imageCollection.push(img_obj)
+                    }
+                    
+                });
+
+                this.productAssets.forEach( obj => {
+                    // console.log('productAssets: ', obj.url);
+                    let img_obj = {
+                        small: ''+obj.url+'',
+                        medium: ''+obj.url+'',
+                        big: ''+obj.url+''
+                    }
+                    
+                    if(obj.itemCode == this.popupItemCode){
+                        this.imageCollection.unshift(img_obj)
+                    }
+                    
+                });
+
+
+                console.log('new imageCollection: ', this.imageCollection);
+                
+                this.galleryImages = this.imageCollection
+                // end of reorder image collection
+
+                console.log('popup details: ' + this.popupPrice + " | " + this.popupItemCode + " | " + this.popupSKU)
             }
             
         }
