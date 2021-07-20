@@ -28,6 +28,10 @@
                                 <div class="col-12 text-left" *ngIf="item.specialInstruction">
                                     <small class="text-muted" >Instruction: <strong>{{item.specialInstruction}}</strong></small>
                                 </div>
+                                <div class="col-12 text-left" *ngIf="item.url">
+                                    <!-- <small class="text-muted" >Instruction: <strong>{{item.url}}</strong></small> -->
+                                    <img src="{{item.url}}" class="img-thumbnail" alt="...">
+                                </div>
                                 <div class="col-12">
                                     <hr class="nondotted">
                                 </div>

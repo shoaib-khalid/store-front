@@ -52,6 +52,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
     cartID:any;
     product:any;
     allProductInventory = [];
+    allProductAssets = [];
     orderId:any;
 
     totalPrice:number = 0;
@@ -171,6 +172,21 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
 
         this.cartitemDetailsCount = checkCart['length'];
 
+        console.log('satu: ', this.cartitemDetails)
+        console.log('dua: ', this.allProductAssets)
+
+        // added image url into the cartItem object 
+        this.cartitemDetails.forEach(cartItem => {
+            this.allProductAssets.map(allAssets => {
+                // console.log("allProduct.itemCode : " + allProduct.itemCode + "\ncartItem.itemCode : " + cartItem.itemCode);
+                if(allAssets.itemCode == cartItem.itemCode){
+                    cartItem["url"] = allAssets.url;
+                }
+            })
+        });
+        
+        console.log('new satu: ', this.cartitemDetails) 
+
         console.log('cartItemLength: ' + this.cartitemDetailsCount)
 
         // countPrice() will wait checkCart() to finished 
@@ -199,7 +215,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
         // set userCountries by default of store countries 
         this.userCountries = storeInfo['regionCountry']['name']
         this.CountryID = storeInfo['regionCountry']['id']
-        this.paymentType = storeInfo['regionCountry']['id']
+        this.paymentType = storeInfo['paymentType']
         this.storeDeliveryPercentage = storeInfo['serviceChargesPercentage']
 
         if(this.paymentType == "ONLINEPAYMENT"){
@@ -457,9 +473,19 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
                                 this.allProductInventory.push(inventoryObj);
                             });
                         }
+
+                        // collect asset image info 
+                        let productAssets = obj.productAssets;
+                        
+                        if(productAssets.length !== 0){
+                            productAssets.forEach(assetObj => {
+                                this.allProductAssets.push(assetObj)
+                            });
+                        }
                     });
                     
                     console.log('all product inventories: ', this.allProductInventory)
+                    console.log('all product assets: ', this.allProductAssets)
 
                     resolve(this.allProductInventory)
 

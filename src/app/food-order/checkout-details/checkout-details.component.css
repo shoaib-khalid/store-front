@@ -92,9 +92,9 @@ input[type=email]:focus, [type=password]:focus, [type=text]:focus, textarea:focu
         padding-right: 30px;
     }
 
-    .quantity{
+    /* .quantity{
         padding-left: 30px;
-    }
+    } */
 
     .subtotal{
         /* font-size: 13px;  */

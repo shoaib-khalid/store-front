@@ -176,7 +176,8 @@
                     <div class="row">
                         <div class="col-4">
                             <div *ngIf="item.productAssets != 0">
-                                <img (click)="goToDetails(item.seoName)" class="card-img-top img-icon details" src="{{ item.productAssets[0].url }}" alt="Card image cap">
+                                <!-- <img (click)="goToDetails(item.seoName)" class="card-img-top img-icon details" src="{{ item.productAssets[0].url }}" alt="Card image cap"> -->
+                                <img (click)="goToDetails(item.seoName)" class="card-img-top img-icon details" src="{{ item.thumbnailUrl }}" alt="Card image cap">
                                 <!-- <span>test {{item.productAssets[0].url}}</span> -->
                             </div>
                             <div *ngIf="item.productAssets == 0 && logoImage">
