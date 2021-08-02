@@ -382,8 +382,8 @@ data-backdrop="static" data-keyboard="false">
     
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-dismiss="modal"><fa-icon [icon]="iconBack"></fa-icon>&nbsp;Close</button>
-                    <button type="submit" class="btn btn-warning">Add to cart&nbsp;<fa-icon [icon]="iconCart"></fa-icon></button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="clearSI()"><fa-icon [icon]="iconBack"></fa-icon>&nbsp;Close</button>
+                    <button type="submit" class="btn btn-warning">Confirm&nbsp;<fa-icon [icon]="iconCart"></fa-icon></button>
                     <!-- <button type="submit" class="btn btn-warning" >check Quantity&nbsp;<fa-icon [icon]="iconCart"></fa-icon></button> -->
                     <button id="closeModalButton2" [hidden]="true" data-dismiss="modal">Close Modal</button>
                 </div>

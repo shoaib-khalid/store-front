@@ -1742,4 +1742,9 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
         }) 
     }
 
+    clearSI(){
+        // clear instruction field  
+        this.addToInstruction = ""
+    }
+
 }

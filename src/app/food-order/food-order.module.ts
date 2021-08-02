@@ -32,6 +32,7 @@ import { LandingComponent } from './landing/landing.component';
 import { RedirectionComponent } from './redirection/redirection.component';
 
 import { CookieService } from 'ngx-cookie-service';
+import { OrderModule } from 'ngx-order-pipe';
 
 
 @NgModule({
@@ -61,7 +62,8 @@ import { CookieService } from 'ngx-cookie-service';
     HttpClientModule,
     NgPipesModule,
     FormsModule,
-    NgxSpinnerModule
+    NgxSpinnerModule,
+    OrderModule
   ],
   exports: [
     StepCheckoutComponent,

@@ -215,6 +215,18 @@ export class ApiService {
             return this.http.get(this.productServiceURL + url, header);
     }
 
+    // Ref : https://api.symplified.biz/product-service/v1/stores/8913d06f-a63f-4a16-8059-2a30a517663a/deliverydetails
+    getDeliveryOption(storeID){
+        const header = {
+            headers: new HttpHeaders().set("Authorization", `Bearer ${this.token}`),
+        };
+        const url =
+            "stores/" +
+            storeID + 
+            "/deliverydetails";
+            return this.http.get(this.productServiceURL + url, header);
+    }
+
     // Ref : http://209.58.160.20:7071/swagger-ui.html#/product-controller/getProductUsingGET_1
 
     // https://api.symplified.biz/product-service/v1/stores/b91e95f5-4af5-40ff-b7d2-d90b67eb595b/
@@ -388,7 +400,23 @@ export class ApiService {
 
         return this.http.post(url, data, httpOptions);
 
-    }    
+    }   
+    
+    // ref : http://209.58.160.20:7001/orders/placeOrder?cartId=0439aee0-b57f-4cf5-81c4-f93d6103c57f
+    postConfirmCOD(data, cartId):Observable<any> {
+        // data sample : { "created": "2021-05-26T01:59:19.698Z", "customerId": "string", "id": "string", "isOpen": true, "storeId": "string", "updated": "2021-05-26T01:59:19.699Z"}
+        const httpOptions = {
+            headers: new HttpHeaders(
+            { 
+               'Authorization': `Bearer ${this.token}`,
+               'Content-Type': 'application/json'
+            })
+        }
+        
+        // const url = "http://209.58.160.20:7001/orders/placeOrder?cartId=" + cartId;
+        const url = this.orderServiceURL + "orders/placeOrder?cartId=" + cartId;
+        return this.http.post(url, data, httpOptions);
+    }
 
     // ref : http://209.58.160.20:7072/swagger-ui.html#/cart-controller/postCartsUsingPOST
     postCreateCart(data):Observable<any> {

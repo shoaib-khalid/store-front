@@ -66,7 +66,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
     userMsisdn:any;
     userAddress:any;
     userCities:any;
-    userState:string = "Choose States";
+    userState:string = "";
     userCountries:any = "";
 
     visible:boolean = false;
@@ -79,7 +79,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
     hasDeliveryFee:boolean = false;
     deliveryRef:any;
 
-    allFieldValidated:boolean;
+    allFieldValidated:boolean = false;
 
     // States (Malaysia State)
     mStates:any;
@@ -89,7 +89,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
 
     deliveryValidUpTo:any;
     serverDateTime:any;
-    showCountDownTime:any = undefined;
+    showCountDownTime:any;
     timerReset:number = 0;
 
     payDisable:boolean = true;
@@ -105,7 +105,14 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
     CountryID: any;
     btnString: string = "CONFIRM ORDER";
     paymentType: string = "COD";
+    deliveryOption: string;
+    storePickup: boolean = false;
+    isSelfPickup: boolean = false;
     // storeCountries: string = "";
+    providerListing:any = {};
+    showProvider: boolean = false;
+    providerName: string = 'providerName';
+    showCounter: boolean = false;
 
     constructor(
         private _databindService: DataBindService,
@@ -159,7 +166,25 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
         // this.getProduct();
         // this.checkCart();
 
+        const deliveryResp = await this.getDeliveryOption(this.storeID)
+
+        // SELF = Self Delivery 
+        // ADHOC = Adhoc Delivery
+        // SCHEDULED = Scheduled Delivery
+
+        this.deliveryOption = deliveryResp['type']
+        console.log('deliveryObj: ', deliveryResp)
+
+        // if(this.deliveryOption == "SELF"){
+
+        // }
+
+        // if(this.deliveryOption == "SCHEDULED") {
+
+        // }
         
+
+        console.log('deliveryOption: ' + this.deliveryOption)
 
         this.getStoreHour()
         
@@ -198,6 +223,22 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
         // NEW PART HERE
         // load states
         // this.mStates = getStates(); // no longer depend on json by miqdaad
+
+    }
+
+    getDeliveryOption(storeID){
+
+        return new Promise(resolve => {
+            this.apiService.getDeliveryOption(storeID).subscribe(async (res: any) => {
+                if (res.message){
+                    resolve(res.data)
+                } else {
+                    console.log('getDeliveryOption operation failed')
+                }
+            }, error => {
+                console.log(error)
+            })
+        })
 
     }
 
@@ -395,9 +436,6 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
                     
                     this.postAddItemToOrder(itemCode,orderId,price,productId,price,quantity,sku,weight,productName,specialInstruction);
     
-                    
-                //     // start the loading 
-                    this.visible = true;
                 }
             });
     
@@ -405,7 +443,15 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
 
         // console.log('go Here tak?')
     
-        this.goPay()
+        if(this.paymentType == "ONLINEPAYMENT"){
+            // start the loading 
+            this.visible = true;
+
+            this.goPay()
+        }else{
+            this.goCod()
+        }
+        
     }
     
     postAddItemToOrder(itemCode,orderId,price,productId,productPrice,quantity,sku,weight,productName,specialInstruction) {
@@ -564,8 +610,52 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
         
     }
 
-    goSkip(e){
-        this.route.navigate(['thankyou']);   
+    goSkip(){
+        this.route.navigate(['thankyou/SUCCESS/ORDER_CONFIRMED']);   
+        // http://cinema-online.test:4200/thankyou/SUCCESS/ORDER_CONFIRMED
+    }
+
+    goCod(){
+
+        // alert("cart id: " + this.cartID)
+
+        // return false;
+        
+        let data = { 
+            "cartId": this.cartID, 
+            "customerId": "faisal", 
+            "orderPaymentDetails": { 
+                "accountName": "Faisal Hayat", 
+                "deliveryQuotationAmount": 14.55, 
+                "deliveryQuotationReferenceId": "34", 
+                "gatewayId": "1" 
+            }, 
+            "orderShipmentDetails": { 
+                "address": "First Subang, Unit S-14-09, Level 14, Jalan SS15/4G, 47500 Subang Jaya, Selangor",
+                "city": "Subang Jaya", 
+                "country": "Malaysia", 
+                "deliveryProviderId": 1, 
+                "email": "faisal.hayat@kalsym.com", 
+                "phoneNumber": "0192802728", 
+                "receiverName": "Faisal Hayat", 
+                "state": "Selangor", 
+                "zipcode": "40150" 
+            }
+        }
+
+        this.apiService.postConfirmCOD(data, this.cartID).subscribe((res: any) => {
+            // console.log('add item to order loop: ', res)
+            if (res.message){
+                console.log('confirmed COD flow: '+ res.data)
+
+                this.goSkip();
+
+            } else {
+            }
+        }, error => {
+            console.log(error)
+        }) 
+
     }
 
     goPay(){
@@ -671,12 +761,14 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
                 uuid = customer['id'];
             }
         } else if (userinfo === 'userEmail') {
-            const regex = new RegExp('(([^\<\>\/\(\)\[\\\]\.\,\;\:\s\@\"]+(\.[^\<\>\(\)\/\[\\\]\.\,\;\:\s@\"]+)*)|(\".+\"))@(([^\<\>\(\)\[\\\]\.\/\,\;\:\s\@\"]+\.)+[^\<\>\(\)\[\\\]\.\/\,\;\:\s\@\"]{2,})$');
+
+            var validRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+
             if (this.userEmail == "" || this.userEmail === undefined) {
                 console.log("Email can't be empty");
                 this.emailError = "Email can't be empty";
                 return false;
-            } else if (!regex.test(this.userEmail)){
+            } else if (!this.userEmail.match(validRegex)){
                 console.log("Not a valid email format");
                 this.emailError = "Not a valid email format";
                 return false;
@@ -687,6 +779,23 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
                 console.log("customer data...", customer)
                 uuid = customer['id'];
             }
+
+            // const regex = new RegExp('(([^\<\>\/\(\)\[\\\]\.\,\;\:\s\@\"]+(\.[^\<\>\(\)\/\[\\\]\.\,\;\:\s@\"]+)*)|(\".+\"))@(([^\<\>\(\)\[\\\]\.\/\,\;\:\s\@\"]+\.)+[^\<\>\(\)\[\\\]\.\/\,\;\:\s\@\"]{2,})$');
+            // if (this.userEmail == "" || this.userEmail === undefined) {
+            //     console.log("Email can't be empty");
+            //     this.emailError = "Email can't be empty";
+            //     return false;
+            // } else if (!regex.test(this.userEmail)){
+            //     console.log("Not a valid email format");
+            //     this.emailError = "Not a valid email format";
+            //     return false;
+            // } else {
+            //     this.emailError = undefined;
+
+            //     const customer = await this.getCustomerProfileByEmail(this.userEmail)
+            //     console.log("customer data...", customer)
+            //     uuid = customer['id'];
+            // }
         } else {
             Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'> Failed to populate data!!</small>", "error")
         }
@@ -709,9 +818,22 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
     toValidate(){
         if (this.userEmail && this.userName && this.userMsisdn && this.userAddress && this.userPostcode 
             && this.userCities && this.userState && this.userCountries) {
+
                 this.allFieldValidated = true;
                 this.getDeliveryFee()
+
+                // if(this.isSelfPickup == false){
+                //     this.getDeliveryFee()
+                // }else{
+                //     this.payDisable = false;
+                // }
+
+                // if(this.deliveryOption == "ADHOC" || this.deliveryOption == "SELF"){
+                //     this.payDisable = false;
+                // }
+                
                 console.log("All field validated")
+                
 
         } else {
             // console.log("this.userName: " +  this.userName +
@@ -825,6 +947,50 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
 
     }
 
+    selfPickup(event){
+        this.isSelfPickup = event.target.checked;
+        // alert(event.target.checked)
+
+        if(this.isSelfPickup == true){
+            this.showProvider = false;
+            this.showCounter = false
+            this.deliveryFee = 0
+        }else{
+            if(this.deliveryOption == "SCHEDULED"){
+                this.getDeliveryFee()
+                this.showProvider = true;
+                this.payDisable = true;
+            }
+
+            if(this.deliveryOption == "ADHOC" || this.deliveryOption == "SELF"){
+                this.getDeliveryFee()
+            }
+
+        }
+
+        this.totalPrice = this.subTotal + this.deliveryFee + this.totalServiceCharges
+    }
+
+    selectedProvider(providerID){
+        alert("provider ID: " + providerID)
+
+        // this.providerListing.find(el => el.id === '45').foo;
+        const found = this.providerListing.find(el => el.providerId === providerID);
+
+        console.log("FOUND: ", found); 
+
+        this.deliveryFee = found.price
+        this.providerId = found.providerId
+        this.deliveryRef = found.refId
+
+        this.totalPrice = this.subTotal + this.deliveryFee + this.totalServiceCharges
+
+        // If COD and region is PAKISTAN then allow proceed button 
+        if(this.paymentType == "COD" && this.CountryID == "PAK"){
+            this.payDisable = false;   
+        }
+    }
+
     getDeliveryFee(){
 
         // alert('postcode: ' + 
@@ -871,37 +1037,62 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
             // console.log('RESPONDEDNTAHSADAHSJHADSAS', res)
             if (res.message) {
 
-                this.deliveryFee = res.data[0].price;
-                this.providerId = res.data[0].providerId;
-                this.deliveryRef = res.data[0].refId;
-                this.deliveryValidUpTo = res.data[0].validUpTo;
-                this.serverDateTime = res.timestamp;
+                if(this.deliveryOption == "SCHEDULED"){
 
-                const isError = res.data[0].isError;
-                const errorMessage = res.data[0].message;
+                    this.providerListing = res.data;
+                    this.showProvider = true;
 
-                // alert('delivery charge: '+this.deliveryFee)
-
-                this.totalPrice = this.subTotal + this.deliveryFee;
-                console.log('total price : ' + this.totalPrice)
-
-                if(isError){
-
-                    Swal.fire("Oops...", errorMessage, "error")
-
+                    console.log('PROVIDER: ', this.providerListing)
                 }else{
-                    this.hasDeliveryFee = true;
 
-                    console.log("server time now(): "+ this.serverDateTime+"\n"+"this.deliveryValidUpTo: "+this.deliveryValidUpTo);
-                    this.timerReset = this.timerReset + 1;
-                    this.timeCounter(this.serverDateTime,this.deliveryValidUpTo);
+                    if(this.deliveryOption == "ADHOC"){
+                        this.deliveryFee = res.data[0].price;
+                        this.providerId = res.data[0].providerId;
+                        this.deliveryRef = res.data[0].refId;
+                        this.deliveryValidUpTo = res.data[0].validUpTo;
+                        this.serverDateTime = res.timestamp;
 
-                    // calling countPrice again so that deliveryFee included in the FE calculation
-                    const countTotal = await this.countPrice(this.allProductInventory)
+                        var isError = res.data[0].isError;
+                        var errorMessage = res.data[0].message;
+                    }else{
+                        this.deliveryFee = res.data.price;
+                        this.providerId = res.data.providerId;
+                        this.deliveryRef = res.data.refId;
+                        this.deliveryValidUpTo = res.data.validUpTo;
+                        this.serverDateTime = res.timestamp;
 
-                    // Swal.fire("Delivery Fees", "Additional charges RM " + this.deliveryFee, "info")
+                        var isError = res.data.isError;
+                        var errorMessage = res.data.message;
+                    }
+                    
+                    // alert('delivery charge: '+this.deliveryFee)
 
-                    this.payDisable = false;
+                    this.totalPrice = this.subTotal + this.deliveryFee;
+                    console.log('total price : ' + this.totalPrice)
+
+                    if(isError){
+
+                        Swal.fire("Oops...", errorMessage, "error")
+
+                    }else{
+                        this.hasDeliveryFee = true;
+
+                        console.log("server time now(): "+ this.serverDateTime+"\n"+"this.deliveryValidUpTo: "+this.deliveryValidUpTo);
+                        this.timerReset = this.timerReset + 1;
+
+                        if(this.deliveryOption == "ADHOC"){
+                            this.timeCounter(this.serverDateTime,this.deliveryValidUpTo);
+                        }
+                        
+                        // calling countPrice again so that deliveryFee included in the FE calculation
+                        const countTotal = await this.countPrice(this.allProductInventory)
+
+                        // Swal.fire("Delivery Fees", "Additional charges RM " + this.deliveryFee, "info")
+
+                        this.payDisable = false;
+                    }
+
+                    this.totalPrice = this.subTotal + this.deliveryFee + this.totalServiceCharges
                 }
                 
             }
@@ -1040,6 +1231,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
                 clearInterval(timer);
             }
         }, 1000);
+        this.showCounter = true
         
         // this is just the return value of the setInterval function, which is just a reference to that interval
         // console.log(showTime(logWhenDone));

@@ -99,7 +99,7 @@
                                 <div class="row">
                                     <div class="col-lg-6 col-md-6 col-xs-12 col-sm-12">
                                         <select name="userState" id="state" [(ngModel)]="userState" [(value)]="userState" (change)="toValidate()" autocomplete="disabled" required>
-                                            <option selected="true" disabled="">Choose States</option>
+                                            <option selected="true" disabled="" value="">Choose States</option>
                                             <option *ngFor="let mState of mStates" [value]="mState.name">
                                                 {{mState.name}}
                                             </option>
@@ -128,6 +128,39 @@
                                 <!-- <button class="btn btn-md col-lg-4 col-md-4 col-xs-12 col-sm-12 btn-warning" style="border-radius: 0;">MAIN MENU &nbsp;&nbsp;<fa-icon [icon]="iconMoney"></fa-icon></button> -->
                             
                                 <!-- <button (click)="checkLah()"></button> -->
+
+                                <div class="form-group form-check">
+                                    <input type="checkbox" class="form-check-input" id="self_pickup"  [checked]="isSelfPickup" (click)="selfPickup($event)">
+                                    <label class="form-check-label" for="self_pickup" style="color: black;">I want to pickup from store</label>
+                                </div>
+                                <br>
+
+                                <div class="row" *ngIf="showProvider">
+                                    <div class="col" style="color: black;">
+                                        <p>Select your preferred delivery</p>
+
+                                        <div class="row" *ngFor="let provider of providerListing | orderBy: providerName">
+                                            <div class="col-4 text-left">{{provider.providerName}}</div>
+                                            <div class="col-4">
+                                                <img src="{{provider.providerImage}}" class="img-thumbnail" alt="..." style="height: 30px; width: 100px;">
+                                            </div>
+                                            <div class="col-4">
+                                                <!-- <div class="btn-group-toggle" data-toggle="buttons">
+                                                    <label class="btn btn-success active" style="border-radius: 50px;">
+                                                      <input type="checkbox" checked> Select
+                                                    </label>
+                                                </div> -->
+                                                <!-- <label class="btn btn-secondary active"> -->
+                                                    <!-- <input type="radio" name="options" id="{{provider.providerName}}" checked> Select -->
+                                                <!-- </label> -->
+                                                    <a class="btn btn-success" style="border-radius: 50px" (click)="selectedProvider(provider.providerId)">Select</a>
+                                            </div>
+                                            <hr class="nondotted">
+                                        </div>
+                                        
+                                        
+                                    </div>
+                                </div>
 
                                 <div class="alert alert-warning" role="alert" style="margin-top: 20px;">
                                     <div class="row">
@@ -166,7 +199,7 @@
                                         </div>
                                     </div>
                                     
-                                    <div *ngIf="showCountDownTime" style="margin-top: 20px;">
+                                    <div *ngIf="showCounter" style="margin-top: 20px;">
                                         <hr>
 
                                         <h4 class="alert-heading text-center bolder warning-text">{{ showCountDownTime }}</h4>
@@ -201,6 +234,7 @@
                         <div class="alert alert-warning" role="alert">
                             <h4 class="alert-heading">Cart is empty!</h4>
                             <p>Please add item to cart to proceed...</p>
+                        
                         </div>
                     </ng-template>
                     
