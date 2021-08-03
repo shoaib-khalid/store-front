@@ -63,8 +63,17 @@
                             <!-- <div *ngIf="inputError" style="  border-radius: 25px;margin-top:10px;padding: 10px; background-color: #fa6a51c6;">
                                     <span tyle="font-weight: bold;color: #a94442;">{{inputError}}</span>
                                 </div> -->
+
+                            <!-- hide first  -->
+                            <br><br>
+
+                            <div class="form-group form-check">
+                                <input type="checkbox" class="form-check-input" id="self_pickup"  [checked]="isSelfPickup" (click)="selfPickup($event)">
+                                <label class="form-check-label" for="self_pickup" style="color: black;">I want to pickup from store</label>
+                            </div>
+                            <br>
                             
-                            <form (submit)="initOrder()" style="color: white; text-align: center; padding: 20px;" ngNativeValidate>
+                            <form *ngIf="viewForm; else storePickup" (submit)="initOrder()" style="color: white; text-align: center; padding: 20px;" ngNativeValidate>
                                 <input type="email" class="is-invalid" id="email" aria-describedby="emailFeedback" name="userEmail" [(ngModel)]="userEmail" [(value)]="userEmail" placeholder="Email" (focusout)="toRepopulate('userEmail')" required>
                                 <div id="emailFeedback" class="invalid-feedback">
                                     {{emailError}}
@@ -128,13 +137,6 @@
                                 <!-- <button class="btn btn-md col-lg-4 col-md-4 col-xs-12 col-sm-12 btn-warning" style="border-radius: 0;">MAIN MENU &nbsp;&nbsp;<fa-icon [icon]="iconMoney"></fa-icon></button> -->
                             
                                 <!-- <button (click)="checkLah()"></button> -->
-
-                                <!-- hide first  -->
-                                <!-- <div class="form-group form-check">
-                                    <input type="checkbox" class="form-check-input" id="self_pickup"  [checked]="isSelfPickup" (click)="selfPickup($event)">
-                                    <label class="form-check-label" for="self_pickup" style="color: black;">I want to pickup from store</label>
-                                </div>
-                                <br> -->
 
                                 <div class="row" *ngIf="showProvider">
                                     <div class="col" style="color: black;">
@@ -214,6 +216,79 @@
                                 <!-- <button (click)="goSkip($event)" class="btn btn-md col-lg-4 col-md-4 col-xs-12 col-sm-12 btn-success" style="border-radius: 0;">PAY NOW &nbsp;&nbsp;<fa-icon [icon]="iconMoney"></fa-icon></button> -->
                             
                             </form>
+
+                            <ng-template #storePickup>
+
+                                <form (submit)="initOrder()" style="color: white; text-align: center;" ngNativeValidate>
+
+                                    <div class="alert alert-light border" role="alert">
+                                        <div class="row">
+                                            <div class="col text-left">
+                                                <label class="form-check-label" for="save_future" style="color: black;">Store Address</label>
+                                                <address>
+                                                    {{storeAddress}}<br> 
+                                                    {{storePostcode}}, {{storeCity}}<br>
+                                                    {{storeState}}, {{userCountries}}.
+                                                </address>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col text-left">
+                                                <label class="form-check-label" for="save_future" style="color: black;">Contact Us</label>
+                                                <address>
+                                                    <label>Email:</label>&nbsp;&nbsp;<a href = "mailto: {{storeEmail}}">{{storeEmail}}</a><br> 
+                                                    <label>Phone No:</label>&nbsp;&nbsp;{{storePhone}}
+                                                </address>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="alert alert-warning" role="alert" style="margin-top: 20px;">
+                                        <div class="row">
+                                            <div class="col">
+                                                <div class="col text-left">
+                                                    <span class="subtotal">SUB-TOTAL</span>
+                                                    <span id="price" style="float: right; padding-right: 38px;">{{currencySymbol}} {{subTotal | number: '1.2-2'}}</span>
+                                                    <!-- <hr class="dotted"> -->
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col">
+                                                <div class="col text-left">
+                                                    <span class="subtotal">SERVICE CHARGES ({{storeDeliveryPercentage}}%)</span>
+                                                    <span id="price" style="float: right; padding-right: 38px;">{{currencySymbol}} {{totalServiceCharges | number: '1.2-2'}}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col">
+                                                <div class="col text-left">
+                                                    <span id="price" class="subtotal warning-text">DELIVERY CHARGES</span>
+                                                    <span id="price" class="warning-text" style="float: right; padding-right: 38px;">{{currencySymbol}} {{deliveryFee | number: '1.2-2'}}</span>
+                                                    <!-- <hr class="dotted"> -->
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col">
+                                                <div class="col text-left text-success">
+                                                    <span class="subtotal" id="price" style="font-size: 15px;">GRAND TOTAL</span>
+                                                    <span id="price" style="float: right; padding-right: 38px; font-size: 15px;">{{currencySymbol}} {{totalPrice | number: '1.2-2'}}</span>
+                                                    <!-- <hr class="dotted"> -->
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+    
+                                    <button type="submit" class="btn btn-md col-lg-6 col-md-6 col-xs-12 col-sm-12 btn-success text-center" style="border-radius: 0;">{{btnString}} &nbsp;&nbsp;<fa-icon [icon]="iconMoney"></fa-icon></button>
+                                    <!-- <button (click)="goSkip($event)" class="btn btn-md col-lg-4 col-md-4 col-xs-12 col-sm-12 btn-success" style="border-radius: 0;">PAY NOW &nbsp;&nbsp;<fa-icon [icon]="iconMoney"></fa-icon></button> -->
+                                
+                                </form>
+
+                            </ng-template>
                         </ng-container>
                         
                     </div>

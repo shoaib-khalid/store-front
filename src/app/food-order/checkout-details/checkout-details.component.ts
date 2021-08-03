@@ -113,6 +113,14 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
     showProvider: boolean = false;
     providerName: string = 'providerName';
     showCounter: boolean = false;
+    viewForm: boolean = true;
+    storeAddress: any;
+    storeCity: any;
+    storeState: any;
+    storePostcode: any;
+    storePhone: any;
+    storeEmail: any;
+    hasInitForm: boolean = false;
 
     constructor(
         private _databindService: DataBindService,
@@ -200,6 +208,9 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
         console.log('satu: ', this.cartitemDetails)
         console.log('dua: ', this.allProductAssets)
 
+        this.subTotal = 0
+        this.totalServiceCharges = 0
+
         // added image url into the cartItem object 
         this.cartitemDetails.forEach(cartItem => {
             this.allProductAssets.map(allAssets => {
@@ -208,15 +219,25 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
                     cartItem["url"] = allAssets.url;
                 }
             })
+
+            this.subTotal = this.subTotal + (cartItem.price * cartItem.quantity);
+            
         });
+
+        this.totalServiceCharges = (this.storeDeliveryPercentage == 0) ? this.storeDeliveryPercentage : ((this.storeDeliveryPercentage/100) * this.subTotal);
+
+
+        this.totalPrice = this.subTotal + this.deliveryFee + this.totalServiceCharges
         
         console.log('new satu: ', this.cartitemDetails) 
 
         console.log('cartItemLength: ' + this.cartitemDetailsCount)
 
+        console.log('ALL PRODUCT SET ON INIT: ', this.allProductInventory)
+
         // countPrice() will wait checkCart() to finished 
-        const countTotal = await this.countPrice(this.allProductInventory)
-        console.log("countTotalPrice executed third...")
+        // const countTotal = await this.countPrice(this.allProductInventory)
+        // console.log("countTotalPrice executed third...")
 
         this.spinner.show();
 
@@ -250,6 +271,14 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
         this.currencySymbol =  storeInfo['regionCountry']['currencySymbol'];
 
         this.storeDomain = storeInfo['domain']
+        
+        this.storeAddress = storeInfo['address']
+        this.storePostcode = storeInfo['postcode']
+        this.storeCity = storeInfo['city']
+        this.storeState = storeInfo['regionCountryStateId']
+
+        this.storeEmail = storeInfo['email']
+        this.storePhone = storeInfo['phoneNumber']
 
         this.cookieService.set( 'subdomain', this.storeDomain );
 
@@ -368,7 +397,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
     async initOrder(){
 
         // wait for delivery service to get quotation
-        if (this.hasDeliveryFee === false) {
+        if (this.hasDeliveryFee === false && this.isSelfPickup === false) {
             Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'> Please wait for us to calculate delivery fee</small>", "error")
             return false;
         }
@@ -411,6 +440,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
             let weight = cartItem.weight
             let productName = cartItem.productName
             let specialInstruction = cartItem.specialInstruction
+            let price = cartItem.price
 
 
             console.log("Checkout SKU: "+ sku);
@@ -418,26 +448,28 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
             
             // console.log("realOrderId: "+ JSON.stringify(realOrderId) + "")
             // console.log("realOrderId: "+ JSON.stringify(orderId) + "")
+
+            this.postAddItemToOrder(itemCode,orderId,price,productId,price,quantity,sku,weight,productName,specialInstruction);
     
-            await this.allProductInventory.forEach(allItem => {
+            // await this.allProductInventory.forEach(allItem => {
     
-                let price = allItem.price
+            //     let price = allItem.price
     
-                if(itemCode == allItem.itemCode){
+            //     if(itemCode == allItem.itemCode){
                     
-                    // console.log("itemCode: " + itemCode +
-                    // "\norderId: " + orderId +
-                    // "\nprice: " + price +
-                    // "\nproductId: " + productId +
-                    // "\nproductPrice: " + price +
-                    // "\nquantity: " + quantity +
-                    // "\nsku: " + sku +
-                    // "\nweight: " + weight);
+            //         // console.log("itemCode: " + itemCode +
+            //         // "\norderId: " + orderId +
+            //         // "\nprice: " + price +
+            //         // "\nproductId: " + productId +
+            //         // "\nproductPrice: " + price +
+            //         // "\nquantity: " + quantity +
+            //         // "\nsku: " + sku +
+            //         // "\nweight: " + weight);
                     
-                    this.postAddItemToOrder(itemCode,orderId,price,productId,price,quantity,sku,weight,productName,specialInstruction);
+            //         this.postAddItemToOrder(itemCode,orderId,price,productId,price,quantity,sku,weight,productName,specialInstruction);
     
-                }
-            });
+            //     }
+            // });
     
         })
 
@@ -573,42 +605,42 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
         
     }
 
-    countPrice(productList:any){
+    // countPrice(productList:any){
 
-        this.subTotal = 0
-        this.totalServiceCharges = 0
+    //     this.subTotal = 0
+    //     this.totalServiceCharges = 0
 
-        // console.log('in countPrice Obj: ', this.cartitemDetails)
+    //     // console.log('in countPrice Obj: ', this.cartitemDetails)
 
-        // console.log('productList: ' , productList)
+    //     // console.log('productList: ' , productList)
 
-        // console.log("this.cartitemDetails: "+this.cartitemDetails);
+    //     // console.log("this.cartitemDetails: "+this.cartitemDetails);
 
-        this.cartitemDetails.forEach(cartItem => {
-            productList.map(allProduct => {
-                // console.log("allProduct.itemCode : " + allProduct.itemCode + "\ncartItem.itemCode : " + cartItem.itemCode);
-                if(allProduct.itemCode == cartItem.itemCode){
-                    this.subTotal = this.subTotal + (allProduct.price * cartItem.quantity);
-                }
-            })
-        });
+    //     this.cartitemDetails.forEach(cartItem => {
+    //         productList.map(allProduct => {
+    //             // console.log("allProduct.itemCode : " + allProduct.itemCode + "\ncartItem.itemCode : " + cartItem.itemCode);
+    //             if(allProduct.itemCode == cartItem.itemCode){
+    //                 this.subTotal = this.subTotal + (allProduct.price * cartItem.quantity);
+    //             }
+    //         })
+    //     });
 
-        this.totalServiceCharges = (this.storeDeliveryPercentage == 0) ? this.storeDeliveryPercentage : ((this.storeDeliveryPercentage/100) * this.subTotal);
+    //     this.totalServiceCharges = (this.storeDeliveryPercentage == 0) ? this.storeDeliveryPercentage : ((this.storeDeliveryPercentage/100) * this.subTotal);
 
 
-        this.totalPrice = this.subTotal + this.deliveryFee + this.totalServiceCharges
+    //     this.totalPrice = this.subTotal + this.deliveryFee + this.totalServiceCharges
 
-        console.log(typeof(this.totalPrice))
-        console.log(typeof(this.subTotal))
-        console.log(typeof(this.deliveryFee))
-        console.log(typeof(this.totalServiceCharges))
+    //     console.log(typeof(this.totalPrice))
+    //     console.log(typeof(this.subTotal))
+    //     console.log(typeof(this.deliveryFee))
+    //     console.log(typeof(this.totalServiceCharges))
 
-        console.log("Sub-total : "+this.subTotal);
-        console.log("Service Charges : "+this.subTotal);
-        console.log("Delivery Charges : "+this.deliveryFee);
-        console.log("Grant Total : "+this.totalPrice);
+    //     console.log("Sub-total : "+this.subTotal);
+    //     console.log("Service Charges : "+this.subTotal);
+    //     console.log("Delivery Charges : "+this.deliveryFee);
+    //     console.log("Grant Total : "+this.totalPrice);
         
-    }
+    // }
 
     goSkip(){
         this.route.navigate(['thankyou/SUCCESS/ORDER_CONFIRMED']);   
@@ -951,22 +983,48 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
         this.isSelfPickup = event.target.checked;
         // alert(event.target.checked)
 
-        if(this.isSelfPickup == true){
+        if(this.isSelfPickup){
+            this.viewForm = !this.viewForm
+
             this.showProvider = false;
             this.showCounter = false
             this.deliveryFee = 0
+
         }else{
+            this.viewForm = !this.viewForm
+
+            this.payDisable = true;
+
             if(this.deliveryOption == "SCHEDULED"){
-                this.getDeliveryFee()
-                this.showProvider = true;
-                this.payDisable = true;
+                if(this.hasInitForm === true){
+                    this.getDeliveryFee()
+                    this.showProvider = true;
+                }
             }
 
             if(this.deliveryOption == "ADHOC" || this.deliveryOption == "SELF"){
-                this.getDeliveryFee()
+                if(this.hasInitForm === true){
+                    this.getDeliveryFee()
+                }
             }
-
         }
+
+        // if(this.isSelfPickup == true){
+        //     this.showProvider = false;
+        //     this.showCounter = false
+        //     this.deliveryFee = 0
+        // }else{
+        //     if(this.deliveryOption == "SCHEDULED"){
+        //         this.getDeliveryFee()
+        //         this.showProvider = true;
+        //         this.payDisable = true;
+        //     }
+
+        //     if(this.deliveryOption == "ADHOC" || this.deliveryOption == "SELF"){
+        //         this.getDeliveryFee()
+        //     }
+
+        // }
 
         this.totalPrice = this.subTotal + this.deliveryFee + this.totalServiceCharges
     }
@@ -1067,8 +1125,8 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
                     
                     // alert('delivery charge: '+this.deliveryFee)
 
-                    this.totalPrice = this.subTotal + this.deliveryFee;
-                    console.log('total price : ' + this.totalPrice)
+                    // this.totalPrice = this.subTotal + this.deliveryFee;
+                    // console.log('total price : ' + this.totalPrice)
 
                     if(isError){
 
@@ -1085,7 +1143,8 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
                         }
                         
                         // calling countPrice again so that deliveryFee included in the FE calculation
-                        const countTotal = await this.countPrice(this.allProductInventory)
+                        // const countTotal = await this.countPrice(this.allProductInventory)
+                        // this.totalPrice = this.subTotal + this.deliveryFee + this.totalServiceCharges
 
                         // Swal.fire("Delivery Fees", "Additional charges RM " + this.deliveryFee, "info")
 
@@ -1093,6 +1152,8 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
                     }
 
                     this.totalPrice = this.subTotal + this.deliveryFee + this.totalServiceCharges
+
+                    this.hasInitForm = true;
                 }
                 
             }
@@ -1136,8 +1197,10 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
                 "created": "",
                 "customerId": this.senderID,
                 "customerNotes": "",
+                "deliveryCharges": this.deliveryFee,
                 "id": "",
                 "invoiceId": "", 
+                // "klCommission": 0,
                 "orderPaymentDetail": {
                     "accountName":  this.userName, 
                     // "couponId": "", 
@@ -1157,11 +1220,15 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
                     "phoneNumber": this.userMsisdn,
                     "receiverName": this.userName,
                     "state": this.userState,
+                    // "trackingUrl": "string",
                     "zipcode": this.userPostcode
                 },
                 "paymentStatus": "PENDING",
                 "privateAdminNotes": "",
+                "serviceCharges": this.totalServiceCharges,
                 "storeId": this.storeID,
+                // "storeServiceCharges": 0,
+                // "storeShare": 0,
                 "subTotal": this.subTotal,
                 "total": this.totalPrice,
                 "updated": ""
