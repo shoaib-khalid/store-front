@@ -19,6 +19,8 @@ import Swal from 'sweetalert2'
 import { PlatformLocation } from "@angular/common";
 import { not } from '@angular/compiler/src/output/output_ast';
 
+import { version } from '../../../../package.json';
+
 
 
 @Component({
@@ -32,6 +34,8 @@ export class LandingComponent implements OnInit, AfterViewInit, OnDestroy {
     // clearLocalStorage(event){
     //     localStorage.clear();
     // }
+
+    version:any = version;
 
     iconEye = faEye;
     iconCart = faShoppingCart;
@@ -120,6 +124,7 @@ export class LandingComponent implements OnInit, AfterViewInit, OnDestroy {
     logoImage:any;
     bannerImage:any;
     storeInformation:any = [];
+    showVersion: boolean = false;
 
     constructor(
         private _databindService: DataBindService, 
@@ -213,6 +218,8 @@ export class LandingComponent implements OnInit, AfterViewInit, OnDestroy {
     ngOnInit(): void {
         console.log('Catalogue On Page Load');
         // this is for initial base setup 
+
+        // alert('version: ' + version)
 
         if(this.localURL != null){
 
@@ -1591,6 +1598,10 @@ export class LandingComponent implements OnInit, AfterViewInit, OnDestroy {
         }, error => {
             console.log(error)
         }) 
+    }
+
+    showVersionPill(e){
+        this.showVersion = !this.showVersion
     }
 
 }

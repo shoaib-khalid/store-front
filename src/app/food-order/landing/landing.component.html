@@ -25,7 +25,7 @@
 		</div> -->
         <food-app-banner></food-app-banner>
 
-		<main style="background-color: white;">
+		<main style="background-color: white; padding-bottom: 50px;">
             <!-- <div class="row">
                 <header class="tm-welcome-section">
                     <h2 class="col-12 text-center tm-section-title">Welcome to <b>{{storeInformation.name}}</b> store</h2>
@@ -110,8 +110,10 @@
         <div class="position-relative">
             <!-- <div class="position-absolute top-100 start-50 translate-middle"></div> -->
             <footer class="tm-footer text-center fixed-bottom position-absolute" style="background-color: #FFE45C;">
-                <p><strong>{{storeName}}</strong></p>
+                <p (click)="showVersionPill($event)" style="cursor: pointer;"><strong>{{storeName}}</strong></p>
                 <p *ngIf=(storeContact)><strong>Contact us: {{storeContact}}</strong></p>
+                <!-- <br> -->
+                <small *ngIf="showVersion" class="text-muted badge badge-pill badge-light" style="padding: 5px; font-size: 9px;">{{version}}</small>
             </footer>
         </div>
 	</div>
