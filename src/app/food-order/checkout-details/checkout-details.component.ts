@@ -121,6 +121,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
     storePhone: any;
     storeEmail: any;
     hasInitForm: boolean = false;
+    allowStorePickup: boolean = false;
 
     constructor(
         private _databindService: DataBindService,
@@ -181,7 +182,10 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
         // SCHEDULED = Scheduled Delivery
 
         this.deliveryOption = deliveryResp['type']
+        this.allowStorePickup = deliveryResp['allowsStorePickup']
         console.log('deliveryObj: ', deliveryResp)
+
+        console.log('allow store pickup : ' + this.allowStorePickup)
 
         // if(this.deliveryOption == "SELF"){
 

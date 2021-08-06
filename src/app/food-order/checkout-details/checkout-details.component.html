@@ -64,14 +64,12 @@
                                     <span tyle="font-weight: bold;color: #a94442;">{{inputError}}</span>
                                 </div> -->
 
-                            <!-- hide first  -->
-                            <br><br>
-
-                            <div class="form-group form-check">
+                            <div class="form-group form-check" *ngIf="allowStorePickup">
+                                <br><br>
                                 <input type="checkbox" class="form-check-input" id="self_pickup"  [checked]="isSelfPickup" (click)="selfPickup($event)">
                                 <label class="form-check-label" for="self_pickup" style="color: black;">I want to pickup from store</label>
+                                <br>
                             </div>
-                            <br>
                             
                             <form *ngIf="viewForm; else storePickup" (submit)="initOrder()" style="color: white; text-align: center; padding: 20px;" ngNativeValidate>
                                 <input type="email" class="is-invalid" id="email" aria-describedby="emailFeedback" name="userEmail" [(ngModel)]="userEmail" [(value)]="userEmail" placeholder="Email" (focusout)="toRepopulate('userEmail')" required>
@@ -219,7 +217,21 @@
 
                             <ng-template #storePickup>
 
-                                <form (submit)="initOrder()" style="color: white; text-align: center;" ngNativeValidate>
+                                <form (submit)="initOrder()" style="color: white; text-align: center; padding: 20px;" ngNativeValidate>
+
+                                    <input type="email" class="is-invalid" id="email" aria-describedby="emailFeedback" name="userEmail" [(ngModel)]="userEmail" [(value)]="userEmail" placeholder="Email" (focusout)="toRepopulate('userEmail')" required>
+                                    <div id="emailFeedback" class="invalid-feedback">
+                                        {{emailError}}
+                                    </div>
+
+                                    <input type="text" id="msisdn" name="userMsisdn" aria-describedby="phoneFeedback" [(ngModel)]="userMsisdn" [(value)]="userMsisdn" autocomplete="disabled" placeholder="Phone No" (focusout)="toRepopulate('userMsisdn')" required>
+                                    <div id="phoneFeedback" class="invalid-feedback">
+                                        {{phoneError}}
+                                    </div>
+
+                                    <input type="text" id="name" name="userName" [(ngModel)]="userName" [(value)]="userName" (change)="toValidate()" autocomplete="disabled" placeholder="Full name" required>
+                                    <br>
+                                    <br>
 
                                     <div class="alert alert-light border" role="alert">
                                         <div class="row">
