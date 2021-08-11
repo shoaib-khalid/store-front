@@ -228,16 +228,50 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
     ngOnInit(): void {
         console.log('Catalogue On Page Load');
         // this is for initial base setup 
-        if(!this.storeID){
-            // console.log('Catalogue StoreID is '+this.storeID+', calling FUNCTION getMerchantInfo Function')
-            this.getMerchantInfo(this.storeName)
-        } else {
-            // console.log('Catalogue StoreID is '+this.storeID+', calling FUNCTION skipMerchantInfo Function')
-            this.skipMerchantInfo()
+        if(this.localURL != null){
 
-            // get Assets Data 
-            this.getAssets(this.storeID)
-            // this.assets = assetData
+            //Staging
+
+            this.getProduct(this.catId);
+
+            this.getCategory();
+
+            if(this.senderID){
+                this.checkCart();
+                console.log('senderId exist!' + this.senderID)
+            }else{
+
+                // sessionStorage = only for current browser, The data survives page refresh, but not closing/opening the tab
+                // localStorage = The data does not expire. It remains after the browser restart and even OS reboot. Shared between all tabs and windows from the same origin.
+                this.cartID = localStorage.getItem("anonym_cart_id")
+                // var sesStoreName = localStorage.getItem('store_name')
+
+                if(this.cartID){
+                    this.getItemDetails(this.cartID)
+                }else{
+                    this.cartitemDetailsCount = 0;
+                }
+
+                console.log('you are anonymous')
+            }
+            
+        } else {
+            // Production
+            
+            if(!this.storeID){
+                console.log('Catalogue StoreID is '+this.storeID+', calling FUNCTION getMerchantInfo Function')
+                this.getMerchantInfo(this.storeName)
+            } else {
+                console.log('Catalogue StoreID is '+this.storeID+', calling FUNCTION skipMerchantInfo Function')
+                this.skipMerchantInfo()
+
+                // get Assets Data 
+                this.getAssets(this.storeID)
+                // this.assets = assetData
+            }
+
+            // this.getStoreCurrency(this.storeID)
+
         }
     }
 
@@ -257,10 +291,10 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     getMerchantInfo(storename){
-        // console.log('Catalogue Calling BACKEND getStoreInfo');
+        console.log('Catalogue Calling BACKEND getStoreInfo');
         this.apiService.getStoreInfo(storename).subscribe((res: any) => {
-            // console.log('Catalogue Receive BACKEND getStoreInfo');
-            // console.log('Catalogue Store Information: ', res.data.content)
+            console.log('Catalogue Receive BACKEND getStoreInfo');
+            console.log('Catalogue Store Information: ', res.data.content)
 
             let data = res.data.content[0]
             let exist = data.length
@@ -594,9 +628,9 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
             // var sesStoreName = localStorage.getItem('store_name')
 
             if(this.cartID){
-                // this.getItemDetails(this.cartID)
+                this.getItemDetails(this.cartID)
             }else{
-                // this.cartitemDetailsCount = 0;
+                this.cartitemDetailsCount = 0;
             }
 
             console.log('you are anonymous')
@@ -764,15 +798,48 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
             // then - create cart first
             // then - get cart again to get the cartId 
             // then - Add item to cart by cartID  
-            
 
         if(this.cartExist == true){
 
-            // console.log('masok cartExist true')
-            // alert('cart exist')
+            console.log('masok cartExist true')
+
             // alert('here: ' + JSON.stringify(data))
 
-            this.flow_anonymAddToCart(itemCode, productID, qty, price, weight, sku, instruction)
+            this.apiService.postAddToCart(data).subscribe((res: any) => {
+
+                console.log('add to cart resp: ', res)
+
+                // Update item count in Cart 
+                this.apiService.getCartItemByCartID(data.cartId).subscribe((res: any) => {
+                    console.log('cart item by cart ID 2: ', res.data.content)
+
+                    this.cartitemDetails = []
+
+                    if (res.message){
+                        this.cartitemDetails = res.data.content;
+
+                        // set back to zero and re-count 
+                        this.cartitemDetailsCount = this.cartitemDetailsCount + qty;
+
+                        // this.cartitemDetails.forEach(allItem => {
+                        //     this.cartitemDetailsCount = this.cartitemDetailsCount + allItem.quantity
+
+                        // });
+
+                        // Swal.fire("Great!", "Item successfully added to cart", "success")
+                        this.inputQty = 1;
+
+                    } else {
+                        // Swal.fire("Great!", "Item failed", "error")
+                    }
+
+                }, error => {
+                    // Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
+                }) 
+
+            }, error => {
+                // Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
+            }) 
 
         }else{
 
@@ -867,17 +934,15 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
 
                 // alert('here 3: ' + JSON.stringify(data))
 
-                // console.log("flow_anonymAddToCart" +
-                //             "\nitemCode: " + itemCode +
-                //             "\nproductID: " + productID +
-                //             "\nqty: " + qty +
-                //             "\nprice: " + price +
-                //             "\nweight: " + weight +
-                //             "\nsku: " + sku +
-                //             "\nspecial instruction: " + instruction);
+                console.log("flow_anonymAddToCart" +
+                            "\nitemCode: " + itemCode +
+                            "\nproductID: " + productID +
+                            "\nqty: " + qty +
+                            "\nprice: " + price +
+                            "\nweight: " + weight +
+                            "\nsku: " + sku +
+                            "\nspecial instruction: " + instruction);
                 this.flow_anonymAddToCart(itemCode, productID, qty, price, weight, sku, instruction)
-
-                // alert('anonym add to cart: ' + this.cartExist)
             }
 
             
@@ -1315,7 +1380,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     getItemByVariant(event, id){
-        // alert(id)
+        alert(id)
         // this.moreThan = false;
         console.log(event)
         this.selectedVariantID = id
@@ -1395,14 +1460,12 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
 
     }
 
-    
-
     getCartItemDetails(){
         
-        // console.log('masok')
+        console.log('masok')
         
         // check count Item in Cart 
-        this.apiService.getCartItemByCartID(this.cartID).subscribe(async (res: any) => {
+        this.apiService.getCartItemByCartID(this.cartID).subscribe((res: any) => {
             console.log('cart item from Cart Item Details: ', res.data.content)
 
             this.cartitemDetails=[]
@@ -1412,19 +1475,9 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.cartitemDetails = res.data.content;
                 this.cartitemDetailsCount = this.cartitemDetails.length;
 
-                this.inputQty = 1;
-
-                this.subTotal = 0;
-
-                var quantity = 0;
-                await this.cartitemDetails.forEach(allItem => {
-                    this.subTotal = this.subTotal + (allItem.quantity * allItem.price);
-                    // this.cartitemDetailsCount = this.cartitemDetailsCount + allItem.quantity
-                    quantity = quantity + allItem.quantity
-          
-                });
-
-                this.cartitemDetailsCount = quantity
+                // this.cartitemDetails.forEach(allItem => {
+                //     this.cartitemDetailsCount = this.cartitemDetailsCount + allItem.quantity
+                // });
 
             } else {
 

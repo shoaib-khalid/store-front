@@ -68,6 +68,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
     userCities:any;
     userState:string = "";
     userCountries:any = "";
+    customerNotes:any = "";
 
     visible:boolean = false;
 
@@ -122,6 +123,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
     storeEmail: any;
     hasInitForm: boolean = false;
     allowStorePickup: boolean = false;
+    isCustNote: boolean = false;
 
     constructor(
         private _databindService: DataBindService,
@@ -983,6 +985,12 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
 
     }
 
+    custNote(event){
+        this.isCustNote = event.target.checked
+
+        // alert(this.isCustNote)
+    }
+
     selfPickup(event){
         this.isSelfPickup = event.target.checked;
         // alert(event.target.checked)
@@ -1034,7 +1042,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
     }
 
     selectedProvider(providerID){
-        alert("provider ID: " + providerID)
+        // alert("provider ID: " + providerID)
 
         // this.providerListing.find(el => el.id === '45').foo;
         const found = this.providerListing.find(el => el.providerId === providerID);
@@ -1200,7 +1208,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
                 "completionStatus": "RECEIVED_AT_STORE",
                 "created": "",
                 "customerId": this.senderID,
-                "customerNotes": "",
+                "customerNotes": this.customerNotes,
                 "deliveryCharges": this.deliveryFee,
                 "id": "",
                 "invoiceId": "", 

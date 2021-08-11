@@ -66,6 +66,7 @@ export class ThankyouComponent implements OnInit {
     var temp_storeID = localStorage.getItem('store_id'); // this temp_storeID will be cleared after second referesh
 
     // localStorage.clear();
+    // alert('session clear')
     
     this.senderID = localStorage.getItem('sender_id');
     this.refID = localStorage.getItem('ref_id');
