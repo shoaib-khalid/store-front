@@ -126,8 +126,9 @@
                                         <!-- </select>
                                     </div> -->
                                 </div>
-
-                                <div class="form-group form-check">
+                                <br>
+                                <textarea name="customerNotes" id="customerNotes" [(ngModel)]="customerNotes" [(value)]="customerNotes" autocomplete="disabled" placeholder="Leave us a note e.g: Pickup/delivery time or instruction" cols="30" rows="3"></textarea>
+                                <!-- <div class="form-group form-check">
                                     <br>
                                     <input type="checkbox" class="form-check-input" id="cust_note"  [checked]="isCustNote" (click)="custNote($event)">
                                     <label class="form-check-label" for="cust_note" style="color: black;">Add Customer Notes</label>
@@ -135,8 +136,8 @@
                                 </div>
 
                                 <div *ngIf="isCustNote">
-                                    <textarea name="customerNotes" id="customerNotes" [(ngModel)]="customerNotes" [(value)]="customerNotes" autocomplete="disabled" placeholder="Customer Notes" cols="30" rows="2"></textarea>
-                                </div>
+                                    <textarea name="customerNotes" id="customerNotes" [(ngModel)]="customerNotes" [(value)]="customerNotes" autocomplete="disabled" placeholder="Leave us a note e.g: Pickup/delivery time or instruction" cols="30" rows="4"></textarea>
+                                </div> -->
         
                                 <br>
                                 <br>
