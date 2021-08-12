@@ -64,11 +64,19 @@
                                     <span tyle="font-weight: bold;color: #a94442;">{{inputError}}</span>
                                 </div> -->
 
-                            <div class="form-group form-check" *ngIf="allowStorePickup">
+                            <!-- <div class="form-group form-check" *ngIf="allowStorePickup">
                                 <br><br>
                                 <input type="checkbox" class="form-check-input" id="self_pickup"  [checked]="isSelfPickup" (click)="selfPickup($event)">
                                 <label class="form-check-label" for="self_pickup" style="color: black;">I want to pickup from store</label>
                                 <br>
+                            </div> -->
+
+                            <div class="form-group" *ngIf="allowStorePickup" style="margin-top: 30px;">
+                                <label class="custom-switch mt-2">
+                                    <input type="checkbox" name="self_pickup" id="self_pickup" class="custom-switch-input" [checked]="isSelfPickup" (click)="selfPickup($event)">
+                                    <span class="custom-switch-indicator"></span>
+                                    <span class="custom-switch-description">I want to pickup from store</span>
+                                </label>
                             </div>
                             
                             <form *ngIf="viewForm; else storePickup" (submit)="initOrder()" style="color: white; text-align: center; padding: 20px;" ngNativeValidate>
@@ -89,9 +97,17 @@
                                     <span aria-hidden="true">&times;</span>
                                     </button>
                                 </div> -->
-                                <div class="form-group form-check">
+                                <!-- <div class="form-group form-check">
                                     <input type="checkbox" class="form-check-input" id="save_future">
                                     <label class="form-check-label" for="save_future" style="color: black;">Save my information for future order</label>
+                                </div> -->
+                                <div class="form-group">
+                                    <label class="custom-switch mt-2">
+                                        <!-- <input type="checkbox" name="self_pickup" id="self_pickup" class="custom-switch-input" [checked]="isSelfPickup" (click)="selfPickup($event)"> -->
+                                        <input type="checkbox" class="custom-switch-input" id="save_future" name="selsave_futuref_pickup">
+                                        <span class="custom-switch-indicator"></span>
+                                        <span class="custom-switch-description">Save my information for future order</span>
+                                    </label>
                                 </div>
                                 <br>
                                 <input type="text" id="name" name="userName" [(ngModel)]="userName" [(value)]="userName" (change)="toValidate()" autocomplete="disabled" placeholder="Full name" required>
@@ -242,6 +258,9 @@
                                     </div>
 
                                     <input type="text" id="name" name="userName" [(ngModel)]="userName" [(value)]="userName" (change)="toValidate()" autocomplete="disabled" placeholder="Full name" required>
+
+                                    <!-- <br> -->
+                                    <textarea name="customerNotes" id="customerNotes" [(ngModel)]="customerNotes" [(value)]="customerNotes" autocomplete="disabled" placeholder="Leave us a note e.g: Pickup/delivery time or instruction" cols="30" rows="3"></textarea>
                                     <br>
                                     <br>
 
