@@ -1233,6 +1233,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
                     "receiverName": this.userName,
                     "state": this.userState,
                     // "trackingUrl": "string",
+                    "storePickup": this.isSelfPickup,
                     "zipcode": this.userPostcode
                 },
                 "paymentStatus": "PENDING",
