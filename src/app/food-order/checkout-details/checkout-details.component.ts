@@ -124,6 +124,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
     hasInitForm: boolean = false;
     allowStorePickup: boolean = false;
     isCustNote: boolean = false;
+    isSaved: boolean = true;
 
     constructor(
         private _databindService: DataBindService,
@@ -219,14 +220,16 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
 
         // added image url into the cartItem object 
         this.cartitemDetails.forEach(cartItem => {
-            this.allProductAssets.map(allAssets => {
-                // console.log("allProduct.itemCode : " + allProduct.itemCode + "\ncartItem.itemCode : " + cartItem.itemCode);
-                if(allAssets.itemCode == cartItem.itemCode){
-                    cartItem["url"] = allAssets.url;
-                }
-            })
+            // this.allProductAssets.map(allAssets => {
+            //     // console.log("allProduct.itemCode : " + allProduct.itemCode + "\ncartItem.itemCode : " + cartItem.itemCode);
+            //     if(allAssets.itemCode == cartItem.itemCode){
+            //         cartItem["url"] = allAssets.url;
+            //     }
+            // })
 
-            this.subTotal = this.subTotal + (cartItem.price * cartItem.quantity);
+            this.subTotal = this.subTotal + cartItem.price;
+
+            // alert(this.subTotal)
             
         });
 
@@ -507,7 +510,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
         let data = {
             "itemCode": itemCode,
             "orderId": orderId,
-            "price": price*quantity,
+            "price": price,
             "productId": productId,
             "productPrice": productPrice,
             "quantity": quantity,
@@ -991,6 +994,10 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
         // alert(this.isCustNote)
     }
 
+    saveInfo(event){
+        this.isSaved = !this.isSaved
+    }
+
     selfPickup(event){
         this.isSelfPickup = event.target.checked;
         // alert(event.target.checked)
@@ -1247,7 +1254,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
                 "updated": ""
             }
 
-            this.apiService.postInitOrder(data).subscribe(async (res: any) => {
+            this.apiService.postInitOrder(data, this.isSaved).subscribe(async (res: any) => {
                 console.log('updateCartItem result: ', res)
                 if (res.message){
                     console.log('postInitOrder operation successfull')

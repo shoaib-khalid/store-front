@@ -492,7 +492,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
 
                     var quantity = 0;
                     await this.cartitemDetails.forEach(allItem => {
-                        this.subTotal = this.subTotal + (allItem.quantity * allItem.price);
+                        this.subTotal = this.subTotal + allItem.price;
                         // this.cartitemDetailsCount = this.cartitemDetailsCount + allItem.quantity
                         quantity = quantity + allItem.quantity
                         // console.log("miqdaad: "+JSON.stringify(allItem.quantity * allItem.price)+"\n");
@@ -1366,7 +1366,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
                         this.subTotal = 0;
 
                         this.cartitemDetails.forEach(allItem => {
-                            this.subTotal = this.subTotal + (allItem.quantity * allItem.price);
+                            this.subTotal = this.subTotal + allItem.price;
                             this.cartitemDetailsCount = this.cartitemDetailsCount + allItem.quantity
                         });
 
@@ -1418,7 +1418,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
 
                 var quantity = 0;
                 await this.cartitemDetails.forEach(allItem => {
-                    this.subTotal = this.subTotal + (allItem.quantity * allItem.price);
+                    this.subTotal = this.subTotal + allItem.price;
                     // this.cartitemDetailsCount = this.cartitemDetailsCount + allItem.quantity
                     quantity = quantity + allItem.quantity
           
@@ -1523,7 +1523,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
             this.cartitemDetailsCount = 0;
             await this.cartitemDetails.forEach(allItem => {
                 // console.log("itemId: "+itemId+"\n"+"allItem.itemId: "+JSON.stringify(allItem.id)+"\n");
-                this.subTotal = this.subTotal + (allItem.quantity * allItem.price);
+                this.subTotal = this.subTotal + allItem.price;
                 this.cartitemDetailsCount = this.cartitemDetailsCount + allItem.quantity
                 // console.log("OK OK OK")
                 // console.log("miqdaad: "+JSON.stringify(allItem.quantity * allItem.price)+"\n");

@@ -104,7 +104,7 @@
                                 <div class="form-group">
                                     <label class="custom-switch mt-2">
                                         <!-- <input type="checkbox" name="self_pickup" id="self_pickup" class="custom-switch-input" [checked]="isSelfPickup" (click)="selfPickup($event)"> -->
-                                        <input type="checkbox" class="custom-switch-input" id="save_future" name="selsave_futuref_pickup">
+                                        <input type="checkbox" class="custom-switch-input" id="save_future" name="selsave_futuref_pickup" [checked]="isSaved" (click)="saveInfo($event)">
                                         <span class="custom-switch-indicator"></span>
                                         <span class="custom-switch-description">Save my information for future order</span>
                                     </label>

@@ -52,7 +52,7 @@ export class ApiService {
         return this.http.post(this.userServiceURL + "clients/authenticate", data);
     }
 
-    // Ref : http://209.58.160.20:20921/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config#/customers-controller/getCustomers_1
+    // Ref : http://209.58.160.20:1201/stores/8913d06f-a63f-4a16-8059-2a30a517663a/customers/?email=mwaqassh%40gmail.com&page=0&pageSize=20
     getCustomerProfileByEmail(email, storeId) {
         const header = {
             headers: new HttpHeaders().set("Authorization", `Bearer ${this.token}`),
@@ -434,7 +434,7 @@ export class ApiService {
     }
 
     // ref : http://209.58.160.20:7072/swagger-ui.html#/order-controller/postOrdersUsingPOST
-    postInitOrder(data):Observable<any> {
+    postInitOrder(data, isSaved):Observable<any> {
         // data : { "cartId": "string", "completionStatus": "string", "customerId": "string", "customerNotes": "string", "deliveryAddress": "string", "deliveryCity": "string", "deliveryContactName": "string", "deliveryContactPhone": "string", "deliveryCountry": "string", "deliveryEmail": "string", "deliveryPostcode": "string", "deliveryProviderId": 0, "deliveryState": "string", "paymentStatus": "string", "privateAdminNotes": "string", "storeId": "string", "subTotal": 0, "total": 0}
         const httpOptions = {
             headers: new HttpHeaders(
@@ -444,7 +444,7 @@ export class ApiService {
             })
         }
         // "https://api.symplified.biz/order-service/v1/",
-        const url = this.orderServiceURL + "orders";
+        const url = this.orderServiceURL + "orders?saveCustomerInformation="+isSaved;
         return this.http.post(url, data, httpOptions);
     }
 
