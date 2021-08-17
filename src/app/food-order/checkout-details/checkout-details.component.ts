@@ -782,6 +782,14 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
 
         let uuid = undefined;
 
+        this.customer_id = null
+        this.userMsisdn = null
+        this.userName = null
+        this.userAddress = null
+        this.userPostcode = null
+        this.userCities = null
+        this.userState = null
+
         if (userinfo === 'userMsisdn') {
             const regex = new RegExp('^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\.\/0-9]*$');
             if (this.userMsisdn == "" || this.userMsisdn === undefined) {
@@ -831,11 +839,12 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
         this.customer_id = customer['id'];
         this.userMsisdn = customer['phoneNumber']
         this.userName = customer['name']
-
         this.userAddress = customer['customerAddress'][0]['address']
         this.userPostcode = customer['customerAddress'][0]['postCode']
         this.userCities = customer['customerAddress'][0]['city']
         this.userState = customer['customerAddress'][0]['state']
+
+        // alert(this.customer_id)
 
         await this.toValidate();
 
