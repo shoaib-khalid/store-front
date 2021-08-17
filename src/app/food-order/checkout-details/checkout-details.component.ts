@@ -789,6 +789,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
         this.userPostcode = null
         this.userCities = null
         this.userState = null
+        this.payDisable = true;
 
         if (userinfo === 'userMsisdn') {
             const regex = new RegExp('^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\.\/0-9]*$');
