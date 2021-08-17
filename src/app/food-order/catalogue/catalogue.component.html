@@ -452,7 +452,7 @@ data-backdrop="static" data-keyboard="false">
                                     <!-- <div *ngFor="let inventory of allProductInventory">
                                         <span *ngIf="item.itemCode == inventory.itemCode" id="price">{{currencySymbol}} {{ item.quantity * inventory.price | number: '1.2-2' }}</span>
                                     </div> -->
-                                    <span id="price">{{currencySymbol}} {{item.quantity*item.price | number : '1.2-2'}}</span>
+                                    <span id="price">{{currencySymbol}} {{item.price | number : '1.2-2'}}</span>
                                 </div>
                                 <div class="col-1 text-right">
                                     <button type="button" class="close" aria-label="Close">

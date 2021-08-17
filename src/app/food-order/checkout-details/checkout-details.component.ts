@@ -796,10 +796,6 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
                 
                 // sanatise input
                 this.userMsisdn = (this.userMsisdn).replace(/[^0-9]/g, '');
-
-                const customer = await this.getCustomerProfileByMsisdn(this.userMsisdn)
-                console.log("customer data...", customer)
-                uuid = customer['id'];
             }
         } else if (userinfo === 'userEmail') {
 
@@ -815,43 +811,34 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
                 return false;
             } else {
                 this.emailError = undefined;
-
-                const customer = await this.getCustomerProfileByEmail(this.userEmail)
-                console.log("customer data...", customer)
-                uuid = customer['id'];
             }
 
-            // const regex = new RegExp('(([^\<\>\/\(\)\[\\\]\.\,\;\:\s\@\"]+(\.[^\<\>\(\)\/\[\\\]\.\,\;\:\s@\"]+)*)|(\".+\"))@(([^\<\>\(\)\[\\\]\.\/\,\;\:\s\@\"]+\.)+[^\<\>\(\)\[\\\]\.\/\,\;\:\s\@\"]{2,})$');
-            // if (this.userEmail == "" || this.userEmail === undefined) {
-            //     console.log("Email can't be empty");
-            //     this.emailError = "Email can't be empty";
-            //     return false;
-            // } else if (!regex.test(this.userEmail)){
-            //     console.log("Not a valid email format");
-            //     this.emailError = "Not a valid email format";
-            //     return false;
-            // } else {
-            //     this.emailError = undefined;
-
-            //     const customer = await this.getCustomerProfileByEmail(this.userEmail)
-            //     console.log("customer data...", customer)
-            //     uuid = customer['id'];
-            // }
         } else {
             Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'> Failed to populate data!!</small>", "error")
         }
 
-        console.log('uuid: ' + uuid)
 
-        const details = await this.getPersonalDetails(uuid)
-        console.log("delivery data...", details)
+        const customer = await this.getCustomerProfileByEmail(this.userEmail)
+        console.log("customer data...", customer)
+        uuid = customer['id'];
+        this.userMsisdn = customer['phoneNumber']
+        this.userName = customer['name']
+        // this.userAddress = customer['address']
+        // this.userPostcode = customer['postCode']
+        // this.userCities = customer['city']
+        // this.userState = customer['state']
 
-        this.userName = details['name']
-        this.userMsisdn = details['phoneNumber']
-        this.userAddress = details['address']
-        this.userPostcode = details['postCode']
-        this.userCities = details['city']
-        this.userState = details['state']
+        // console.log('uuid: ' + uuid)
+
+        // const details = await this.getPersonalDetails(uuid)
+        // console.log("delivery data...", details)
+
+        // this.userName = details['name']
+        // this.userMsisdn = details['phoneNumber']
+        // this.userAddress = details['address']
+        // this.userPostcode = details['postCode']
+        // this.userCities = details['city']
+        // this.userState = details['state']
         // this.userCountries = details['country']  //userCountries need to get from store countries
         // later add function to calculate delivery charges
     }

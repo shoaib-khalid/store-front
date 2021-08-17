@@ -1519,15 +1519,21 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
             // this.updateCartItem(itemId, operation);
             this.putCartItem(itemId, productId, itemCode , this.cartitemDetails[index].quantity);
 
-            this.subTotal = 0;
-            this.cartitemDetailsCount = 0;
-            await this.cartitemDetails.forEach(allItem => {
-                // console.log("itemId: "+itemId+"\n"+"allItem.itemId: "+JSON.stringify(allItem.id)+"\n");
-                this.subTotal = this.subTotal + allItem.price;
-                this.cartitemDetailsCount = this.cartitemDetailsCount + allItem.quantity
-                // console.log("OK OK OK")
-                // console.log("miqdaad: "+JSON.stringify(allItem.quantity * allItem.price)+"\n");
-            });
+
+            // const cart_details = await this.getItemDetails(this.cartID)
+
+            // console.log('retrieve cart detail: ', cart_details)
+
+            // console.log('cartitem: ', this.cartitemDetails)
+            // this.subTotal = 0;
+            // this.cartitemDetailsCount = 0;
+            // await this.cartitemDetails.forEach(allItem => {
+            //     // console.log("itemId: "+itemId+"\n"+"allItem.itemId: "+JSON.stringify(allItem.id)+"\n");
+            //     // this.subTotal = this.subTotal + allItem.price;
+            //     this.cartitemDetailsCount = this.cartitemDetailsCount + allItem.quantity
+            //     // console.log("OK OK OK")
+            //     // console.log("miqdaad: "+JSON.stringify(allItem.quantity * allItem.price)+"\n");
+            // });
 
         }
         
@@ -1568,14 +1574,39 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
         }
 
         this.apiService.putCartItem(data).subscribe((res: any) => {
-            console.log('updateCartItem result: ', res)
+            console.log('putCartItem result: ', res)
             if (res.message){
                 console.log('operation successfull')
+                this.checkBackCart();
             } else {
                 console.log('operation failed')
             }
         }, error => {
             console.log(error)
+        }) 
+    }
+
+    checkBackCart(){
+        this.apiService.getCartItemByCartID(this.cartID).subscribe(async (res: any) => {
+            // console.log('cart item by cart ID 3: ', res.data.content)
+
+            this.cartitemDetails = []
+
+            if (res.message){
+                this.cartitemDetails = res.data.content;
+
+                this.subTotal = 0;
+                this.cartitemDetailsCount = 0;
+
+                await this.cartitemDetails.forEach(allItem => {
+                    this.subTotal = this.subTotal + allItem.price;
+                    this.cartitemDetailsCount = this.cartitemDetailsCount + allItem.quantity
+
+                });
+            }
+        }, error => {
+            // Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
+
         }) 
     }
 

@@ -85,7 +85,17 @@ export class RedirectionComponent implements OnInit {
         const url = "https://" + this.subDomain + ".symplified.store/thankyou/"+this.status_id+"/"+this.msg
         // const testurl = "http://" + this.subDomain + ".test:4200/thankyou/"+this.status_id+"/"+this.msg
 
-        window.open(url);
+        // open(location, '_self').close();
+        window.open(url,"_self");
+        // window.close();
+        // window.location.replace(url);
+        // window.location.href = url;
+
+        // var method = 'get';
+        // var form = document.createElement('form');
+        // form.setAttribute('method', method);
+        // form.setAttribute('action', url);
+        // form.submit();
         
   }
 

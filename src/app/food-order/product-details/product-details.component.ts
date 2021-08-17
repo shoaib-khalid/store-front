@@ -48,6 +48,7 @@ export class ProductDetailsComponent implements OnInit {
     inputQty:any;
 
     cartID:any;
+    cartitemDetails:any = {};
     cartitemDetailsCount:any;
     senderID:any;
 
@@ -219,16 +220,27 @@ export class ProductDetailsComponent implements OnInit {
         return new Promise(resolve => {
 
             // check count Item in Cart 
-            this.apiService.getCartItemByCartID(cartID).subscribe((res: any) => {
+            this.apiService.getCartItemByCartID(cartID).subscribe(async (res: any) => {
                 // console.log('cart item by cart ID 3: ', res.data.content)
 
                 resolve(res.data.content)
 
-                if (res.message){
-                    // this.cartitemDetails = res.data.content;
-                    // this.cartitemDetailsCount = this.cartitemDetails.length;
+                this.cartitemDetails = []
 
-                    // this.inputQty = 1;
+                if (res.message){
+
+                    var quantity = 0;
+
+                    this.cartitemDetails = res.data.content;
+
+                    await this.cartitemDetails.forEach(item => {
+
+                        quantity = quantity + item.quantity
+                        // console.log("miqdaad: "+JSON.stringify(allItem.quantity * allItem.price)+"\n");
+                    });
+
+                    this.cartitemDetailsCount = quantity
+                    
                 }
 
             }, error => {
