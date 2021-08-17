@@ -85,7 +85,8 @@
                                     {{emailError}}
                                 </div>
 
-                                <input type="text" id="msisdn" name="userMsisdn" aria-describedby="phoneFeedback" [(ngModel)]="userMsisdn" [(value)]="userMsisdn" autocomplete="disabled" placeholder="Phone No" (focusout)="toRepopulate('userMsisdn')" required>
+                                <!-- remove focusout(toRepopulate) in phonenumber field, for future use when API query by phonenumber is ready  -->
+                                <input type="text" id="msisdn" name="userMsisdn" aria-describedby="phoneFeedback" [(ngModel)]="userMsisdn" [(value)]="userMsisdn" autocomplete="disabled" placeholder="Phone No" required>
                                 <div id="phoneFeedback" class="invalid-feedback">
                                     {{phoneError}}
                                 </div>
@@ -251,8 +252,8 @@
                                     <div id="emailFeedback" class="invalid-feedback">
                                         {{emailError}}
                                     </div>
-
-                                    <input type="text" id="msisdn" name="userMsisdn" aria-describedby="phoneFeedback" [(ngModel)]="userMsisdn" [(value)]="userMsisdn" autocomplete="disabled" placeholder="Phone No" (focusout)="toRepopulate('userMsisdn')" required>
+                                    <!-- remove focusout(toRepopulate) in phonenumber field, for future use when API query by phonenumber is ready  -->
+                                    <input type="text" id="msisdn" name="userMsisdn" aria-describedby="phoneFeedback" [(ngModel)]="userMsisdn" [(value)]="userMsisdn" autocomplete="disabled" placeholder="Phone No" required>
                                     <div id="phoneFeedback" class="invalid-feedback">
                                         {{phoneError}}
                                     </div>

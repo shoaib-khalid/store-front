@@ -125,6 +125,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
     allowStorePickup: boolean = false;
     isCustNote: boolean = false;
     isSaved: boolean = true;
+    customer_id:any;
 
     constructor(
         private _databindService: DataBindService,
@@ -307,6 +308,8 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
         var todayDay = this.dayArr[currentDate.getDay()];
         var browserTime = new Date();
 
+        // alert(currentDate)
+
         this.storeTimingObj = storeInfo['storeTiming']
 
         this.storeTimingObj.forEach( obj => {
@@ -412,6 +415,8 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
         }
 
         console.log("initOrder initiated:");
+
+        // alert(this.userMsisdn)
         
         const orderId = await this.postInitOrder();
         this.addItemOrder(orderId['id'])
@@ -820,7 +825,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
 
         const customer = await this.getCustomerProfileByEmail(this.userEmail)
         console.log("customer data...", customer)
-        uuid = customer['id'];
+        this.customer_id = customer['id'];
         this.userMsisdn = customer['phoneNumber']
         this.userName = customer['name']
         // this.userAddress = customer['address']
@@ -1201,7 +1206,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
                 "cartId": this.cartID,
                 "completionStatus": "RECEIVED_AT_STORE",
                 "created": "",
-                "customerId": this.senderID,
+                "customerId": this.customer_id,
                 "customerNotes": this.customerNotes,
                 "deliveryCharges": this.deliveryFee,
                 "id": "",
@@ -1240,6 +1245,9 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
                 "total": this.totalPrice,
                 "updated": ""
             }
+
+            alert(JSON.stringify(data))
+            // console.log("result: "+ JSON.stringify(result))
 
             this.apiService.postInitOrder(data, this.isSaved).subscribe(async (res: any) => {
                 console.log('updateCartItem result: ', res)
