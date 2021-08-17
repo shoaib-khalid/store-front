@@ -825,13 +825,19 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
 
         const customer = await this.getCustomerProfileByEmail(this.userEmail)
         console.log("customer data...", customer)
+
+        // alert(JSON.stringify(customer));
+
         this.customer_id = customer['id'];
         this.userMsisdn = customer['phoneNumber']
         this.userName = customer['name']
-        // this.userAddress = customer['address']
-        // this.userPostcode = customer['postCode']
-        // this.userCities = customer['city']
-        // this.userState = customer['state']
+
+        this.userAddress = customer['customerAddress'][0]['address']
+        this.userPostcode = customer['customerAddress'][0]['postCode']
+        this.userCities = customer['customerAddress'][0]['city']
+        this.userState = customer['customerAddress'][0]['state']
+
+        await this.toValidate();
 
         // console.log('uuid: ' + uuid)
 
@@ -1246,7 +1252,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
                 "updated": ""
             }
 
-            alert(JSON.stringify(data))
+            // alert(JSON.stringify(data))
             // console.log("result: "+ JSON.stringify(result))
 
             this.apiService.postInitOrder(data, this.isSaved).subscribe(async (res: any) => {
