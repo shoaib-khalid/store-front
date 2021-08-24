@@ -272,8 +272,8 @@ export class ApiService {
             "&featured=true" +
             "&page=0" +
             "&pageSize=20" +
-            "&seoName=" +
-            name;
+            "&seoName=" + name +
+            "&status=ACTIVE";
 
         console.log('URL: ' + this.productServiceURL + url)
 
