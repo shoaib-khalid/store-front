@@ -127,6 +127,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
     addToWeight: any;
     addToSku: any;
     addToInstruction: string = "";
+    sortBy:any = 0;
 
     constructor(
         private _databindService: DataBindService, 
@@ -277,7 +278,8 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
                 // since checkout page does query store service , i passed this storeDeliveryPercentage via local storage.. lol
                 this.storeDeliveryPercentage = data.serviceChargesPercentage;
 
-                this.getProduct(this.catId)
+                // this.getProduct(this.catId)
+                this.getProduct(this.catId ,this.sortBy)
 
                 // this.getProductNew();
                 this.getCategory();
@@ -325,13 +327,17 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
 
     }
 
-    getProduct(categoryId) {
+    getProduct(categoryId, sortId) {
+
+        // alert(categoryId + " | " + sortId)
+
+        this.catId = categoryId
 
         this.catalogueList = []
 
         // console.log('Calling Backend getProductSByStoreID');
         // this.apiService.getProductSByStoreID(this.storeID).subscribe((res: any) => {
-        this.apiService.getProductSByCategory(categoryId, this.storeID).subscribe((res: any) => {
+        this.apiService.getProductSByCategory(categoryId, this.storeID, sortId).subscribe((res: any) => {
             // console.log('Receive Backend getProductSByStoreID');
             if (res.message) {
                 this.product = res.data.content;
@@ -420,6 +426,12 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
         }, error => {
             console.log(error)
         }) 
+    }
+
+    sortByValue(){
+        // alert('value: ' + this.sortBy)
+
+        this.getProduct(this.catId ,this.sortBy)
     }
 
     async flow_anonymCheckCartItem(){
@@ -572,7 +584,8 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     skipMerchantInfo(){
-        this.getProduct(this.catId);
+        // this.getProduct(this.catId);
+        this.getProduct(this.catId ,this.sortBy)
         // this.getProductNew();
         this.getCategory();
 
@@ -1440,30 +1453,30 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
         console.log('Change Quantity: ' + this.inputQty);
     }
 
-    onGetCategoriesItem(categoryId){
+    // onGetCategoriesItem(categoryId, sortId){
 
-        // alert('here')
+    //     // alert('here')
         
 
-        console.log('Category ID: ' + categoryId);
+    //     console.log('Category ID: ' + categoryId);
 
-        this.apiService.getProductSByCategory(categoryId, this.storeID).subscribe((res: any) => {
-            console.log('getProductSByCategory resp:', res.data.content)
-            let new_product = res.data.content;
-            if (res.message) {
-                // this.details = product_details;
-                // this.detailPrice = product_details.productInventories.price;
-                this.product = new_product;
-                console.log('new product: ', this.product);
-            } else {
+    //     this.apiService.getProductSByCategory(categoryId, this.storeID, sortId).subscribe((res: any) => {
+    //         console.log('getProductSByCategory resp:', res.data.content)
+    //         let new_product = res.data.content;
+    //         if (res.message) {
+    //             // this.details = product_details;
+    //             // this.detailPrice = product_details.productInventories.price;
+    //             this.product = new_product;
+    //             console.log('new product: ', this.product);
+    //         } else {
 
-            }
+    //         }
 
-        }, error => {
-            console.log(error)
-        }) 
+    //     }, error => {
+    //         console.log(error)
+    //     }) 
 
-    }
+    // }
 
     onIndexChanged(idx) {
         this.idx = idx;

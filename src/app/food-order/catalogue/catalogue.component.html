@@ -100,7 +100,7 @@
                             </div> -->
                         </ng-template>
                         
-                        <a (click)="getProduct(item.id)" class="text-center selected" id="price" style="margin: 5px; font-size: 13px; font-weight: bold;">{{ item.name }}</a>
+                        <a (click)="getProduct(item.id, sortId)" class="text-center selected" id="price" style="margin: 5px; font-size: 13px; font-weight: bold;">{{ item.name }}</a>
                     </div>
                 </div> 
             </div>
@@ -160,12 +160,28 @@
 
 <div class="container" style="padding-top: 20px; padding-bottom: 100px;">
     <div class="row">
-        <!-- <div class="col-lg-9 col-sm-12 col-md-12 col-xs-12">
-            <h4>PRODUCT LIST</h4>
-        </div> -->
-        <div class="col-lg-3 col-sm-12 col-md-12 col-xs-12">
+        <div class="col-lg-10 col-sm-12 col-md-12 col-xs-12">
+            <!-- <h4>PRODUCT LIST</h4> -->
+        </div>
+        <div class="col-lg-2 col-sm-12 col-md-12 col-xs-12">
             <!-- <button (click)="initOrder()">TEST</button> -->
             <!-- <input type="text" class="form-control search-bar" style="border-radius: 5px;" placeholder="search"> -->
+            <!-- <select class="custom-select custom-select-sm">
+                <option selected>Sort By</option>
+                <option value="1">Cheapest</option>
+                <option value="2">Most Expensive</option>
+                <option value="3">Name</option>
+                <option value="4">Most Recent</option>
+            </select> -->
+            <select name="sortBy" class="custom-select custom-select-sm" [(ngModel)]="sortBy" (change)="sortByValue()">
+                <option selected disabled value="0">Sort By</option>
+                <option value="1">Cheapest</option>
+                <option value="2">Most Expensive</option>
+                <option value="3">Name (A-Z)</option>
+                <option value="4">Name (Z-A)</option>
+                <option value="5">Most Recent</option>
+            </select>
+            
         </div>
     </div>
     <hr>

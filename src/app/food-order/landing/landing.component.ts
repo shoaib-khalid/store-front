@@ -1351,30 +1351,30 @@ export class LandingComponent implements OnInit, AfterViewInit, OnDestroy {
         console.log('Change Quantity: ' + this.inputQty);
     }
 
-    onGetCategoriesItem(categoryId){
+    // onGetCategoriesItem(categoryId){
 
-        // alert('here')
+    //     // alert('here')
         
 
-        console.log('Category ID: ' + categoryId);
+    //     console.log('Category ID: ' + categoryId);
 
-        this.apiService.getProductSByCategory(categoryId, this.storeID).subscribe((res: any) => {
-            console.log('getProductSByCategory resp:', res.data.content)
-            let new_product = res.data.content;
-            if (res.message) {
-                // this.details = product_details;
-                // this.detailPrice = product_details.productInventories.price;
-                this.product = new_product;
-                console.log('new product: ', this.product);
-            } else {
+    //     this.apiService.getProductSByCategory(categoryId, this.storeID).subscribe((res: any) => {
+    //         console.log('getProductSByCategory resp:', res.data.content)
+    //         let new_product = res.data.content;
+    //         if (res.message) {
+    //             // this.details = product_details;
+    //             // this.detailPrice = product_details.productInventories.price;
+    //             this.product = new_product;
+    //             console.log('new product: ', this.product);
+    //         } else {
 
-            }
+    //         }
 
-        }, error => {
-            console.log(error)
-        }) 
+    //     }, error => {
+    //         console.log(error)
+    //     }) 
 
-    }
+    // }
 
     onIndexChanged(idx) {
         this.idx = idx;

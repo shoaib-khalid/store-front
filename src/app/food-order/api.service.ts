@@ -231,31 +231,56 @@ export class ApiService {
 
     // https://api.symplified.biz/product-service/v1/stores/b91e95f5-4af5-40ff-b7d2-d90b67eb595b/
     // products?pageSize=10&page=0&status=ACTIVE&categoryId=ad3e14db-54c8-4595-ba57-ee6c450bab99
-    getProductSByCategory(categoryId, storeID) {
+    getProductSByCategory(categoryId, storeID, sortId) {
         const header = {
             headers: new HttpHeaders().set("Authorization", `Bearer ${this.token}`),
         };
+        
+Endpoint: http://localhost:7071/stores/storeId/products?sortByCol=price&sortingOrder=DESC
 
-        // const url =
-        //     "products?categoryId="+ categoryId +
-        //     "&featured=true" +
-        //     "&page=0" +
-        //     "&pageSize=20" +
-        //     "&storeId=" +
-        //     storeID;
+        if(sortId == 1){
+            // cheapest
+            var url =
+            "stores/"+storeID+"/products?pageSize=10" +
+            "&page=0" +
+            "&status=ACTIVE" +
+            "&categoryId=" + categoryId +
+            "&sortByCol=price" + 
+            "&sortingOrder=ASC";
 
-        const url =
+        }else if(sortId == 2){
+            // expensive
+            var url =
+            "stores/"+storeID+"/products?pageSize=10" +
+            "&page=0" +
+            "&status=ACTIVE" +
+            "&categoryId=" + categoryId +
+            "&sortByCol=price" + 
+            "&sortingOrder=DESC";
+        }else if(sortId == 3){
+            // by A-Z 
+            var url =
+            "stores/"+storeID+"/products?pageSize=10" +
+            "&page=0" +
+            "&status=ACTIVE" +
+            "&categoryId=" + categoryId +
+            "&sortingOrder=ASC";
+        }else if(sortId == 4){
+            // by Z-A
+            var url =
+            "stores/"+storeID+"/products?pageSize=10" +
+            "&page=0" +
+            "&status=ACTIVE" +
+            "&categoryId=" + categoryId +
+            "&sortingOrder=DESC";
+        }else{
+            // non sorted 
+            var url =
             "stores/"+storeID+"/products?pageSize=10" +
             "&page=0" +
             "&status=ACTIVE" +
             "&categoryId=" + categoryId;
-            
-            // categoryId="+ categoryId +
-            // "&featured=true" +
-            // "&page=0" +
-            // "&pageSize=20" +
-            // "&storeId=" +
-            // storeID;
+        }
 
         return this.http.get(this.productServiceURL + url, header);
     }
@@ -272,8 +297,8 @@ export class ApiService {
             "&featured=true" +
             "&page=0" +
             "&pageSize=20" +
-            "&seoName=" + name +
-            "&status=ACTIVE";
+            "&seoName=" +
+            name;
 
         console.log('URL: ' + this.productServiceURL + url)
 
