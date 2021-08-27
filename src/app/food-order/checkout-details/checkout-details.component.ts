@@ -669,23 +669,23 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
         
         let data = { 
             "cartId": this.cartID, 
-            "customerId": "faisal", 
+            "customerId": this.customer_id, 
             "orderPaymentDetails": { 
-                "accountName": "Faisal Hayat", 
-                "deliveryQuotationAmount": 14.55, 
-                "deliveryQuotationReferenceId": "34", 
-                "gatewayId": "1" 
+                "accountName": this.userName, 
+                "deliveryQuotationAmount": this.deliveryFee, 
+                "deliveryQuotationReferenceId": this.deliveryRef, 
+                "gatewayId": "" 
             }, 
             "orderShipmentDetails": { 
-                "address": "First Subang, Unit S-14-09, Level 14, Jalan SS15/4G, 47500 Subang Jaya, Selangor",
-                "city": "Subang Jaya", 
-                "country": "Malaysia", 
-                "deliveryProviderId": 1, 
-                "email": "faisal.hayat@kalsym.com", 
-                "phoneNumber": "0192802728", 
-                "receiverName": "Faisal Hayat", 
-                "state": "Selangor", 
-                "zipcode": "40150" 
+                "address": this.userAddress,
+                "city": this.userCities, 
+                "country": this.userCountries, 
+                "deliveryProviderId": this.providerId, 
+                "email": this.userEmail, 
+                "phoneNumber": this.userMsisdn, 
+                "receiverName": this.userName, 
+                "state": this.userState, 
+                "zipcode": this.userPostcode
             }
         }
 
