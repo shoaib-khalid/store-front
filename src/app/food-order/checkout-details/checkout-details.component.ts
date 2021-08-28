@@ -455,6 +455,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
             let productName = cartItem.productName
             let specialInstruction = cartItem.specialInstruction
             let price = cartItem.price
+            let productPrice = cartItem.productPrice
 
 
             console.log("Checkout SKU: "+ sku);
@@ -463,7 +464,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
             // console.log("realOrderId: "+ JSON.stringify(realOrderId) + "")
             // console.log("realOrderId: "+ JSON.stringify(orderId) + "")
 
-            this.postAddItemToOrder(itemCode,orderId,price,productId,price,quantity,sku,weight,productName,specialInstruction);
+            this.postAddItemToOrder(itemCode,orderId,price,productId,productPrice,quantity,sku,weight,productName,specialInstruction);
     
             // await this.allProductInventory.forEach(allItem => {
     
@@ -506,7 +507,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
         "\norderId: " + orderId +
         "\nprice: " + price +
         "\nproductId: " + productId +
-        "\nproductPrice: " + price +
+        "\nproductPrice: " + productPrice +
         "\nquantity: " + quantity +
         "\nsku: " + sku +
         "\nweight: " + weight) +
