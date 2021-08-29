@@ -1,6 +1,6 @@
 {
   "name": "store-front",
-  "version": "1.4.2-alpha",
+  "version": "1.4.3-alpha",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",

@@ -870,7 +870,11 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
             && this.userCities && this.userState && this.userCountries) {
 
                 this.allFieldValidated = true;
-                this.getDeliveryFee()
+
+                // only if viewForm true get deliveryFees 
+                if(this.viewForm){
+                    this.getDeliveryFee()
+                }
 
                 // if(this.isSelfPickup == false){
                 //     this.getDeliveryFee()
@@ -1012,7 +1016,11 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
         // alert(event.target.checked)
 
         if(this.isSelfPickup){
+
+            // alert('hello')
             this.viewForm = !this.viewForm
+
+            // alert(this.viewForm);
 
             this.showProvider = false;
             this.showCounter = false
