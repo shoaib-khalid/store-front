@@ -273,6 +273,15 @@ Endpoint: http://localhost:7071/stores/storeId/products?sortByCol=price&sortingO
             "&status=ACTIVE" +
             "&categoryId=" + categoryId +
             "&sortingOrder=DESC";
+        }else if(sortId == 5){
+            // by Most Recent
+            var url =
+            "stores/"+storeID+"/products?pageSize=10" +
+            "&page=0" +
+            "&status=ACTIVE" +
+            "&categoryId=" + categoryId +
+            "&sortByCol = created" +
+            "&sortingOrder=DESC";
         }else{
             // non sorted 
             var url =
