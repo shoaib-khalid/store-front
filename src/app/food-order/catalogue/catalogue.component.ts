@@ -1608,6 +1608,8 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
             if (res.message){
                 this.cartitemDetails = res.data.content;
 
+                console.log('checkBackCart: ', this.cartitemDetails)
+
                 this.subTotal = 0;
                 this.cartitemDetailsCount = 0;
 
