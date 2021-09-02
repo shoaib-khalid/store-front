@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { CookieService } from 'ngx-cookie-service';
 import { ApiService } from './../api.service';
+import { PlatformLocation } from "@angular/common";
 
 @Component({
   selector: 'app-redirection',
@@ -27,12 +28,17 @@ export class RedirectionComponent implements OnInit {
     msg: any;
     subDomain: string;
 
+    currBaseURL:any;
+    localURL:any;
+
   constructor(
     private route: Router,
     private activatedRoute: ActivatedRoute,
     private cookieService: CookieService,
     private apiService: ApiService,
+    private platformLocation: PlatformLocation
   ) {
+
 
     // { path: "return/:name/:email/:phone/:amount/:hash/:status_id/:order_id/:transaction_id/:msg", component: RedirectionComponent },
 
@@ -81,8 +87,13 @@ export class RedirectionComponent implements OnInit {
 
         this.subDomain = getMerchantInfo['domain']
 
+        this.currBaseURL = (this.platformLocation as any).location.origin;
+        // var domainTLD = this.currBaseURL.split('.')[2];
+        var domainTLD = this.currBaseURL.split('.')[1] + "." + this.currBaseURL.split('.')[2]
 
-        const url = "https://" + this.subDomain + ".symplified.store/thankyou/"+this.status_id+"/"+this.msg
+        // console.log(this.currBaseURL);
+
+        const url = "https://" + this.subDomain + "." + domainTLD + "/thankyou/"+this.status_id+"/"+this.msg
         // const testurl = "http://" + this.subDomain + ".test:4200/thankyou/"+this.status_id+"/"+this.msg
 
         // open(location, '_self').close();
