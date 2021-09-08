@@ -25,6 +25,22 @@
                                     </div> -->
                                     <span id="price">{{currencySymbol}} {{ (item.quantity * item.productPrice) | number : '1.2-2' }}</span>
                                 </div>
+                                <!-- <div class="row" *ngIf="item.productInventory">
+                                    <div class="col">
+                                        <small class="text-danger">
+                                            <span class="badge badge-pill badge-warning" *ngFor="let variant_details of item.productInventory.productInventoryItemList" style="margin-right: 5px;">
+                                                {{variant_details.productVariantAvailable.value}}
+                                            </span>
+                                        </small>
+                                    </div>
+                                </div> -->
+                                <div class="col-12 text-left" *ngIf="item.productInventory">
+                                    <small class="text-danger">
+                                        <span class="badge badge-pill badge-warning" *ngFor="let variant_details of item.productInventory.productInventoryItemList" style="margin-right: 5px;">
+                                            {{variant_details.productVariantAvailable.value}}
+                                        </span>
+                                    </small>
+                                </div>
                                 <div class="col-12 text-left" *ngIf="item.specialInstruction">
                                     <small class="text-muted" >Instruction: <strong>{{item.specialInstruction}}</strong></small>
                                 </div>
@@ -205,7 +221,7 @@
                                     <div class="row">
                                         <div class="col">
                                             <div class="col text-left">
-                                                <span class="subtotal">SERVICE CHARGES ({{storeDeliveryPercentage}}%)</span>
+                                                <span class="subtotal">{{vertical_fees_txt}} ({{storeDeliveryPercentage}}%)</span>
                                                 <span id="price" style="float: right; padding-right: 38px;">{{currencySymbol}} {{totalServiceCharges | number: '1.2-2'}}</span>
                                             </div>
                                         </div>
@@ -301,7 +317,7 @@
                                         <div class="row">
                                             <div class="col">
                                                 <div class="col text-left">
-                                                    <span class="subtotal">SERVICE CHARGES ({{storeDeliveryPercentage}}%)</span>
+                                                    <span class="subtotal">{{vertical_fees_txt}} ({{storeDeliveryPercentage}}%)</span>
                                                     <span id="price" style="float: right; padding-right: 38px;">{{currencySymbol}} {{totalServiceCharges | number: '1.2-2'}}</span>
                                                 </div>
                                             </div>

@@ -476,6 +476,15 @@ data-backdrop="static" data-keyboard="false">
                                     </button>
                                 </div>
                             </div>
+                            <div class="row" *ngIf="item.productInventory">
+                                <div class="col">
+                                    <small class="text-danger">
+                                        <span class="badge badge-pill badge-warning" *ngFor="let variant_details of item.productInventory.productInventoryItemList" style="margin-right: 5px;">
+                                            {{variant_details.productVariantAvailable.value}}
+                                        </span>
+                                    </small>
+                                </div>
+                            </div>
                             <div class="row" *ngIf="item.specialInstruction">
                                 <div class="col">
                                     <small class="text-muted" >Instruction: <strong>{{item.specialInstruction}}</strong></small>
@@ -520,6 +529,15 @@ data-backdrop="static" data-keyboard="false">
                                     <button type="button" class="close" aria-label="Close">
                                         <span (click)="deleteItem(item.id, item.productId)" aria-hidden="true"><fa-icon [icon]="iconTrash" class="iconStyle"></fa-icon></span>
                                     </button>
+                                </div>
+                            </div>
+                            <div class="row" *ngIf="item.productInventory">
+                                <div class="col">
+                                    <small class="text-danger">
+                                        <span class="badge badge-pill badge-warning" *ngFor="let variant_details of item.productInventory.productInventoryItemList" style="margin-right: 5px;">
+                                            {{variant_details.productVariantAvailable.value}}
+                                        </span>
+                                    </small>
                                 </div>
                             </div>
                             <div class="row" *ngIf="item.specialInstruction">
@@ -640,4 +658,20 @@ data-backdrop="static" data-keyboard="false">
 </div>
 
   
-  
+<!-- <div *ngIf="visible">
+    <ngx-spinner bdColor = "rgba(0, 0, 0, 0.8)" 
+    size = "default" 
+    color = "#fff" 
+    type = "square-jelly-box" 
+    [fullScreen] = "true">
+        <p style="color: white" > Loading... </p>
+    </ngx-spinner>
+</div> -->
+
+<ngx-spinner
+    size = "default" 
+    color = "#fff" 
+    type = "line-spin-fade" 
+    [fullScreen] = "true">
+        <p style="color: white" > Loading... </p>
+    </ngx-spinner>

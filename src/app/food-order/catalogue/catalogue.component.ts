@@ -19,6 +19,7 @@ import Swal from 'sweetalert2'
 import { PlatformLocation } from "@angular/common";
 import { not } from '@angular/compiler/src/output/output_ast';
 import { finished } from 'stream';
+import { NgxSpinnerService } from "ngx-spinner";
 
 
 
@@ -128,6 +129,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
     addToSku: any;
     addToInstruction: string = "";
     sortBy:any = 0;
+    visible:boolean = false;
 
     constructor(
         private _databindService: DataBindService, 
@@ -135,7 +137,8 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
         private activatedRoute: ActivatedRoute,
         private mScrollbarService: MalihuScrollbarService,
         private apiService: ApiService,
-        private platformLocation: PlatformLocation
+        private platformLocation: PlatformLocation,
+        private spinner: NgxSpinnerService
     ) { 
         
         // init clear localStorage
@@ -227,6 +230,10 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     ngOnInit(): void {
+
+        /** spinner starts on init */
+        this.spinner.show();
+
         console.log('Catalogue On Page Load');
         // this is for initial base setup 
         if(!this.storeID){
@@ -240,7 +247,29 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
             this.getAssets(this.storeID)
             // this.assets = assetData
         }
+
+        // setTimeout(() => {
+        // /** spinner ends after 5 seconds */
+        // this.spinner.hide();
+        // alert('after 2 sec')
+        // }, 2000);
     }
+
+    // showSpinner() {
+    //     // visible return true 
+    //     this.visible = true;
+
+    //     // calling function after 2 second 
+    //     setTimeout(() => {;
+    //         this.hideSpinner()
+    //     }, 1500);
+    // }
+
+    // hideSpinner(){
+    //     // visible return false 
+    //     this.visible = false;
+    //     // this.spinner.hide();
+    // }
 
 
     goToLanding(){
@@ -252,6 +281,10 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
             console.log('ASSET Data: ', res)
 
             this.logoImage = res.data.logoUrl
+
+            // hide spinner after banner assets loaded 
+            this.spinner.hide();
+
         }, error => {
             // Swals.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
         }) 
@@ -277,7 +310,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.storeID = data.id;
                 // since checkout page does query store service , i passed this storeDeliveryPercentage via local storage.. lol
                 this.storeDeliveryPercentage = data.serviceChargesPercentage;
-
+                
                 // this.getProduct(this.catId)
                 this.getProduct(this.catId ,this.sortBy)
 
@@ -330,6 +363,9 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
     getProduct(categoryId, sortId) {
 
         // alert(categoryId + " | " + sortId)
+
+        // this.visible = true;
+        this.spinner.show();
 
         this.catId = categoryId
 
@@ -399,6 +435,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
                             //     }
                             // })
                         }
+                        
 
                     }else{
                         this.minVal = 0;
@@ -420,9 +457,17 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
                 console.log('initial catalogue product: ', this.catalogueList)
                 console.log('all product inventories: ', this.allProductInventory)
 
+                // this.visible = true;
+
+                // alert(this.visible)
+
             } else {
                 // condition if required for different type of response message 
             }
+
+            // hide after got response 
+            this.spinner.hide();
+
         }, error => {
             console.log(error)
         }) 

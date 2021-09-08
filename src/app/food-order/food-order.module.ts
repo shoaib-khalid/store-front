@@ -33,6 +33,7 @@ import { RedirectionComponent } from './redirection/redirection.component';
 
 import { CookieService } from 'ngx-cookie-service';
 import { OrderModule } from 'ngx-order-pipe';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 
 @NgModule({
@@ -63,7 +64,8 @@ import { OrderModule } from 'ngx-order-pipe';
     NgPipesModule,
     FormsModule,
     NgxSpinnerModule,
-    OrderModule
+    OrderModule,
+    BrowserAnimationsModule
   ],
   exports: [
     StepCheckoutComponent,

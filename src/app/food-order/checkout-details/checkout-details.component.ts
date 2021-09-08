@@ -126,6 +126,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
     isCustNote: boolean = false;
     isSaved: boolean = true;
     customer_id:any;
+    vertical_fees_txt:string = "SERVICE CHARGES"
 
     constructor(
         private _databindService: DataBindService,
@@ -303,6 +304,14 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
         }
 
         console.log('symbol currency: ', this.currencySymbol)
+
+        if(storeInfo['verticalCode'] == "FnB" || storeInfo['verticalCode'] == "FnB_PK"){
+            this.vertical_fees_txt = "TAKEAWAY FEE"
+        }
+
+        if(storeInfo['verticalCode'] == "ECommerece" || storeInfo['verticalCode'] == "ECommerece_PK"){
+            this.vertical_fees_txt = "PROCESSING FEE"
+        }
 
         const currentDate = new Date();
         var todayDay = this.dayArr[currentDate.getDay()];
