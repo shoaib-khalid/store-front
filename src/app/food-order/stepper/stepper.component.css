@@ -38,7 +38,7 @@
 /* .breadcrumbs a:hover::after, */
 .breadcrumbs a.active,
 .breadcrumbs a.active::after{
-    background: #f1c40f;
+    background: #ffe259;
 }
 
 .breadcrumbs a::before {

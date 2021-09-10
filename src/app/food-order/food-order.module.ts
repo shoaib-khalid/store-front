@@ -34,6 +34,7 @@ import { RedirectionComponent } from './redirection/redirection.component';
 import { CookieService } from 'ngx-cookie-service';
 import { OrderModule } from 'ngx-order-pipe';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { BannerCatalogueComponent } from './banner-catalogue/banner-catalogue.component';
 
 
 @NgModule({
@@ -51,7 +52,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     ProductDetailsComponent,
     NotFoundComponent,
     LandingComponent,
-    RedirectionComponent
+    RedirectionComponent,
+    BannerCatalogueComponent
   ],
   imports: [
     CommonModule,

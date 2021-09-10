@@ -4,11 +4,11 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { PlatformLocation } from "@angular/common";
 
 @Component({
-  selector: 'food-app-banner',
-  templateUrl: './banner.component.html',
-  styleUrls: ['./banner.component.css']
+  selector: 'food-app-banner-catalogue',
+  templateUrl: './banner-catalogue.component.html',
+  styleUrls: ['./banner-catalogue.component.css']
 })
-export class BannerComponent implements OnInit {
+export class BannerCatalogueComponent implements OnInit {
   currBaseURL: any;
     localURL: any;
     senderID: any;

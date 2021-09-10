@@ -24,6 +24,7 @@
     .bg_banner{
         background-color: #FFE45C; 
         padding-bottom: 130px;
+        padding-top: 45px;
     }
 
   .fb-profile-block {
@@ -60,12 +61,13 @@
       z-index:9;
   }
   .profile-img img {
-    background-color: #FFE45C;
+    background-color: white;
     border-radius: 2px;
     box-shadow: 0 1px 1px rgba(0, 0, 0, 0.07);
     height:160px;
     padding: 5px;
     width:160px;
+    border: 1px solid rgb(207, 136, 3);
     
   }
   .profile-name {
@@ -141,6 +143,7 @@
       }
 
     .fb-profile-block-thumb{
+
         height: 120px !important;
       }
 
