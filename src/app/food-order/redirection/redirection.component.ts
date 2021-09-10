@@ -89,7 +89,7 @@ export class RedirectionComponent implements OnInit {
 
         this.currBaseURL = (this.platformLocation as any).location.origin;
         // var domainTLD = this.currBaseURL.split('.')[2];
-        var domainTLD = this.currBaseURL.split('.')[1] + "." + this.currBaseURL.split('.')[2]
+        var domainTLD = this.currBaseURL.split('.')[1]
 
         // console.log(this.currBaseURL);
 
