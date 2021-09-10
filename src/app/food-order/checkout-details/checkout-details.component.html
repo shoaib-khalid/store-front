@@ -67,8 +67,8 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-1 col-md-1"></div>
-                <div class="col-lg-5 col-md-5 col-sm-12 col-xs-12 text-center border border-secondary" id="mobilespacer"
+                <!-- <div class="col-lg-1 col-md-1"></div> -->
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 text-center border border-secondary" id="mobilespacer"
                  style="padding: 10px; background-color: white; border-radius: 15px;">
 
                     <div *ngIf="store_close; else storeClosed">
@@ -222,16 +222,35 @@
                                     <div class="row">
                                         <div class="col">
                                             <div class="col text-left">
-                                                <span class="subtotal">{{vertical_fees_txt}} ({{storeDeliveryPercentage}}%)</span>
-                                                <span id="price" style="float: right; padding-right: 38px;">{{currencySymbol}} {{totalServiceCharges | number: '1.2-2'}}</span>
+                                                <span class="subtotal">SUB-TOTAL DISCOUNT {{subTotalDiscountDesc}}</span>
+                                                <span id="price" style="float: right; padding-right: 38px;">{{currencySymbol}} {{subTotalDiscount | number: '1.2-2'}}</span>
+                                                <!-- <hr class="dotted"> -->
                                             </div>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col">
                                             <div class="col text-left">
+                                                <span class="subtotal">{{vertical_fees_txt}} ({{storeDeliveryPercentage}}%)</span>
+                                                <span id="price" style="float: right; padding-right: 38px;">{{currencySymbol}} {{totalServiceCharges | number: '1.2-2'}}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    <div class="row">
+                                        <div class="col">
+                                            <div class="col text-left">
                                                 <span id="price" class="subtotal warning-text">DELIVERY CHARGES</span>
                                                 <span id="price" class="warning-text" style="float: right; padding-right: 38px;">{{currencySymbol}} {{deliveryFee | number: '1.2-2'}}</span>
+                                                <!-- <hr class="dotted"> -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col">
+                                            <div class="col text-left">
+                                                <span class="subtotal">DELIVERY CHARGES DISCOUNT {{deliveryDiscountDesc}}</span>
+                                                <span id="price" style="float: right; padding-right: 38px;">{{currencySymbol}} {{deliveryDiscount | number: '1.2-2'}}</span>
                                                 <!-- <hr class="dotted"> -->
                                             </div>
                                         </div>

@@ -123,6 +123,19 @@ export class ApiService {
         return this.http.get(this.productServiceURL + url, header);
     }
 
+    // Ref : https://api.symplified.biz/order-service/v1/carts/8a4868e2-c5d2-4c7e-8c8f-1547c9736208/discount?deliveryCharge=10.00
+
+    getDiscount(cartId, deliveryCharge){
+        const header = {
+            headers: new HttpHeaders().set("Authorization", `Bearer ${this.token}`),
+        };
+        const url =
+            "carts/" + cartId + 
+            "/discount?deliveryCharge=" + deliveryCharge;
+
+        return this.http.get(this.orderServiceURL + url, header);
+    }
+
     // REf : https://api.symplified.biz/product-service/v1/region-country-state?id=MYS
     getStateByCountryID(countryID){
         const header = {

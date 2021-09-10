@@ -127,6 +127,10 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
     isSaved: boolean = true;
     customer_id:any;
     vertical_fees_txt:string = "SERVICE CHARGES"
+    subTotalDiscount: any = 0;
+    subTotalDiscountDesc: any = "";
+    deliveryDiscount: any = 0;
+    deliveryDiscountDesc: any = "";
 
     constructor(
         private _databindService: DataBindService,
@@ -192,6 +196,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
 
         console.log('allow store pickup : ' + this.allowStorePickup)
 
+        // alert(this.deliveryOption)
         // if(this.deliveryOption == "SELF"){
 
         // }
@@ -1094,147 +1099,151 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
         }
     }
 
-    getDeliveryFee(){
+    async getDeliveryFee(){
 
         // alert('postcode: ' + 
         // this.userPostcode + this.userName + this.userEmail + 
         // this.userMsisdn + this.userAddress + this.userState + 
         // this.userCountries)
 
-        console.log("customerId: "+ this.senderID + // if anonymous
-                    "\ndeliveryProviderId: "+ null+ // current fixed to mr speedy
-                    "\ncartId: "+ this.cartID+
-                    "\nstoreId: "+ this.storeID+
-                    "\ndelivery: "+
-                        "\n\tdeliveryAddress: "+ this.userAddress+
-                        "\n\tdeliveryCity: "+this.userCities+
-                        "\n\tdeliveryContactEmail: "+ this.userEmail+
-                        "\n\tdeliveryContactName: "+ this.userName+
-                        "\n\tdeliveryContactPhone: "+ this.userMsisdn+
-                        "\n\tdeliveryCountry: "+ this.userCountries+
-                        "\n\tdeliveryPostcode: "+ this.userPostcode+
-                        "\n\tdeliveryState: "+ this.userState
-        );
+        const delivery = await this.postGetDelivery()
+        console.log("delivery data...", delivery)
 
-        // return false;
-        let data = {
-            "customerId": this.senderID, // if anonymous
-            "deliveryProviderId": null, // current fixed to mr speedy
-            "cartId": this.cartID,
-            "storeId": this.storeID,
-            "delivery": {
-              "deliveryAddress": this.userAddress,
-              "deliveryCity": this.userCities,
-              "deliveryContactEmail": this.userEmail,
-              "deliveryContactName": this.userName,
-              "deliveryContactPhone": this.userMsisdn,
-              "deliveryCountry": this.userCountries,
-              "deliveryPostcode": this.userPostcode,
-              "deliveryState": this.userState
+        if(this.deliveryOption == "SCHEDULED"){
+    
+            this.providerListing = delivery['data'];
+            this.showProvider = true;
+
+            console.log('PROVIDER: ', this.providerListing)
+        }else{
+
+            if(this.deliveryOption == "ADHOC"){
+                this.deliveryFee = delivery['data'][0]['price'];
+                this.providerId = delivery['data'][0]['providerId'];
+                this.deliveryRef = delivery['data'][0]['refId'];
+                this.deliveryValidUpTo = delivery['data'][0]['validUpTo'];
+                this.serverDateTime = delivery['timestamp'];
+
+                var isError = delivery['data'][0]['isError'];
+                var errorMessage = delivery['message'];
+            }else{
+                this.deliveryFee = delivery['data']['price'];
+                this.providerId = delivery['data']['providerId'];
+                this.deliveryRef = delivery['data']['refId'];
+                this.deliveryValidUpTo = delivery['data']['validUpTo'];
+                this.serverDateTime = delivery['timestamp'];
+
+                var isError = delivery['data']['isError'];
+                var errorMessage = delivery['message'];
             }
-        }
+            
+            // alert('delivery charge: '+this.deliveryFee)
 
-        // console.log("data: "+ JSON.stringify(data));
-        this.apiService.postTogetDeliveryFee(data).subscribe(async (res: any) => {
+            // this.totalPrice = this.subTotal + this.deliveryFee;
+            // console.log('total price : ' + this.totalPrice)
 
-            // console.log('RESPONDEDNTAHSADAHSJHADSAS', res)
-            if (res.message) {
+            if(isError){
 
-                if(this.deliveryOption == "SCHEDULED"){
+                Swal.fire("Oops...", errorMessage, "error")
 
-                    this.providerListing = res.data;
-                    this.showProvider = true;
+            }else{
+                this.hasDeliveryFee = true;
 
-                    console.log('PROVIDER: ', this.providerListing)
-                }else{
+                console.log("server time now(): "+ this.serverDateTime+"\n"+"this.deliveryValidUpTo: "+this.deliveryValidUpTo);
+                this.timerReset = this.timerReset + 1;
 
-                    if(this.deliveryOption == "ADHOC"){
-                        this.deliveryFee = res.data[0].price;
-                        this.providerId = res.data[0].providerId;
-                        this.deliveryRef = res.data[0].refId;
-                        this.deliveryValidUpTo = res.data[0].validUpTo;
-                        this.serverDateTime = res.timestamp;
-
-                        var isError = res.data[0].isError;
-                        var errorMessage = res.data[0].message;
-                    }else{
-                        this.deliveryFee = res.data.price;
-                        this.providerId = res.data.providerId;
-                        this.deliveryRef = res.data.refId;
-                        this.deliveryValidUpTo = res.data.validUpTo;
-                        this.serverDateTime = res.timestamp;
-
-                        var isError = res.data.isError;
-                        var errorMessage = res.data.message;
-                    }
-                    
-                    // alert('delivery charge: '+this.deliveryFee)
-
-                    // this.totalPrice = this.subTotal + this.deliveryFee;
-                    // console.log('total price : ' + this.totalPrice)
-
-                    if(isError){
-
-                        Swal.fire("Oops...", errorMessage, "error")
-
-                    }else{
-                        this.hasDeliveryFee = true;
-
-                        console.log("server time now(): "+ this.serverDateTime+"\n"+"this.deliveryValidUpTo: "+this.deliveryValidUpTo);
-                        this.timerReset = this.timerReset + 1;
-
-                        if(this.deliveryOption == "ADHOC"){
-                            this.timeCounter(this.serverDateTime,this.deliveryValidUpTo);
-                        }
-                        
-                        // calling countPrice again so that deliveryFee included in the FE calculation
-                        // const countTotal = await this.countPrice(this.allProductInventory)
-                        // this.totalPrice = this.subTotal + this.deliveryFee + this.totalServiceCharges
-
-                        // Swal.fire("Delivery Fees", "Additional charges RM " + this.deliveryFee, "info")
-
-                        this.payDisable = false;
-                    }
-
-                    this.totalPrice = this.subTotal + this.deliveryFee + this.totalServiceCharges
-
-                    this.hasInitForm = true;
+                if(this.deliveryOption == "ADHOC"){
+                    this.timeCounter(this.serverDateTime,this.deliveryValidUpTo);
                 }
                 
-            }
-        }, error => {
-            Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
-        }) 
+                // calling countPrice again so that deliveryFee included in the FE calculation
+                // const countTotal = await this.countPrice(this.allProductInventory)
+                // this.totalPrice = this.subTotal + this.deliveryFee + this.totalServiceCharges
 
+                // Swal.fire("Delivery Fees", "Additional charges RM " + this.deliveryFee, "info")
+
+                this.payDisable = false;
+            }
+
+            this.totalPrice = this.subTotal + this.deliveryFee + this.totalServiceCharges
+
+            this.hasInitForm = true;
+        }
+
+
+        const discount = await this.getDiscount(this.cartID, this.deliveryFee)
+        console.log("discount data...", discount)
+
+        this.subTotalDiscount = discount['data']['subTotalDiscount']
+        this.subTotalDiscountDesc = '(' + discount['data']['subTotalDiscountDescription'] + ')'
+        this.deliveryDiscount = discount['data']['deliveryDiscount']
+        this.deliveryDiscountDesc = '(' + discount['data']['deliveryDiscountDescription'] + ')'
+
+        // Recalculate detail price after fetch discount 
+        var newsubTotal = this.subTotal - this.subTotalDiscount
+        var newdeliveryFee = this.deliveryFee - this.deliveryDiscount
+
+        this.totalPrice = newsubTotal + newdeliveryFee + this.totalServiceCharges
+        
+
+    }
+
+    postGetDelivery(){
+        return new Promise(resolve => {
+
+            let data = {
+                "customerId": this.senderID, // if anonymous
+                "deliveryProviderId": null, // current fixed to mr speedy
+                "cartId": this.cartID,
+                "storeId": this.storeID,
+                "delivery": {
+                  "deliveryAddress": this.userAddress,
+                  "deliveryCity": this.userCities,
+                  "deliveryContactEmail": this.userEmail,
+                  "deliveryContactName": this.userName,
+                  "deliveryContactPhone": this.userMsisdn,
+                  "deliveryCountry": this.userCountries,
+                  "deliveryPostcode": this.userPostcode,
+                  "deliveryState": this.userState
+                }
+            }
+    
+            // console.log("data: "+ JSON.stringify(data));
+            this.apiService.postTogetDeliveryFee(data).subscribe(async (res: any) => {
+    
+                // console.log('RESPONDEDNTAHSADAHSJHADSAS', res)
+                if (res.message) {
+    
+                    resolve(res)
+                    
+                }
+            }, error => {
+                Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
+            }) 
+            // console.log("result: "+ JSON.stringify(result))
+        })
+    }
+
+    getDiscount(cartId, deliveryCharge){
+        return new Promise(resolve => {
+    
+            // console.log("data: "+ JSON.stringify(data));
+            this.apiService.getDiscount(cartId, deliveryCharge).subscribe(async (res: any) => {
+    
+                if (res.message) {
+    
+                    resolve(res)
+                    
+                }
+            }, error => {
+                Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
+            }) 
+            // console.log("result: "+ JSON.stringify(result))
+        })
     }
 
     postInitOrder(){
         return new Promise(resolve => {
-            // let data = {
-            //     "cartId": this.cartID,
-            //     "completionStatus": "",
-            //     "created": "",
-            //     "customerId": this.senderID,
-            //     "customerNotes": "",
-            //     "id": "",
-            //     "paymentStatus": "PENDING",
-            //     "privateAdminNotes": "",
-            //     "storeId": this.storeID,
-            //     "subTotal": 0,
-            //     "total": this.totalPrice,
-            //     "updated": "",
-            //     "deliveryContactName": this.userName,
-            //     "deliveryAddress": this.userAddress,  
-            //     "deliveryContactPhone": this.userMsisdn,
-            //     "deliveryPostcode":this.userPostcode,
-            //     "deliveryCity": this.userCities,
-            //     "deliveryState":this.userState,
-            //     "deliveryCountry":this.userCountries,
-            //     "deliveryEmail": this.userEmail,
-            //     "deliveryProviderId": this.providerId,
-            //     "deliveryQuotationReferenceId": this.deliveryRef,
-            //     "deliveryQuotationAmount": this.deliveryFee,
-            // }
 
             let data = {
                 "cartId": this.cartID,
