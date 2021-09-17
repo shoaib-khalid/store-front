@@ -14,23 +14,258 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-12 bg_banner">
-            <div class="fb-profile-block">
-                <div class="fb-profile-block-thumb cover-container bg-image-full border" [ngStyle]="{'background-image': 'url('+ assets['bannerUrl'] +')'}"></div>
-                <div class="profile-img">
-                    <a href="javascript:;">
-                        <img src="{{assets['logoUrl']}}" alt="" title="" style="border-radius: 100px;">        
-                    </a>
+            <div class="row">
+                <div class="col">
+                    <div class="fb-profile-block">
+                        <div *ngIf="bannerExist; else viewDefault" class="fb-profile-block-thumb cover-container bg-image-full border" [ngStyle]="{'background-image': 'url('+ assets['bannerUrl'] +')'}"></div>
+                        <ng-template #viewDefault>
+                            
+
+                            <div *ngIf="isFnb" class="fb-profile-block-thumb cover-container bg-image-full border" 
+                            style="background-image: url(assets/image/banner-fnb.png);"></div>
+
+                            <div *ngIf="isEcomm" class="fb-profile-block-thumb cover-container bg-image-full border" 
+                            style="background-image: url(assets/image/banner-ecomm.jpeg);"></div>
+
+
+                        </ng-template>
+                        
+                        <div *ngIf="bannerExist; else viewLogoDefault" class="profile-img">
+                            <a href="javascript:;">
+                                <img src="{{assets['logoUrl']}}" alt="" title="" style="border-radius: 100px;">        
+                            </a>
+                        </div>
+
+                        <ng-template #viewLogoDefault>
+                            <div class="profile-img">
+                                <a href="javascript:;">
+                                    <img src="assets/image/logo_symplified_bg.png" alt="" title="" style="border-radius: 100px;">        
+                                </a>
+                            </div>
+                        </ng-template>
+
+                        <div class="profile-name">
+                            <h2>{{storeName}}</h2>
+                            <div class="d-none d-sm-none d-md-none d-lg-block d-xl-block">
+                                 <br><small [innerHTML]="storeDescription"></small>
+                            </div>
+                            
+                        </div>
+                    </div>
                 </div>
-                <div class="profile-name">
-                    <h2>{{storeName}} <br> <small [innerHTML]="storeDescription"></small></h2>
-                    <!-- <h5>{{storeDescription}}</h5> -->
-                </div>
-                
+            </div>
+            
+        </div>
+    </div>
+
+</div>
+
+
+<!-- Desktop  -->
+<ng-container *ngIf="(storeDiscount | keyvalue)?.length">
+    <div class="d-none d-sm-none d-md-block d-lg-block d-xl-block">
+        <div class="container">
+            <div class="row">
+                <div class="col-9" style="padding-left: unset; padding-right: unset;">
         
+                    <div *ngIf="is_sales" id="carouselExampleCaptionsSales1" class="carousel slide" data-ride="carousel" data-interval="5000" style="padding: 5px;">
+                        <ol class="carousel-indicators">
+                            <ng-container *ngFor="let item of salesDiscount.storeDiscountTierList; let i = index; let first = first;">
+                                <li data-target="#carouselExampleCaptionsSales1" data-slide-to="i" [ngClass]="{'active': first}"></li>
+                            </ng-container>
+                        </ol>
+                        <div class="carousel-inner" 
+                        style="border-top-left-radius: 15px;
+                        border-bottom-left-radius: 15px;">
+                            <ng-container *ngFor="let item of salesDiscount.storeDiscountTierList; first as isFirst">
+                                <div class="carousel-item" [ngClass]="{'active': isFirst}">
+                                    <img src="assets/image/banner_sales.png" class="d-block w-100" style="max-height: 200px;" alt="...">
+                                    <div class="carousel-caption d-none d-md-block text-dark">
+                                        <h2><b>{{item.discountAmount | number: '1.0-0'}} %</b></h2>
+                                        <p>Total spend from RM {{item.startTotalSalesAmount | number: '1.2-2'}} to RM {{item.endTotalSalesAmount | number: '1.2-2'}}</p>
+                                    </div>
+                                </div>
+                            </ng-container>
+                        </div>
+                        <a class="carousel-control-prev" href="#carouselExampleCaptionsSales1" role="button" data-slide="prev">
+                          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                          <span class="sr-only">Previous</span>
+                        </a>
+                        <a class="carousel-control-next" href="#carouselExampleCaptionsSales1" role="button" data-slide="next">
+                          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                          <span class="sr-only">Next</span>
+                        </a>
+                    </div>
+        
+                    <div *ngIf="is_delivery" id="carouselExampleCaptionsDeliver1" class="carousel slide" data-ride="carousel" data-interval="5000" style="padding: 5px;">
+                        <ol class="carousel-indicators">
+                            <ng-container *ngFor="let item of deliveryDiscount.storeDiscountTierList; let i = index; let first = first;">
+                                <li data-target="#carouselExampleCaptionsDeliver1" data-slide-to="i" [ngClass]="{'active': first}"></li>
+                            </ng-container>
+                        </ol>
+                        <div class="carousel-inner" 
+                        style="border-top-left-radius: 15px;
+                        border-bottom-left-radius: 15px;">
+                            <ng-container *ngFor="let item of deliveryDiscount.storeDiscountTierList; first as isFirst">
+                                <div class="carousel-item" [ngClass]="{'active': isFirst}">
+                                    <img src="assets/image/banner_delivery.png" class="d-block w-100" style="max-height: 200px;" alt="...">
+                                    <div class="carousel-caption d-none d-md-block text-dark">
+                                        <h2><b>{{item.discountAmount | number: '1.0-0'}} %</b></h2>
+                                        <p>Total spend from RM {{item.startTotalSalesAmount | number: '1.2-2'}} to RM {{item.endTotalSalesAmount | number: '1.2-2'}}</p>
+                                    </div>
+                                </div>
+                            </ng-container>
+                        </div>
+                        <a class="carousel-control-prev" href="#carouselExampleCaptionsDeliver1" role="button" data-slide="prev">
+                          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                          <span class="sr-only">Previous</span>
+                        </a>
+                        <a class="carousel-control-next" href="#carouselExampleCaptionsDeliver1" role="button" data-slide="next">
+                          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                          <span class="sr-only">Next</span>
+                        </a>
+                    </div>
+        
+                </div>
+                <div class="col-3">
+                    <div class="row">
+                        <div class="col discount_type" 
+                        style="height: 100px; margin-top: 5px; 
+                        background-image: url(assets/image/banner2.jpg); 
+                        background-size: contain;
+                        border-top-right-radius: 15px;" 
+                        (click)="isSalesDiscount()">
+                            <div class="centered">
+                                <strong>{{salesDiscount.discountName}}</strong><br>
+                                <small>{{salesDiscount.startDate | date:'mediumDate'}} to {{salesDiscount.endDate | date:'mediumDate'}}</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col discount_type" 
+                        style="height: 95px; margin-top: 5px; 
+                        background-image: url(assets/image/banner2.jpg); 
+                        background-size: contain;
+                        border-bottom-right-radius: 15px;"
+                        (click)="isDeliveryDiscount()">
+                            <div class="centered">
+                                <strong>{{deliveryDiscount.discountName}}</strong><br>
+                                <small>{{deliveryDiscount.startDate | date:'mediumDate'}} to {{deliveryDiscount.endDate | date:'mediumDate'}}</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-</div>
+    
+    
+    <!-- Mobile  -->
+    <div class="d-block d-sm-block d-md-none d-lg-none d-xl-none">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="row">
+                        <div class="col discount_type" 
+                        style="height:60px; 
+                        margin-top: 5px; 
+                        margin-left: 5px;
+                        margin-right: 5px;
+                        background-image: url(assets/image/banner2.jpg); 
+                        background-size: contain;
+                        border-radius: 15px;" 
+                        (click)="isSalesDiscount()">
+                            <div class="centered text-center">
+                                <strong>{{salesDiscount.discountName}}</strong><br>
+                                <small>{{salesDiscount.startDate | date:'mediumDate'}} to {{salesDiscount.endDate | date:'mediumDate'}}</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col discount_type" 
+                        style="height: 60px; 
+                        margin-top: 5px; 
+                        margin-left: 5px;
+                        margin-right: 5px;
+                        background-image: url(assets/image/banner2.jpg); 
+                        background-size: contain;
+                        border-radius: 15px;"
+                        (click)="isDeliveryDiscount()">
+                            <div class="centered text-center">
+                                <strong>{{deliveryDiscount.discountName}}</strong><br>
+                                <small>{{deliveryDiscount.startDate | date:'mediumDate'}} to {{deliveryDiscount.endDate | date:'mediumDate'}}</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12" style="padding-left: unset; padding-right: unset;">
+        
+                    <div *ngIf="is_sales" id="carouselExampleCaptionsSales" class="carousel slide" data-ride="carousel" data-interval="5000" style="padding: 5px;">
+                        <ol class="carousel-indicators">
+                            <ng-container *ngFor="let item of salesDiscount.storeDiscountTierList; let i = index; let first = first;">
+                                <li data-target="#carouselExampleCaptionsSales" data-slide-to="i" [ngClass]="{'active': first}"></li>
+                            </ng-container>
+                        </ol>
+                        <div class="carousel-inner" 
+                        style="border-top-left-radius: 15px;
+                        border-radius: 15px;">
+                            <ng-container *ngFor="let item of salesDiscount.storeDiscountTierList; first as isFirst">
+                                <div class="carousel-item" [ngClass]="{'active': isFirst}">
+                                    <img src="assets/image/banner_sales.png" class="d-block w-100" style="height: 150px;" alt="...">
+                                    <div class="carousel-caption text-dark">
+                                        <h6><b>{{item.discountAmount | number: '1.0-0'}} %</b></h6>
+                                        <p>Total spend from RM {{item.startTotalSalesAmount | number: '1.2-2'}} to RM {{item.endTotalSalesAmount | number: '1.2-2'}}</p>
+                                    </div>
+                                </div>
+                            </ng-container>
+                        </div>
+                        <a class="carousel-control-prev" href="#carouselExampleCaptionsSales" role="button" data-slide="prev">
+                          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                          <span class="sr-only">Previous</span>
+                        </a>
+                        <a class="carousel-control-next" href="#carouselExampleCaptionsSales" role="button" data-slide="next">
+                          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                          <span class="sr-only">Next</span>
+                        </a>
+                    </div>
+        
+                    <div *ngIf="is_delivery" id="carouselExampleCaptionsDeliver" class="carousel slide" data-ride="carousel" data-interval="5000" style="padding: 5px;">
+                        <ol class="carousel-indicators">
+                            <ng-container *ngFor="let item of deliveryDiscount.storeDiscountTierList; let i = index; let first = first;">
+                                <li data-target="#carouselExampleCaptionsDeliver" data-slide-to="i" [ngClass]="{'active': first}"></li>
+                            </ng-container>
+                        </ol>
+                        <div class="carousel-inner" 
+                        style="border-top-left-radius: 15px;
+                        border-radius: 15px;">
+                            <ng-container *ngFor="let item of deliveryDiscount.storeDiscountTierList; first as isFirst">
+                                <div class="carousel-item" [ngClass]="{'active': isFirst}">
+                                    <img src="assets/image/banner_delivery.png" class="d-block w-100" style="height: 150px;" alt="...">
+                                    <div class="carousel-caption text-dark">
+                                        <h6><b>{{item.discountAmount | number: '1.0-0'}} %</b></h6>
+                                        <p>Total spend from RM {{item.startTotalSalesAmount | number: '1.2-2'}} to RM {{item.endTotalSalesAmount | number: '1.2-2'}}</p>
+                                    </div>
+                                </div>
+                            </ng-container>
+                        </div>
+                        <a class="carousel-control-prev" href="#carouselExampleCaptionsDeliver" role="button" data-slide="prev">
+                          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                          <span class="sr-only">Previous</span>
+                        </a>
+                        <a class="carousel-control-next" href="#carouselExampleCaptionsDeliver" role="button" data-slide="next">
+                          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                          <span class="sr-only">Next</span>
+                        </a>
+                    </div>
+        
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-container>
+
+
+
 
 <!-- <div id="carouselExampleSlidesOnly">
     <div class="carousel-inner">

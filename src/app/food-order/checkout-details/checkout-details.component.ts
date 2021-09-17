@@ -128,9 +128,10 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
     customer_id:any;
     vertical_fees_txt:string = "SERVICE CHARGES"
     subTotalDiscount: any = 0;
-    subTotalDiscountDesc: any = "";
+    subTotalDiscountDesc: any = "0%";
     deliveryDiscount: any = 0;
-    deliveryDiscountDesc: any = "";
+    deliveryDiscountDesc: any = "0%";
+    queryValidate: boolean = false;
 
     constructor(
         private _databindService: DataBindService,
@@ -244,6 +245,10 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
 
 
         this.totalPrice = this.subTotal + this.deliveryFee + this.totalServiceCharges
+
+        if(this.totalPrice < 0){
+            this.totalPrice == 0;
+        }
         
         console.log('new satu: ', this.cartitemDetails) 
 
@@ -900,6 +905,9 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
                 //     this.payDisable = false;
                 // }
                 
+
+                this.queryValidate = true;
+
                 console.log("All field validated")
                 
 
@@ -1076,7 +1084,13 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
 
         // }
 
+
+
         this.totalPrice = this.subTotal + this.deliveryFee + this.totalServiceCharges
+
+        if(this.totalPrice < 0){
+            this.totalPrice == 0;
+        }
     }
 
     selectedProvider(providerID){
@@ -1092,6 +1106,10 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
         this.deliveryRef = found.refId
 
         this.totalPrice = this.subTotal + this.deliveryFee + this.totalServiceCharges
+
+        if(this.totalPrice < 0){
+            this.totalPrice == 0;
+        }
 
         // If COD and region is PAKISTAN then allow proceed button 
         if(this.paymentType == "COD" && this.CountryID == "PAK"){
@@ -1165,7 +1183,13 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
                 this.payDisable = false;
             }
 
+
+
             this.totalPrice = this.subTotal + this.deliveryFee + this.totalServiceCharges
+
+            if(this.totalPrice < 0){
+                this.totalPrice == 0;
+            }
 
             this.hasInitForm = true;
         }
@@ -1180,10 +1204,23 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
         this.deliveryDiscountDesc = '(' + discount['data']['deliveryDiscountDescription'] + ')'
 
         // Recalculate detail price after fetch discount 
+
+        if(this.subTotalDiscount > this.subTotal){
+            this.subTotalDiscount == this.subTotal;
+        }
+
         var newsubTotal = this.subTotal - this.subTotalDiscount
+
+        if(this.deliveryDiscount > this.deliveryFee){
+            this.deliveryDiscount == this.deliveryFee;
+        }
         var newdeliveryFee = this.deliveryFee - this.deliveryDiscount
 
         this.totalPrice = newsubTotal + newdeliveryFee + this.totalServiceCharges
+
+        if(this.totalPrice < 0){
+            this.totalPrice == 0;
+        }
         
 
     }

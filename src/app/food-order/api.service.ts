@@ -111,6 +111,18 @@ export class ApiService {
         return this.http.get(this.productServiceURL + url, header);
     }
 
+    // Ref : https://api.symplified.it/product-service/v1/stores/8913d06f-a63f-4a16-8059-2a30a517663a/discount/active
+    getStoreActiveDiscount(storeID){
+        const header = {
+            headers: new HttpHeaders().set("Authorization", `Bearer ${this.token}`),
+        };
+        const url =
+            "stores/" + storeID +
+            "/discount/active";
+
+        return this.http.get(this.productServiceURL + url, header);
+    }
+
     // Ref : https://api.symplified.biz/product-service/v1/stores/McD
 
     getStoreInfoByID(storeID){

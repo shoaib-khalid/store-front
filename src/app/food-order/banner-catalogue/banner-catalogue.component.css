@@ -88,6 +88,22 @@
     color: black;
     font-weight: bolder;
   }
+
+  .profile-name small {
+    color: #fff;
+    /* font-size: 22px; */
+    /* font-weight: 600; */
+    /* line-height: 30px; */
+    /* padding-left: 30px !important; */
+    left: 20px !important;
+    /* max-width: 275px; */
+    position: relative;
+    /* text-transform: uppercase; */
+    /* top: 15px; */
+    color: black;
+    /* font-weight: bolder; */
+  }
+  
   .fb-profile-block-menu{
     height: 44px;
     position: relative;

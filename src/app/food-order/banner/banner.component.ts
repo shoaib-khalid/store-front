@@ -18,6 +18,15 @@ export class BannerComponent implements OnInit {
     assets = {};
     bannerExist: boolean = false;
     storeDescription: any;
+    storeDiscount:any = {};
+    salesDiscount:any = {};
+    deliveryDiscount:any = {};
+    is_sales: boolean = true;
+    is_delivery: boolean = false;
+    vertical: any;
+    hasBanner:any;
+    isFnb: boolean = false;
+    isEcomm: boolean = false;
 
   constructor(
     private apiService: ApiService,
@@ -87,7 +96,18 @@ export class BannerComponent implements OnInit {
 
     this.storeID = storeInfo['id']
     this.storeDescription = storeInfo['storeDescription']
+    this.vertical = storeInfo['verticalCode']
+
+    // alert('vertical: ' + this.vertical)
     // this.storeName = storeInfo['name']
+
+    if(this.vertical == "FnB" || this.vertical == "FnB_PK"){
+        this.isFnb = true;
+    }
+
+    if(this.vertical == "ECommerece" || this.vertical == "ECommerece_PK"){
+        this.isEcomm = true;
+    }
 
     console.log('Banner StoreID: ' + this.storeID)
     // return false
@@ -103,6 +123,53 @@ export class BannerComponent implements OnInit {
     if(this.assets != null){
         this.bannerExist = true;
     }
+
+    const storeDiscount = await this.getStoreDiscount(this.storeID)
+    console.log('storeDiscount: ', storeDiscount)
+
+    this.storeDiscount = storeDiscount
+
+    this.storeDiscount.forEach(obj => {
+
+        if(obj.discountType == "TOTALSALES"){
+            this.salesDiscount = obj;
+        }
+
+        if(obj.discountType == "SHIPPING"){
+            this.deliveryDiscount = obj;
+        }
+
+    });
+
+
+    console.log('sales discount obj: ', this.salesDiscount)
+    console.log('delivery discount obj: ', this.deliveryDiscount)
+
+  }
+
+  isSalesDiscount(){
+    this.is_sales = true;
+    this.is_delivery = false;
+
+  }
+
+  isDeliveryDiscount(){
+    this.is_sales = false;
+    this.is_delivery = true;
+  }
+
+  getStoreDiscount(storeID){
+
+    return new Promise(resolve => {
+        // check count Item in Cart 
+        this.apiService.getStoreActiveDiscount(storeID).subscribe((res: any) => {
+            // console.log('Banner Receive BACKEND getStoreAssets');
+            resolve(res.data)
+        }, error => {
+            // Swals.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
+        }) 
+        
+    });
 
   }
 

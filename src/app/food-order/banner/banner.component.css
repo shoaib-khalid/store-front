@@ -1,6 +1,6 @@
 .bg-image-full {
-    /* background: no-repeat center center scroll; */
-    background: no-repeat;
+    background: no-repeat center center scroll;
+    /* background: no-repeat; */
     -webkit-background-size: cover;
     -moz-background-size: cover;
     background-size: cover;
@@ -17,6 +17,39 @@
 .jumbotron {
     margin-bottom: 0rem !important;
 }
+
+.discount_type:hover{
+    cursor: pointer;
+
+    background: url('/assets/image/banner2.jpg'), linear-gradient(#FFFCEB, white) !important;
+	/*background: url('../img/quran.png'), linear-gradient(#eb01a5, #d13531);*/
+  	/* background-position: center center; */
+  	/* background-repeat: no-repeat; */
+  	background-size: contain !important;
+  	opacity: 1;
+
+  	background-blend-mode: multiply;
+}
+
+.centered {
+    position: relative;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+/* .carousel-indicators > li {
+    border-radius: 50%;
+  } */
+
+  /* .carousel-control-right{
+    left: auto;
+    right: 0;
+    background-image: linear-gradient(
+    90deg,rgba(0,0,0,.0001) 0,rgba(0,0,0,.5));
+    background-repeat: repeat-x;
+  } */
+
 
 
 /* FB TEMPLATE  */
@@ -62,10 +95,11 @@
   .profile-img img {
     background-color: #FFE45C;
     border-radius: 2px;
-    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.07);
+    /* box-shadow: 0 1px 1px rgba(0, 0, 0, 0.07); */
     height:160px;
     padding: 5px;
     width:160px;
+    border: 1px solid #E0BB00;
     
   }
   .profile-name {
@@ -86,6 +120,22 @@
     color: black;
     font-weight: bolder;
   }
+
+  .profile-name small {
+    color: #fff;
+    /* font-size: 22px; */
+    /* font-weight: 600; */
+    /* line-height: 30px; */
+    /* padding-left: 30px !important; */
+    left: 20px !important;
+    /* max-width: 275px; */
+    position: relative;
+    /* text-transform: uppercase; */
+    /* top: 15px; */
+    color: black;
+    /* font-weight: bolder; */
+  }
+
   .fb-profile-block-menu{
     height: 44px;
     position: relative;
