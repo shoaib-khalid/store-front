@@ -99,9 +99,18 @@
     height:160px;
     padding: 5px;
     width:160px;
-    border: 1px solid #E0BB00;
+    /* border: 1px solid white; */
     
   }
+
+  #store_desc{
+    color: black;
+    position: relative;
+    padding-left: 20px !important;
+    /* margi */
+    font-size: 12px;
+  }
+
   .profile-name {
     /* bottom: 60px; */
     left: 200px;

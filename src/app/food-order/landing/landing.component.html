@@ -1,4 +1,4 @@
-<div class="container-fluid" style="background-color: white;">
+<div class="container" style="background-color: white;">
 	<!-- Top box -->
 		<!-- Logo & Site Name -->
 		<!-- <div class="placeholder parallax" style="background-image: url({{bannerImage}});">
@@ -83,7 +83,7 @@
                                     <img src="{{item.thumbnailUrl}}" alt="Image" class="img-fluid tm-gallery-img" 
                                     style="height: 150px; 
                                     width: 150px;
-                                    border-radius: 100px;
+                                    border-radius: 15px;
                                     border: 2px solid #FFDA1F;
                                     padding: 5px;"
                                     (click)="goToCategory(item.id)"/>
@@ -91,13 +91,23 @@
 
                                 <ng-template #noImage>
                                     <div class="text-center grow">
-                                        <img src="{{logoImage}}" alt="Image" class="img-fluid tm-gallery-img" 
+                                        <img *ngIf="logoImage != null; else useDefault" src="{{logoImage}}" alt="Image" class="img-fluid tm-gallery-img" 
                                         style="height: 150px; 
                                         width: 150px; 
-                                        border-radius: 100px;
+                                        border-radius: 15px;
                                         border: 2px solid #FFDA1F;
                                         padding: 5px;"
                                         (click)="goToCategory(item.id)"/>
+
+                                        <ng-template #useDefault>
+                                            <img src="assets/image/logo_symplified_bg.png" alt="Image" class="img-fluid tm-gallery-img" 
+                                            style="height: 150px; 
+                                            width: 150px; 
+                                            border-radius: 15px;
+                                            border: 2px solid #FFDA1F;
+                                            padding: 5px;"
+                                            (click)="goToCategory(item.id)"/>
+                                        </ng-template>
                                     </div>
                                 </ng-template>
                                 
@@ -128,7 +138,7 @@
 
         <div class="position-relative">
             <!-- <div class="position-absolute top-100 start-50 translate-middle"></div> -->
-            <footer class="tm-footer text-center fixed-bottom position-absolute" style="background-color: #FFE45C;">
+            <footer class="tm-footer text-center fixed-bottom position-absolute" style="background-color: #FFE45C; border-top-left-radius: 25px; border-top-right-radius: 25px;">
                 <p (click)="showVersionPill($event)" style="cursor: pointer;"><strong>{{storeName}}</strong></p>
                 <p *ngIf=(storeContact)><strong>Contact us: {{storeContact}}</strong></p>
                 <!-- <br> -->

@@ -17,6 +17,7 @@ export class BannerComponent implements OnInit {
     has_storeId: boolean = false;
     assets = {};
     bannerExist: boolean = false;
+    logoExist: boolean = false;
     storeDescription: any;
     storeDiscount:any = {};
     salesDiscount:any = {};
@@ -118,10 +119,16 @@ export class BannerComponent implements OnInit {
     this.assets = assetData
     // this.cartID = created_cart['id'];
 
-    // console.log('assets Data: ', this.assets)
+    console.log('assets Data: ', this.assets)
 
-    if(this.assets != null){
+    // alert('assets: ', this.assets)
+
+    if(this.assets['bannerUrl'] != null){
         this.bannerExist = true;
+    }
+
+    if(this.assets['logoUrl'] != null){
+        this.logoExist = true;
     }
 
     const storeDiscount = await this.getStoreDiscount(this.storeID)

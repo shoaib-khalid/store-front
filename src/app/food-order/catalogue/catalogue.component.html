@@ -565,38 +565,41 @@ data-backdrop="static" data-keyboard="false">
 
 <!-- footer desktop -->
 <div class="d-none d-sm-none d-md-block d-lg-block d-xl-block">
-    <div class="footer fixed-bottom">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col">
-                    <div style="margin-top: 15px;">
-                        <h5 id="price">SUB-TOTAL: <span>{{currencySymbol}} {{subTotal | number: '1.2-2'}}</span></h5>
+    <div class="">
+        <div class="container">
+            <div class="container footer fixed-bottom">
+                <div class="row">
+                    <div class="col">
+                        <div style="margin-top: 20px; margin-left: 10px;">
+                            <h5 id="price">SUB-TOTAL: <span>{{currencySymbol}} {{subTotal | number: '1.2-2'}}</span></h5>
+                        </div>
+                    </div> 
+                    <div class="col"></div>
+                    <div class="col" style="margin-top: 8px;">
+                        <button (click)="goToCheckout()" class="btn btn-lg" style="float: right; margin: 5px; border: 1px solid black; width: 150px; border-radius: 0; background-color: #A9E538; font-size: 16px;">CHECKOUT&nbsp;<fa-icon [icon]="iconBag"></fa-icon></button>
+                        <button (click)="getCartItemDetails()" class="btn btn-warning btn-lg" style="float: right; margin: 5px; border: 1px solid black; border-radius: 0; font-size: 16px;" data-toggle="modal" data-target="#modalCart">CART LIST - <span id="price">{{cartitemDetailsCount}}</span></button>
                     </div>
-                </div>
-                <div class="col"></div>
-                <div class="col">
-                    <button (click)="goToCheckout()" class="btn btn-lg" style="float: right; margin: 5px; border: 1px solid black; width: 150px; border-radius: 0; background-color: #A9E538; font-size: 16px;">CHECKOUT&nbsp;<fa-icon [icon]="iconBag"></fa-icon></button>
-                    <button (click)="getCartItemDetails()" class="btn btn-warning btn-lg" style="float: right; margin: 5px; border: 1px solid black; border-radius: 0; font-size: 16px;" data-toggle="modal" data-target="#modalCart">CART LIST - <span id="price">{{cartitemDetailsCount}}</span></button>
                 </div>
             </div>
         </div>
     </div>
+    
 </div>
 
 <!-- footer mobile-->
 <div class="d-block d-sm-block d-md-none d-lg-none d-xl-none">
-    <div class="footer fixed-bottom">
-        <div class="container-fluid">
+    <div class="container footer fixed-bottom">
+        <div class="container">
             <div class="row">
                 <div class="col-5" style="margin-top: 15px;">
                     <!-- <div style="margin-top: 15px;"> -->
-                        <span class="fontmobile_s" id="price" style="font-size: small;">SUB-TOTAL: <span>{{currencySymbol}} {{subTotal | number: '1.2-2'}}</span></span>
+                        <span class="fontmobile_s" id="price" style="font-size: small;">SUB-TOTAL: <br><span>{{currencySymbol}} {{subTotal | number: '1.2-2'}}</span></span>
                     <!-- </div> -->
                 </div>
                 <!-- <div class="col"></div> -->
                 <div class="col-7 removepadding" style="padding-top: 10px; text-align: center;">
-                    <button (click)="getCartItemDetails()" class="btn btn-warning btn-sm footerfont cartlistm" data-toggle="modal" data-target="#modalCart">CART LIST - <span id="price">{{cartitemDetailsCount}}</span></button>
-                    <button (click)="goToCheckout()" class="btn btn-sm footerfont nextm">CHECKOUT&nbsp;<fa-icon [icon]="iconBag"></fa-icon></button>
+                    <button (click)="getCartItemDetails()" class="btn btn-warning btn-sm footerfont cartlistm float-right" data-toggle="modal" data-target="#modalCart">CART LIST - <span id="price">{{cartitemDetailsCount}}</span></button>
+                    <button (click)="goToCheckout()" class="btn btn-sm footerfont nextm float-right">CHECKOUT&nbsp;<fa-icon [icon]="iconBag"></fa-icon></button>
                 </div>
             </div>
         </div>

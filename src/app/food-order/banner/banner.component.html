@@ -11,9 +11,9 @@
     <img src="{{assets['bannerUrl']}}" class="img-fluid" alt="...">
 </div> -->
 
-<div class="container-fluid">
+<div class="container">
     <div class="row">
-        <div class="col-md-12 bg_banner">
+        <div class="col-md-12 bg_banner" style="border-bottom-left-radius: 25px; border-bottom-right-radius: 25px;">
             <div class="row">
                 <div class="col">
                     <div class="fb-profile-block">
@@ -30,7 +30,7 @@
 
                         </ng-template>
                         
-                        <div *ngIf="bannerExist; else viewLogoDefault" class="profile-img">
+                        <div *ngIf="logoExist; else viewLogoDefault" class="profile-img">
                             <a href="javascript:;">
                                 <img src="{{assets['logoUrl']}}" alt="" title="" style="border-radius: 100px;">        
                             </a>
@@ -47,7 +47,7 @@
                         <div class="profile-name">
                             <h2>{{storeName}}</h2>
                             <div class="d-none d-sm-none d-md-none d-lg-block d-xl-block">
-                                 <br><small [innerHTML]="storeDescription"></small>
+                                 <br><div id="store_desc" [innerHTML]="storeDescription"></div>
                             </div>
                             
                         </div>
@@ -88,12 +88,16 @@
                             </ng-container>
                         </div>
                         <a class="carousel-control-prev" href="#carouselExampleCaptionsSales1" role="button" data-slide="prev">
-                          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                          <span class="sr-only">Previous</span>
+                            <span class="" aria-hidden="true" style="color: black;">
+                                <i class="fas fa-chevron-circle-left" style="font-size: 25px;"></i>
+                            </span>
+                            <span class="sr-only">Previous</span>
                         </a>
                         <a class="carousel-control-next" href="#carouselExampleCaptionsSales1" role="button" data-slide="next">
-                          <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                          <span class="sr-only">Next</span>
+                            <span class="" aria-hidden="true" style="color: black !important;">
+                                <i class="fas fa-chevron-circle-right" style="font-size: 25px;"></i>
+                            </span>
+                            <span class="sr-only">Next</span>
                         </a>
                     </div>
         
@@ -117,12 +121,16 @@
                             </ng-container>
                         </div>
                         <a class="carousel-control-prev" href="#carouselExampleCaptionsDeliver1" role="button" data-slide="prev">
-                          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                          <span class="sr-only">Previous</span>
+                            <span class="" aria-hidden="true" style="color: black;">
+                                <i class="fas fa-chevron-circle-left" style="font-size: 25px;"></i>
+                            </span>
+                            <span class="sr-only">Previous</span>
                         </a>
                         <a class="carousel-control-next" href="#carouselExampleCaptionsDeliver1" role="button" data-slide="next">
-                          <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                          <span class="sr-only">Next</span>
+                            <span class="" aria-hidden="true" style="color: black !important;">
+                                <i class="fas fa-chevron-circle-right" style="font-size: 25px;"></i>
+                            </span>
+                            <span class="sr-only">Next</span>
                         </a>
                     </div>
         

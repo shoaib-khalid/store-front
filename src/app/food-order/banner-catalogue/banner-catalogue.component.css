@@ -23,8 +23,8 @@
 
     .bg_banner{
         background-color: #FFE45C; 
-        padding-bottom: 130px;
-        padding-top: 45px;
+        padding-bottom: 140px;
+        padding-top: 50px;
     }
 
   .fb-profile-block {
@@ -89,14 +89,24 @@
     font-weight: bolder;
   }
 
+  #store_desc{
+    color: black;
+    position: relative;
+    padding-left: 20px !important;
+    /* margi */
+    font-size: 12px;
+  }
+
   .profile-name small {
-    color: #fff;
+    /* color: #fff; */
+    /* padding-left: 50px !important; */
     /* font-size: 22px; */
     /* font-weight: 600; */
     /* line-height: 30px; */
     /* padding-left: 30px !important; */
-    left: 20px !important;
-    /* max-width: 275px; */
+    /* left: 20px !important; */
+    /* right: 40px !important; */
+    /* max-width: 100px !important; */
     position: relative;
     /* text-transform: uppercase; */
     /* top: 15px; */

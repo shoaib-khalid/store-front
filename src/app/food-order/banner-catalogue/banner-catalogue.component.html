@@ -11,26 +11,45 @@
     <img src="{{assets['bannerUrl']}}" class="img-fluid" alt="...">
 </div> -->
 
-<div class="container-fluid">
+
+
+<div class="container">
     <div class="row">
-        <div class="col-md-12 bg_banner">
-            <div class="fb-profile-block">
-                <!-- <div class="fb-profile-block-thumb cover-container bg-image-full border" [ngStyle]="{'background-image': 'url('+ assets['bannerUrl'] +')'}"></div> -->
-                <div class="profile-img">
-                    <a href="#">
-                        <img src="{{assets['logoUrl']}}" alt="" title="" style="border-radius: 100px;">        
-                    </a>
-                </div>
-                <div class="profile-name">
-                    <h2>{{storeName}}</h2>
-                    <div class="d-none d-sm-none d-md-none d-lg-block d-xl-block">
-                            <br><small [innerHTML]="storeDescription"></small>
+        <div class="col-md-12 bg_banner" style="border-bottom-left-radius: 25px; border-bottom-right-radius: 25px;">
+            <div class="row">
+                <div class="col">
+                    <div class="fb-profile-block">
+                        
+                        <div *ngIf="logoExist; else viewLogoDefault" class="profile-img">
+                            <a href="javascript:;">
+                                <img src="{{assets['logoUrl']}}" alt="" title="" style="border-radius: 100px;">        
+                            </a>
+                        </div>
+
+                        <ng-template #viewLogoDefault>
+                            <div class="profile-img">
+                                <a href="javascript:;">
+                                    <img src="assets/image/logo_symplified_bg.png" alt="" title="" style="border-radius: 100px;">        
+                                </a>
+                            </div>
+                        </ng-template>
+
+                        <div class="profile-name">
+                            <h2>{{storeName}}</h2>
+                            <div class="d-none d-sm-none d-md-none d-lg-block d-xl-block">
+                                 <br><div id="store_desc" [innerHTML]="storeDescription"></div>
+                            </div>
+                            
+                        </div>
                     </div>
                 </div>
             </div>
+            
         </div>
     </div>
+
 </div>
+
 
 <!-- <div id="carouselExampleSlidesOnly">
     <div class="carousel-inner">

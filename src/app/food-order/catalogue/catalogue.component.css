@@ -115,14 +115,17 @@ drag-scroll-item::-webkit-scrollbar-track {
 
 .footer {
     background: #FFE45C;
-    position: fixed;
-    left: 0;
-    right: 0;
+    /* position: fixed; */
+    /* left: 0; */
+    /* right: 0; */
+    /* width: 100%; */
     bottom: 0;
-    height: 60px;
-    border-top: 1px solid rgb(207, 136, 3);
-    /* border-top-left-radius: 10px; */
-    /* border-top-right-radius: 10px; */
+    height: 65px;
+    /* margin-left: 14%; */
+    /* margin-right: 14%; */
+    /* border-top: 1px solid rgb(207, 136, 3); */
+    border-top-left-radius: 25px;
+    border-top-right-radius: 25px;
 }   
 
 /* slider test  */
@@ -195,12 +198,15 @@ drag-scroll-item::-webkit-scrollbar-track {
 	/* background-color: rgba(209, 53, 49, .8); */
 	
 
-	background: url('/assets/image/vector2.jpg'), linear-gradient(#ffe259, #FFF8D6);
+	/* background: url('/assets/image/vector2.jpg'), linear-gradient(#ffe259, #FFF8D6); */
+    background: linear-gradient(#FFFCEB, white) !important;
 	/*background: url('../img/quran.png'), linear-gradient(#eb01a5, #d13531);*/
   	background-position: center center;
   	background-repeat: no-repeat;
   	background-size: cover;
   	opacity: 1;
+
+    border: 1px solid orange !important;
 
   	background-blend-mode: multiply;
 }
@@ -339,17 +345,35 @@ drag-scroll-item::-webkit-scrollbar-track {
 
 @media (max-width: 376px){
     .cartlistm{
-        margin-right: 10px !important;
+        margin-right: 0px !important;
+        margin-bottom: 5px !important;
+        /* padding: 5px !important; */
+        margin-top: 0px !important;
+        height: 30px !important;
+        width: 100px !important;
+        position: relative;
+        float: right;
         padding: 5px !important;
+        width: 100% !important;
         margin-top: 3px;
         height: 35px;
+        margin-top: 5px !important;
     }
     
     .nextm{
         padding: 5px !important;
-        width: 88px !important;
-        margin-top: 3px;
-        height: 35px;
+        width: 100% !important;
+        /* margin-top: 3px; */
+        height: 30px !important;
+        margin-bottom: 5px !important;
+    }
+
+    .footer{
+        height: 75px !important;
+    }
+
+    .removepadding{
+        padding-top: unset !important;
     }
 }
 

@@ -17,6 +17,7 @@ export class BannerCatalogueComponent implements OnInit {
     has_storeId: boolean = false;
     assets = {};
     bannerExist: boolean = false;
+    logoExist: boolean = false;
     storeDescription: any;
 
   constructor(
@@ -100,8 +101,12 @@ export class BannerCatalogueComponent implements OnInit {
 
     // console.log('assets Data: ', this.assets)
 
-    if(this.assets != null){
+    if(this.assets['bannerUrl'] != null){
         this.bannerExist = true;
+    }
+
+    if(this.assets['logoUrl'] != null){
+        this.logoExist = true
     }
 
   }
