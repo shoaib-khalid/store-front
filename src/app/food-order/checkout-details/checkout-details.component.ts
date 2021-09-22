@@ -388,11 +388,11 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
                         console.log("WE ARE OPEN !");
                     }else{
                         console.log("OH No, sorry! between 5.30pm and 6.30pm");
-                        // this.store_close = false
+                        this.store_close = false
                     }
                 } else {
                     console.log("WERE ARE CLOSED")
-                    // this.store_close = false
+                    this.store_close = false
                 }
             }
         });
