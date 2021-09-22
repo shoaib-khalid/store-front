@@ -140,6 +140,7 @@ export class BannerComponent implements OnInit {
 
         if(obj.discountType == "TOTALSALES"){
             this.salesDiscount = obj;
+            // this.deliveryDiscount = obj;
         }
 
         if(obj.discountType == "SHIPPING"){
@@ -151,6 +152,14 @@ export class BannerComponent implements OnInit {
 
     console.log('sales discount obj: ', this.salesDiscount)
     console.log('delivery discount obj: ', this.deliveryDiscount)
+
+    // alert('here' + this.salesDiscount.length)
+    // if this.salesDiscount not exist and this.deliveryDiscount exist
+    // if( this.salesDiscount.length < 1 || this.salesDiscount.length === 'undefined'){
+    //     this.is_sales = false;
+    //     this.is_delivery = true;
+    //     alert('here')
+    // }
 
   }
 
