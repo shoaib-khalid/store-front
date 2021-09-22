@@ -266,6 +266,45 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
         // load states
         // this.mStates = getStates(); // no longer depend on json by miqdaad
 
+        const discount = await this.getDiscount(this.cartID, this.deliveryFee)
+        console.log("discount data ngoninit...", discount)
+
+        this.subTotalDiscount = discount['data']['subTotalDiscount']
+        this.subTotalDiscountDesc = '(' + discount['data']['subTotalDiscountDescription'] + ')'
+        this.deliveryDiscount = discount['data']['deliveryDiscount']
+        this.deliveryDiscountDesc = '(' + discount['data']['deliveryDiscountDescription'] + ')'
+
+        // Recalculate detail price after fetch discount 
+
+        if(discount['data']['subTotalDiscountDescription'] == null){
+            this.subTotalDiscountDesc = "0%"
+        }
+
+        if(this.subTotalDiscount > this.subTotal){
+            this.subTotalDiscount == this.subTotal;
+        }
+
+        var newsubTotal = this.subTotal - this.subTotalDiscount
+
+        // alert(this.subTotal + " | " + this.subTotalDiscount)
+
+        if(discount['data']['deliveryDiscountDescription'] == null){
+            this.deliveryDiscountDesc = "0%"
+        }
+
+        if(this.deliveryDiscount > this.deliveryFee){
+            this.deliveryDiscount == this.deliveryFee;
+        }
+        var newdeliveryFee = this.deliveryFee - this.deliveryDiscount
+
+        this.totalPrice = newsubTotal + newdeliveryFee + this.totalServiceCharges
+
+        // alert(newsubTotal + " | " + newdeliveryFee + " | " + this.totalServiceCharges + " | " + this.totalPrice)
+
+        if(this.totalPrice < 0){
+            this.totalPrice == 0;
+        }
+
     }
 
     getDeliveryOption(storeID){
@@ -349,11 +388,11 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
                         console.log("WE ARE OPEN !");
                     }else{
                         console.log("OH No, sorry! between 5.30pm and 6.30pm");
-                        this.store_close = false
+                        // this.store_close = false
                     }
                 } else {
                     console.log("WERE ARE CLOSED")
-                    this.store_close = false
+                    // this.store_close = false
                 }
             }
         });
@@ -1033,7 +1072,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
         this.isSaved = !this.isSaved
     }
 
-    selfPickup(event){
+    async selfPickup(event){
         this.isSelfPickup = event.target.checked;
         // alert(event.target.checked)
 
@@ -1067,26 +1106,40 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
             }
         }
 
-        // if(this.isSelfPickup == true){
-        //     this.showProvider = false;
-        //     this.showCounter = false
-        //     this.deliveryFee = 0
-        // }else{
-        //     if(this.deliveryOption == "SCHEDULED"){
-        //         this.getDeliveryFee()
-        //         this.showProvider = true;
-        //         this.payDisable = true;
-        //     }
+        const discount = await this.getDiscount(this.cartID, this.deliveryFee)
+        console.log("discount data ngoninit...", discount)
 
-        //     if(this.deliveryOption == "ADHOC" || this.deliveryOption == "SELF"){
-        //         this.getDeliveryFee()
-        //     }
+        this.subTotalDiscount = discount['data']['subTotalDiscount']
+        this.subTotalDiscountDesc = '(' + discount['data']['subTotalDiscountDescription'] + ')'
+        this.deliveryDiscount = discount['data']['deliveryDiscount']
+        this.deliveryDiscountDesc = '(' + discount['data']['deliveryDiscountDescription'] + ')'
 
-        // }
+        // Recalculate detail price after fetch discount 
 
+        if(discount['data']['subTotalDiscountDescription'] == null){
+            this.subTotalDiscountDesc = "0%"
+        }
 
+        if(this.subTotalDiscount > this.subTotal){
+            this.subTotalDiscount == this.subTotal;
+        }
 
-        this.totalPrice = this.subTotal + this.deliveryFee + this.totalServiceCharges
+        var newsubTotal = this.subTotal - this.subTotalDiscount
+
+        // alert(this.subTotal + " | " + this.subTotalDiscount)
+
+        if(discount['data']['deliveryDiscountDescription'] == null){
+            this.deliveryDiscountDesc = "0%"
+        }
+
+        if(this.deliveryDiscount > this.deliveryFee){
+            this.deliveryDiscount == this.deliveryFee;
+        }
+        var newdeliveryFee = this.deliveryFee - this.deliveryDiscount
+
+        this.totalPrice = newsubTotal + newdeliveryFee + this.totalServiceCharges
+
+        // alert(newsubTotal + " | " + newdeliveryFee + " | " + this.totalServiceCharges + " | " + this.totalPrice)
 
         if(this.totalPrice < 0){
             this.totalPrice == 0;
@@ -1205,15 +1258,26 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
 
         // Recalculate detail price after fetch discount 
 
+        if(discount['data']['subTotalDiscountDescription'] == null){
+            this.subTotalDiscountDesc = "0%"
+        }
+
         if(this.subTotalDiscount > this.subTotal){
             this.subTotalDiscount == this.subTotal;
         }
 
         var newsubTotal = this.subTotal - this.subTotalDiscount
 
+
+        if(discount['data']['deliveryDiscountDescription'] == null){
+            this.deliveryDiscountDesc = "0%"
+        }
+
         if(this.deliveryDiscount > this.deliveryFee){
             this.deliveryDiscount == this.deliveryFee;
         }
+
+        
         var newdeliveryFee = this.deliveryFee - this.deliveryDiscount
 
         this.totalPrice = newsubTotal + newdeliveryFee + this.totalServiceCharges

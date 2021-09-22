@@ -92,7 +92,14 @@
                                 <label class="custom-switch mt-2">
                                     <input type="checkbox" name="self_pickup" id="self_pickup" class="custom-switch-input" [checked]="isSelfPickup" (click)="selfPickup($event)">
                                     <span class="custom-switch-indicator"></span>
-                                    <span class="custom-switch-description">I want to pickup from store</span>
+
+                                    <div class="d-none d-sm-none d-md-block d-lg-block d-xl-block">
+                                        <span class="custom-switch-description">I want to pickup from store</span>
+                                    </div>
+                                    <div class="d-block d-sm-block d-md-none d-lg-none d-xl-none">
+                                        <small class="custom-switch-description" style="width: 200px;">I want to pickup from store</small>
+                                    </div>
+                                    
                                 </label>
                             </div>
                             
@@ -122,9 +129,17 @@
                                 <div class="form-group">
                                     <label class="custom-switch mt-2">
                                         <!-- <input type="checkbox" name="self_pickup" id="self_pickup" class="custom-switch-input" [checked]="isSelfPickup" (click)="selfPickup($event)"> -->
-                                        <input type="checkbox" class="custom-switch-input" id="save_future" name="selsave_futuref_pickup" [checked]="isSaved" (click)="saveInfo($event)">
+                                        <!-- <input type="checkbox" class="custom-switch-input" id="save_future" name="self_pickup" [checked]="isSaved" (click)="saveInfo($event)"> -->
+                                        <input type="checkbox" name="save_future" id="save_future" class="custom-switch-input" [checked]="isSaved" (click)="saveInfo($event)">
                                         <span class="custom-switch-indicator"></span>
-                                        <span class="custom-switch-description">Save my information for future order</span>
+
+                                        <div class="d-none d-sm-none d-md-block d-lg-block d-xl-block">
+                                            <span class="custom-switch-description">Save my information for future order</span>
+                                        </div>
+                                        <div class="d-block d-sm-block d-md-none d-lg-none d-xl-none" style="width: 200px !important;">
+                                            <small class="custom-switch-description">Save my information for future order</small>
+                                        </div>
+                                        
                                     </label>
                                 </div>
                                 <br>
@@ -337,20 +352,29 @@
                                         <div class="row">
                                             <div class="col">
                                                 <div class="col text-left">
-                                                    <span class="subtotal">{{vertical_fees_txt}} ({{storeDeliveryPercentage}}%)</span>
-                                                    <span id="price" style="float: right; padding-right: 38px;">{{currencySymbol}} {{totalServiceCharges | number: '1.2-2'}}</span>
+                                                    <span class="subtotal">SUB-TOTAL DISCOUNT {{subTotalDiscountDesc}}</span>
+                                                    <span id="price" style="float: right; padding-right: 38px;">{{currencySymbol}} {{subTotalDiscount | number: '1.2-2'}}</span>
+                                                    <!-- <hr class="dotted"> -->
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col">
                                                 <div class="col text-left">
-                                                    <span id="price" class="subtotal warning-text">DELIVERY CHARGES</span>
-                                                    <span id="price" class="warning-text" style="float: right; padding-right: 38px;">{{currencySymbol}} {{deliveryFee | number: '1.2-2'}}</span>
-                                                    <!-- <hr class="dotted"> -->
+                                                    <span class="subtotal">{{vertical_fees_txt}} ({{storeDeliveryPercentage}}%)</span>
+                                                    <span id="price" style="float: right; padding-right: 38px;">{{currencySymbol}} {{totalServiceCharges | number: '1.2-2'}}</span>
                                                 </div>
                                             </div>
                                         </div>
+                                        <!-- <div class="row">
+                                            <div class="col">
+                                                <div class="col text-left">
+                                                    <span id="price" class="subtotal warning-text">DELIVERY CHARGES</span>
+                                                    <span id="price" class="warning-text" style="float: right; padding-right: 38px;">{{currencySymbol}} {{deliveryFee | number: '1.2-2'}}</span>
+                                                    
+                                                </div>
+                                            </div>
+                                        </div> -->
                                         <div class="row">
                                             <div class="col">
                                                 <div class="col text-left text-success">
