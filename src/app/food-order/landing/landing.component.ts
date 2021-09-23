@@ -254,6 +254,7 @@ export class LandingComponent implements OnInit, AfterViewInit, OnDestroy {
             if(!this.storeID){
                 console.log('Catalogue StoreID is '+this.storeID+', calling FUNCTION getMerchantInfo Function')
                 this.getMerchantInfo(this.storeName)
+                // alert(this.cartID)
             } else {
                 console.log('Catalogue StoreID is '+this.storeID+', calling FUNCTION skipMerchantInfo Function')
                 this.skipMerchantInfo()
@@ -264,8 +265,10 @@ export class LandingComponent implements OnInit, AfterViewInit, OnDestroy {
             }
 
             // this.getStoreCurrency(this.storeID)
+            // alert(this.cartID)
 
         }
+
     }
 
     goToCategory(catId){
@@ -339,9 +342,10 @@ export class LandingComponent implements OnInit, AfterViewInit, OnDestroy {
                     // localStorage = The data does not expire. It remains after the browser restart and even OS reboot. Shared between all tabs and windows from the same origin.
                     this.cartID = localStorage.getItem("anonym_cart_id")
                     // var sesStoreName = localStorage.getItem('store_name')
-    
+                    // alert(this.cartID)
                     if(this.cartID){
                         this.getItemDetails(this.cartID)
+                        
                     }else{
                         this.cartitemDetailsCount = 0;
                     }
@@ -540,7 +544,9 @@ export class LandingComponent implements OnInit, AfterViewInit, OnDestroy {
                 }
 
             }, error => {
-                Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
+                // Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
+
+                this.flow_anonymCheckCartItem()
 
             }) 
             
@@ -631,7 +637,7 @@ export class LandingComponent implements OnInit, AfterViewInit, OnDestroy {
             // var sesStoreName = localStorage.getItem('store_name')
 
             if(this.cartID){
-                this.getItemDetails(this.cartID)
+                // this.getItemDetails(this.cartID)
             }else{
                 this.cartitemDetailsCount = 0;
             }
