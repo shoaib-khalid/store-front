@@ -158,19 +158,11 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
     // using async method for javascript function trigger 
     // allowing to use wait method, one function will wait until previous method is finished
     async ngOnInit() {
-        console.log('ngOnInit');
+        // console.log('ngOnInit');
 
         this.senderID = localStorage.getItem('sender_id');
         this.refID = localStorage.getItem('ref_id');
         this.storeID = localStorage.getItem('store_id');
-        var userEmailSes = localStorage.getItem('userEmail');
-
-        // If userEmail exist, then rePopulate form Data
-        if(this.userEmail !== 'undefined'){
-            this.userEmail = userEmailSes
-
-            this.toRepopulate('userEmail')
-        }
 
         // this.storeDeliveryPercentage = localStorage.getItem('store_delivery_percentage');
 
@@ -312,6 +304,12 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
 
         if(this.totalPrice < 0){
             this.totalPrice == 0;
+        var userEmailSes = localStorage.getItem('userEmail');
+
+        // If userEmail exist, then rePopulate form Data
+        if(this.userEmail !== 'undefined'){
+            this.userEmail = userEmailSes
+            await this.toRepopulate('userEmail')
         }
 
     }
@@ -916,7 +914,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
         this.userState = customer['customerAddress'][0]['state']
 
         // alert(this.customer_id)
-
+        // alert('toValidate')
         await this.toValidate();
 
         // console.log('uuid: ' + uuid)
