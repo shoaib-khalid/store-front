@@ -499,7 +499,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
 
         // var sesStoreName = localStorage.getItem('store_name')
 
-        
+        // alert(this.cartID)
 
         if(!this.cartID){
             
@@ -596,6 +596,10 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
 
             }, error => {
                 // Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
+                // this.cartID = localStorage.getItem("anonym_cart_id")
+                localStorage.removeItem("anonym_cart_id");
+                localStorage.removeItem("cart_id");
+                window.location.reload();
             })
                 
         });
@@ -823,7 +827,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
             // then - get cart again to get the cartId 
             // then - Add item to cart by cartID  
             
-
+        // alert(this.cartExist)
         if(this.cartExist == true){
 
             // console.log('masok cartExist true')
