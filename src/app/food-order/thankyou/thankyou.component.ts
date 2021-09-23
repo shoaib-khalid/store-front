@@ -21,7 +21,7 @@ export class ThankyouComponent implements OnInit {
     cartID:any;
 
     assets = {};
-    logoExist: boolean = false;
+    logoExist: boolean = true;
     status_id: any;
     msg: any;
     successPay: boolean = false;
@@ -79,8 +79,12 @@ export class ThankyouComponent implements OnInit {
     this.assets = assetData
     // this.cartID = created_cart['id'];
 
-    if(this.assets != null){
-        this.logoExist = true;
+    if(this.assets == null){
+        this.logoExist = false
+    }else{
+        if(this.assets['logoUrl'] == null || this.assets['logoUrl'] == "null"){
+            this.logoExist = false
+        }
     }
 
     console.log(this.senderID + " | " + this.storeID + " | " + this.cartID )
