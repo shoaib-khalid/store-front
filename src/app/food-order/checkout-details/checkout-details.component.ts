@@ -304,6 +304,8 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
 
         if(this.totalPrice < 0){
             this.totalPrice == 0;
+        }
+        
         var userEmailSes = localStorage.getItem('userEmail');
 
         // If userEmail exist, then rePopulate form Data
