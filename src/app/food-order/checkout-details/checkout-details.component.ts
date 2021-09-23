@@ -163,6 +163,15 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
         this.senderID = localStorage.getItem('sender_id');
         this.refID = localStorage.getItem('ref_id');
         this.storeID = localStorage.getItem('store_id');
+        var userEmailSes = localStorage.getItem('userEmail');
+
+        // If userEmail exist, then rePopulate form Data
+        if(this.userEmail !== 'undefined'){
+            this.userEmail = userEmailSes
+
+            this.toRepopulate('userEmail')
+        }
+
         // this.storeDeliveryPercentage = localStorage.getItem('store_delivery_percentage');
 
         // console.log('storeDeliveryPercentage: ', typeof(this.storeDeliveryPercentage))
@@ -869,6 +878,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
                 
                 // sanatise input
                 this.userMsisdn = (this.userMsisdn).replace(/[^0-9]/g, '');
+                
             }
         } else if (userinfo === 'userEmail') {
 
@@ -884,6 +894,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
                 return false;
             } else {
                 this.emailError = undefined;
+                localStorage.setItem('userEmail', this.userEmail);
             }
 
         } else {
