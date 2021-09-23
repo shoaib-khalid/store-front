@@ -245,11 +245,11 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
         this.totalServiceCharges = (this.storeDeliveryPercentage == 0) ? this.storeDeliveryPercentage : ((this.storeDeliveryPercentage/100) * this.subTotal);
 
 
-        this.totalPrice = this.subTotal + this.deliveryFee + this.totalServiceCharges
+        // this.totalPrice = this.subTotal + this.deliveryFee + this.totalServiceCharges
 
-        if(this.totalPrice < 0){
-            this.totalPrice == 0;
-        }
+        // if(this.totalPrice < 0){
+        //     this.totalPrice = 0;
+        // }
         
         console.log('new satu: ', this.cartitemDetails) 
 
@@ -282,7 +282,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
         }
 
         if(this.subTotalDiscount > this.subTotal){
-            this.subTotalDiscount == this.subTotal;
+            this.subTotalDiscount = this.subTotal;
         }
 
         var newsubTotal = this.subTotal - this.subTotalDiscount
@@ -294,16 +294,18 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
         }
 
         if(this.deliveryDiscount > this.deliveryFee){
-            this.deliveryDiscount == this.deliveryFee;
+            this.deliveryDiscount = this.deliveryFee;
         }
         var newdeliveryFee = this.deliveryFee - this.deliveryDiscount
+
+        this.totalServiceCharges = (this.storeDeliveryPercentage == 0) ? this.storeDeliveryPercentage : ((this.storeDeliveryPercentage/100) * newsubTotal);
 
         this.totalPrice = newsubTotal + newdeliveryFee + this.totalServiceCharges
 
         // alert(newsubTotal + " | " + newdeliveryFee + " | " + this.totalServiceCharges + " | " + this.totalPrice)
 
         if(this.totalPrice < 0){
-            this.totalPrice == 0;
+            this.totalPrice = 0;
         }
         
         var userEmailSes = localStorage.getItem('userEmail');
@@ -1132,7 +1134,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
         }
 
         if(this.subTotalDiscount > this.subTotal){
-            this.subTotalDiscount == this.subTotal;
+            this.subTotalDiscount = this.subTotal;
         }
 
         var newsubTotal = this.subTotal - this.subTotalDiscount
@@ -1144,16 +1146,18 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
         }
 
         if(this.deliveryDiscount > this.deliveryFee){
-            this.deliveryDiscount == this.deliveryFee;
+            this.deliveryDiscount = this.deliveryFee;
         }
         var newdeliveryFee = this.deliveryFee - this.deliveryDiscount
+
+        this.totalServiceCharges = (this.storeDeliveryPercentage == 0) ? this.storeDeliveryPercentage : ((this.storeDeliveryPercentage/100) * newsubTotal);
 
         this.totalPrice = newsubTotal + newdeliveryFee + this.totalServiceCharges
 
         // alert(newsubTotal + " | " + newdeliveryFee + " | " + this.totalServiceCharges + " | " + this.totalPrice)
 
         if(this.totalPrice < 0){
-            this.totalPrice == 0;
+            this.totalPrice = 0;
         }
     }
 
@@ -1172,7 +1176,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
         this.totalPrice = this.subTotal + this.deliveryFee + this.totalServiceCharges
 
         if(this.totalPrice < 0){
-            this.totalPrice == 0;
+            this.totalPrice = 0;
         }
 
         // If COD and region is PAKISTAN then allow proceed button 
@@ -1206,6 +1210,8 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
                 this.deliveryValidUpTo = delivery['data'][0]['validUpTo'];
                 this.serverDateTime = delivery['timestamp'];
 
+                // alert('adhoc: ' + this.deliveryFee)
+
                 var isError = delivery['data'][0]['isError'];
                 var errorMessage = delivery['message'];
             }else{
@@ -1235,6 +1241,8 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
                 this.timerReset = this.timerReset + 1;
 
                 if(this.deliveryOption == "ADHOC"){
+
+                    // this.deliveryValidUpTo = "2021-09-23 10:01:14.843"
                     this.timeCounter(this.serverDateTime,this.deliveryValidUpTo);
                 }
                 
@@ -1249,11 +1257,11 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
 
 
 
-            this.totalPrice = this.subTotal + this.deliveryFee + this.totalServiceCharges
+            // this.totalPrice = this.subTotal + this.deliveryFee + this.totalServiceCharges
 
-            if(this.totalPrice < 0){
-                this.totalPrice == 0;
-            }
+            // if(this.totalPrice < 0){
+            //     this.totalPrice == 0;
+            // }
 
             this.hasInitForm = true;
         }
@@ -1274,7 +1282,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
         }
 
         if(this.subTotalDiscount > this.subTotal){
-            this.subTotalDiscount == this.subTotal;
+            this.subTotalDiscount = this.subTotal;
         }
 
         var newsubTotal = this.subTotal - this.subTotalDiscount
@@ -1285,16 +1293,20 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
         }
 
         if(this.deliveryDiscount > this.deliveryFee){
-            this.deliveryDiscount == this.deliveryFee;
+            this.deliveryDiscount = this.deliveryFee;
+
+            // alert('here' + this.deliveryDiscount + " | " + this.deliveryFee)
         }
 
         
         var newdeliveryFee = this.deliveryFee - this.deliveryDiscount
 
+        this.totalServiceCharges = (this.storeDeliveryPercentage == 0) ? this.storeDeliveryPercentage : ((this.storeDeliveryPercentage/100) * newsubTotal);
+
         this.totalPrice = newsubTotal + newdeliveryFee + this.totalServiceCharges
 
         if(this.totalPrice < 0){
-            this.totalPrice == 0;
+            this.totalPrice = 0;
         }
         
 
@@ -1447,7 +1459,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
         //   console.log("time: "+time)
 
       
-          return dateToShow = distance < 0 ? false : time;
+          return dateToShow = distance < 0 ? '' : time;
         };
       
       
@@ -1456,7 +1468,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
         let timeReset = this.timerReset;
         const timer = setInterval(() => {
             this.showCountDownTime = showTime(logWhenDone);
-            if (this.showCountDownTime === false){
+            if (this.showCountDownTime === ''){
                 console.log("DONE");
                 // stop current countdown
                 clearInterval(timer);
