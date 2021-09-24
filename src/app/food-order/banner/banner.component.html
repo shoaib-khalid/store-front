@@ -82,7 +82,8 @@
                                     <div class="carousel-item" [ngClass]="{'active': isFirst}">
                                         <img src="assets/image/banner_sales.png" class="d-block w-100" style="max-height: 200px;" alt="...">
                                         <div class="carousel-caption d-none d-md-block text-dark">
-                                            <h2><b>{{item.discountAmount | number: '1.0-0'}} %</b></h2>
+                                            <h2 *ngIf="item.calculationType == 'PERCENT'"><b>{{item.discountAmount | number: '1.0-0'}} %</b></h2>
+                                            <h2 *ngIf="item.calculationType == 'FIX'"><b>RM {{item.discountAmount | number: '1.0-0'}}</b></h2>
                                             <p>Total spend from RM {{item.startTotalSalesAmount | number: '1.2-2'}}</p>
                                         </div>
                                     </div>
@@ -115,7 +116,8 @@
                                     <div class="carousel-item" [ngClass]="{'active': isFirst}">
                                         <img src="assets/image/banner_delivery.png" class="d-block w-100" style="max-height: 200px;" alt="...">
                                         <div class="carousel-caption d-none d-md-block text-dark">
-                                            <h2><b>{{item.discountAmount | number: '1.0-0'}} %</b></h2>
+                                            <h2 *ngIf="item.calculationType == 'PERCENT'"><b>{{item.discountAmount | number: '1.0-0'}} %</b></h2>
+                                            <h2 *ngIf="item.calculationType == 'FIX'"><b>RM {{item.discountAmount | number: '1.0-0'}}</b></h2>
                                             <p>Total spend from RM {{item.startTotalSalesAmount | number: '1.2-2'}}</p>
                                         </div>
                                     </div>
@@ -185,7 +187,8 @@
                                     <div class="carousel-item" [ngClass]="{'active': isFirst}">
                                         <img src="assets/image/banner_sales.png" class="d-block w-100" style="max-height: 200px;" alt="...">
                                         <div class="carousel-caption d-none d-md-block text-dark">
-                                            <h2><b>{{item.discountAmount | number: '1.0-0'}} %</b></h2>
+                                            <h2 *ngIf="item.calculationType == 'PERCENT'"><b>{{item.discountAmount | number: '1.0-0'}} %</b></h2>
+                                            <h2 *ngIf="item.calculationType == 'FIX'"><b>RM {{item.discountAmount | number: '1.0-0'}}</b></h2>
                                             <p>Total spend from RM {{item.startTotalSalesAmount | number: '1.2-2'}}</p>
                                         </div>
                                     </div>
@@ -245,7 +248,8 @@
                                     <div class="carousel-item" [ngClass]="{'active': isFirst}">
                                         <img src="assets/image/banner_delivery.png" class="d-block w-100" style="max-height: 200px;" alt="...">
                                         <div class="carousel-caption d-none d-md-block text-dark">
-                                            <h2><b>{{item.discountAmount | number: '1.0-0'}} %</b></h2>
+                                            <h2 *ngIf="item.calculationType == 'PERCENT'"><b>{{item.discountAmount | number: '1.0-0'}} %</b></h2>
+                                            <h2 *ngIf="item.calculationType == 'FIX'"><b>RM {{item.discountAmount | number: '1.0-0'}}</b></h2>
                                             <p>Total spend from RM {{item.startTotalSalesAmount | number: '1.2-2'}}</p>
                                         </div>
                                     </div>
@@ -345,7 +349,8 @@
                                     <div class="carousel-item" [ngClass]="{'active': isFirst}">
                                         <img src="assets/image/banner_sales.png" class="d-block w-100" style="height: 150px;" alt="...">
                                         <div class="carousel-caption text-dark">
-                                            <h6><b>{{item.discountAmount | number: '1.0-0'}} %</b></h6>
+                                            <h6 *ngIf="item.calculationType == 'PERCENT'"><b>{{item.discountAmount | number: '1.0-0'}} %</b></h6>
+                                            <h6 *ngIf="item.calculationType == 'FIX'"><b>RM {{item.discountAmount | number: '1.0-0'}}</b></h6>
                                             <p>Total spend from RM {{item.startTotalSalesAmount | number: '1.2-2'}}</p>
                                         </div>
                                     </div>
@@ -374,7 +379,8 @@
                                     <div class="carousel-item" [ngClass]="{'active': isFirst}">
                                         <img src="assets/image/banner_delivery.png" class="d-block w-100" style="height: 150px;" alt="...">
                                         <div class="carousel-caption text-dark">
-                                            <h6><b>{{item.discountAmount | number: '1.0-0'}} %</b></h6>
+                                            <h6 *ngIf="item.calculationType == 'PERCENT'"><b>{{item.discountAmount | number: '1.0-0'}} %</b></h6>
+                                            <h6 *ngIf="item.calculationType == 'FIX'"><b>RM {{item.discountAmount | number: '1.0-0'}}</b></h6>
                                             <p>Total spend from RM {{item.startTotalSalesAmount | number: '1.2-2'}}</p>
                                         </div>
                                     </div>
@@ -426,7 +432,8 @@
                                     <div class="carousel-item" [ngClass]="{'active': isFirst}">
                                         <img src="assets/image/banner_sales.png" class="d-block w-100" style="height: 150px;" alt="...">
                                         <div class="carousel-caption text-dark">
-                                            <h6><b>{{item.discountAmount | number: '1.0-0'}} %</b></h6>
+                                            <h6 *ngIf="item.calculationType == 'PERCENT'"><b>{{item.discountAmount | number: '1.0-0'}} %</b></h6>
+                                            <h6 *ngIf="item.calculationType == 'FIX'"><b>RM {{item.discountAmount | number: '1.0-0'}}</b></h6>
                                             <p>Total spend from RM {{item.startTotalSalesAmount | number: '1.2-2'}}</p>
                                         </div>
                                     </div>
@@ -479,7 +486,8 @@
                                     <div class="carousel-item" [ngClass]="{'active': isFirst}">
                                         <img src="assets/image/banner_delivery.png" class="d-block w-100" style="height: 150px;" alt="...">
                                         <div class="carousel-caption text-dark">
-                                            <h6><b>{{item.discountAmount | number: '1.0-0'}} %</b></h6>
+                                            <h6 *ngIf="item.calculationType == 'PERCENT'"><b>{{item.discountAmount | number: '1.0-0'}} %</b></h6>
+                                            <h6 *ngIf="item.calculationType == 'FIX'"><b>RM {{item.discountAmount | number: '1.0-0'}}</b></h6>
                                             <p>Total spend from RM {{item.startTotalSalesAmount | number: '1.2-2'}}</p>
                                         </div>
                                     </div>
