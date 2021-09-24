@@ -576,8 +576,26 @@ data-backdrop="static" data-keyboard="false">
                     </div> 
                     <div class="col"></div>
                     <div class="col" style="margin-top: 8px;">
-                        <button (click)="goToCheckout()" class="btn btn-lg" style="float: right; margin: 5px; border: 1px solid black; width: 150px; border-radius: 0; background-color: #A9E538; font-size: 16px;">CHECKOUT&nbsp;<fa-icon [icon]="iconBag"></fa-icon></button>
-                        <button (click)="getCartItemDetails()" class="btn btn-warning btn-lg" style="float: right; margin: 5px; border: 1px solid black; border-radius: 0; font-size: 16px;" data-toggle="modal" data-target="#modalCart">CART LIST - <span id="price">{{cartitemDetailsCount}}</span></button>
+                        <button (click)="goToCheckout()" class="btn btn-lg" 
+                            style="float: right; 
+                            margin: 5px; 
+                            border: 1px solid #55A630; 
+                            width: 150px; 
+                            border-radius: 10px; 
+                            background-color: #A9E538; 
+                            font-size: 16px;">
+                            CHECKOUT&nbsp;<fa-icon [icon]="iconBag"></fa-icon>
+                        </button>
+                        <button (click)="getCartItemDetails()" class="btn btn-warning btn-lg" 
+                            style="float: right; 
+                            margin: 5px; 
+                            border: 1px solid rgb(207, 136, 3); 
+                            border-radius: 10px; 
+                            font-size: 16px;" 
+                            data-toggle="modal" 
+                            data-target="#modalCart">
+                            CART LIST - <span id="price">{{cartitemDetailsCount}}</span>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -598,8 +616,8 @@ data-backdrop="static" data-keyboard="false">
                 </div>
                 <!-- <div class="col"></div> -->
                 <div class="col-7 removepadding" style="padding-top: 10px; text-align: center;">
-                    <button (click)="getCartItemDetails()" class="btn btn-warning btn-sm footerfont cartlistm float-right" data-toggle="modal" data-target="#modalCart">CART LIST - <span id="price">{{cartitemDetailsCount}}</span></button>
-                    <button (click)="goToCheckout()" class="btn btn-sm footerfont nextm float-right">CHECKOUT&nbsp;<fa-icon [icon]="iconBag"></fa-icon></button>
+                    <button style="border-radius: 5px;" (click)="getCartItemDetails()" class="btn btn-warning btn-sm footerfont cartlistm float-right" data-toggle="modal" data-target="#modalCart">CART LIST - <span id="price">{{cartitemDetailsCount}}</span></button>
+                    <button style="border-radius: 5px;" (click)="goToCheckout()" class="btn btn-sm footerfont nextm float-right">CHECKOUT&nbsp;<fa-icon [icon]="iconBag"></fa-icon></button>
                 </div>
             </div>
         </div>
