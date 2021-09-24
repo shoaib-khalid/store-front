@@ -28,6 +28,7 @@ export class BannerComponent implements OnInit {
     hasBanner:any;
     isFnb: boolean = false;
     isEcomm: boolean = false;
+    currencySymbol:string = "";
 
   constructor(
     private apiService: ApiService,
@@ -98,6 +99,7 @@ export class BannerComponent implements OnInit {
     this.storeID = storeInfo['id']
     this.storeDescription = storeInfo['storeDescription']
     this.vertical = storeInfo['verticalCode']
+    this.currencySymbol = storeInfo['regionCountry']['currencySymbol']
 
     // alert('vertical: ' + this.vertical)
     // this.storeName = storeInfo['name']
