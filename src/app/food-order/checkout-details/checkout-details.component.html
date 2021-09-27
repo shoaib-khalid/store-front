@@ -3,37 +3,30 @@
         <div class="card-body">
             <div class="row">
                 <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 text-center bg-white">
-                    <div class="card bg-white border border-secondary" style="border-radius: 0px; border: 0; border-radius: 15px;">
+                    <div class="card bg-white border" style="border-radius: 0px; border: 0; border-radius: 15px; border-color: #ffb347 !important;">
                         <div class="card-body">
                             <div class="row" style="padding-bottom: 30px;">
                                 <div class="col text-center">
-                                    <span style="color: #ffb347;" id="price">CART SUMMARY</span>
-                                    <!-- <hr class="dotted"> -->
+                                    <span style="color: black;" id="price">CART SUMMARY</span>
+
                                 </div>
                             </div>
                             <div class="row" *ngFor="let item of cartitemDetails; let i = index;">
-                                <div class="col-9 text-left">
-                                    <span id="price" class="quantity" style="font-size: 13px;">{{item.quantity}}&nbsp;x&nbsp;</span>
-                                    <!-- <div *ngFor="let product of product">
-                                        <span *ngIf="item.productId == product.id" style="font-weight: bold; font-size: 13px;">{{product.name | uppercase }}</span>
-                                    </div> -->
-                                    <span style="font-weight: bold; font-size: 13px;">{{item.productName | uppercase }}</span>
-                                </div>
-                                <div class="col-3 text-center">
-                                    <!-- <div *ngFor="let inventory of allProductInventory">
-                                        <span *ngIf="item.itemCode == inventory.itemCode" id="price">{{currencySymbol}} {{ (item.quantity * inventory.price) | number : '1.2-2' }}</span>
-                                    </div> -->
-                                    <span id="price">{{currencySymbol}} {{ (item.quantity * item.productPrice) | number : '1.2-2' }}</span>
-                                </div>
-                                <!-- <div class="row" *ngIf="item.productInventory">
-                                    <div class="col">
-                                        <small class="text-danger">
-                                            <span class="badge badge-pill badge-warning" *ngFor="let variant_details of item.productInventory.productInventoryItemList" style="margin-right: 5px;">
-                                                {{variant_details.productVariantAvailable.value}}
-                                            </span>
-                                        </small>
+                                <span class="btn btn-outline-warning" style="width: 100%; color: black; padding: 15px; 
+                                border-color: #ffb347 !important; 
+                                background-color: #fff3cd;">
+                                    <div class="row">
+                                        <div class="col-9 text-left">
+                                            <span id="price" class="quantity" style="font-size: 12px;">{{item.quantity}}&nbsp; X &nbsp;</span>
+    
+                                            <span style="font-weight: bold; font-size: 12px;">{{item.productName | uppercase }}</span>
+                                        </div>
+                                        <div class="col-3 text-left">
+                                            <span id="price" style="font-size: 14px;">{{currencySymbol}} {{ (item.quantity * item.productPrice) | number : '1.2-2' }}</span>
+                                        </div>
                                     </div>
-                                </div> -->
+                                </span>
+
                                 <div class="col-12 text-left" *ngIf="item.productInventory">
                                     <small class="text-danger">
                                         <span class="badge badge-pill badge-warning" *ngFor="let variant_details of item.productInventory.productInventoryItemList" style="margin-right: 5px;">
@@ -45,7 +38,7 @@
                                     <small class="text-muted" >Instruction: <strong>{{item.specialInstruction}}</strong></small>
                                 </div>
                                 <div class="col-12 text-left" *ngIf="item.url">
-                                    <!-- <small class="text-muted" >Instruction: <strong>{{item.url}}</strong></small> -->
+
                                     <img src="{{item.url}}" class="img-thumbnail" alt="..." style="height: 100px; width: 100px;">
                                 </div>
                                 <div class="col-12">
@@ -69,7 +62,7 @@
                 </div>
                 <!-- <div class="col-lg-1 col-md-1"></div> -->
                 <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 text-center border border-secondary" id="mobilespacer"
-                 style="padding: 10px; background-color: white; border-radius: 15px;">
+                 style="padding: 10px; background-color: white; border-radius: 15px; border-color: #ffb347 !important;">
 
                     <div *ngIf="store_close; else storeClosed">
                         <ng-container *ngIf="cartitemDetailsCount > 0 ;else emptyCartItem">

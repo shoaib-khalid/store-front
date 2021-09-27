@@ -85,7 +85,7 @@
                             <span style="margin: 35px;"></span>
                         </div> -->
                         
-                        <a (click)="goToLanding()" class="text-center details selected" id="price" style="margin: 5px; font-size: 13px; font-weight: bold;">Home</a>
+                        <a (click)="goToLanding()" class="text-center details selected btn btn-outline-warning btn-lg" id="price" style="margin: 5px; font-size: 13px; font-weight: bold;">Home</a>
                     </div>
                 </div>
 
@@ -102,7 +102,7 @@
                             </div> -->
                         </ng-template>
                         
-                        <a (click)="getProduct(item.id, sortId)" class="text-center selected" id="price" style="margin: 5px; font-size: 13px; font-weight: bold;">{{ item.name }}</a>
+                        <a (click)="getProduct(item.id, sortId)" class="text-center details selected btn btn-outline-warning btn-lg" id="price" style="margin: 5px; font-size: 13px; font-weight: bold;">{{ item.name }}</a>
                     </div>
                 </div> 
             </div>
@@ -499,38 +499,44 @@ data-backdrop="static" data-keyboard="false">
                 <!-- Mobile Layout -->
 
                 <div class="d-block d-sm-block d-md-none d-lg-none d-xl-none">
-                    <div class="card" style="margin-bottom: 10px;" *ngFor="let item of cartitemDetails; let i = index;">
+                    <div class="card shadow-sm" style="margin-bottom: 10px; border-color: #FFE45C;" *ngFor="let item of cartitemDetails; let i = index;">
                         <div class="card-body">
                             <div class="row">
-                                <div class="col-1">
-                                    <span style="font-size: 10px;">{{ i + 1 }}&nbsp;</span>
+                                <!-- <div class="col-1">
+                                    <span style="font-size: 12px;">{{ i + 1 }}&nbsp;</span>
+                                </div> -->
+                                <div class="col-8 text-left">
+                                    <span style="font-weight: bold; font-size: 12px;">{{ i + 1 }}.&nbsp;{{item.productName | uppercase }}</span>
                                 </div>
-                                <div class="col-4 text-left">
-                                    <!-- <div *ngFor="let product of product">
-                                        <span *ngIf="item.productId == product.id" style="font-weight: bold; font-size: 13px;">{{product.name | uppercase }}</span>
-                                    </div> -->
-                                    <span style="font-weight: bold; font-size: 13px;">{{item.productName | uppercase }}</span>
-                                </div>
-                                <div class="col-3 text-center">
+                                <div class="col-4 text-right">
+                                    <span id="price" style="font-size: 14px;">{{currencySymbol}} {{item.price | number : '1.2-2'}}</span>
+                                </div>  
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <!-- <div class="col-2 text-left">
+                                    <span style="font-size: 12px;">Qty: </span>
+                                </div> -->
+                                <div class="col-6 text-center">
                                     <span>
                                         <fa-icon (click)="adjustItem(item.id, item.productId, item.itemCode, -1, i)" [icon]="iconMinus" class="qtyIcon"></fa-icon>
                                     </span>
-                                    <span style="margin-left: 20px; margin-right: 20px;">{{item.quantity}}</span>
+                                    <span style="margin-left: 20px; margin-right: 20px; font-size: 14px; font-weight: bold;">{{item.quantity}}</span>
                                     <span>
                                         <fa-icon (click)="adjustItem(item.id, item.productId, item.itemCode, 1, i)" [icon]="iconAdd" class="qtyIcon"></fa-icon>
                                     </span>
                                 </div>
-                                <div class="col-3 text-center">
-                                    <!-- <div *ngFor="let inventory of allProductInventory">
-                                        <span *ngIf="item.itemCode == inventory.itemCode" id="price">{{currencySymbol}} {{item.quantity * inventory.price | number: '1.2-2' }}</span>
-                                    </div> -->
-                                    <!-- <span id="price">RM {{item.quantity*item.unitprice | number : '1.2'}}</span> -->
-                                    <span id="price">{{currencySymbol}} {{item.price | number : '1.2-2'}}</span>
-                                </div>
-                                <div class="col-1 text-right">
-                                    <button type="button" class="close" aria-label="Close">
+                                
+                                <div class="col-6 text-right">
+                                    <!-- <button type="button" class="btn btn-outline-danger btn-sm" data-dismiss="modal">Remove</button> -->
+                                    <button type="button" class="btn btn-outline-danger btn-sm" aria-label="Close" style="padding: 5px;">
+                                        <span (click)="deleteItem(item.id, item.productId)" aria-hidden="true">
+                                            <fa-icon [icon]="iconTrash" class="iconStyle" style="font-size: 12px;"></fa-icon> &nbsp; Remove Item
+                                        </span>
+                                    </button> 
+                                    <!-- <button type="button" class="close" aria-label="Close">
                                         <span (click)="deleteItem(item.id, item.productId)" aria-hidden="true"><fa-icon [icon]="iconTrash" class="iconStyle"></fa-icon></span>
-                                    </button>
+                                    </button> -->
                                 </div>
                             </div>
                             <div class="row" *ngIf="item.productInventory">
