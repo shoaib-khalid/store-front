@@ -1468,7 +1468,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
         let timeReset = this.timerReset;
         const timer = setInterval(() => {
             this.showCountDownTime = showTime(logWhenDone);
-            if (this.showCountDownTime === ''){
+            if (this.showCountDownTime === false){
                 console.log("DONE");
                 // stop current countdown
                 clearInterval(timer);
