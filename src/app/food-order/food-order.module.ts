@@ -36,6 +36,8 @@ import { OrderModule } from 'ngx-order-pipe';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BannerCatalogueComponent } from './banner-catalogue/banner-catalogue.component';
 
+import { CountdownModule } from 'ngx-countdown';
+
 
 @NgModule({
   declarations: [
@@ -68,7 +70,8 @@ import { BannerCatalogueComponent } from './banner-catalogue/banner-catalogue.co
     FormsModule,
     NgxSpinnerModule,
     OrderModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    CountdownModule 
   ],
   exports: [
     StepCheckoutComponent,
@@ -81,7 +84,8 @@ import { BannerCatalogueComponent } from './banner-catalogue/banner-catalogue.co
     HttpClientModule,
     NgPipesModule,
     FormsModule,
-    NgxSpinnerModule
+    NgxSpinnerModule,
+    CountdownModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [

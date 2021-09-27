@@ -17,6 +17,8 @@ import { forkJoin, timer, Subscription } from 'rxjs';
 import { PlatformLocation } from "@angular/common";
 import { CookieService } from 'ngx-cookie-service';
 
+import { CountdownConfig, CountdownEvent } from 'ngx-countdown';
+
 
 import {
     allPostcodes,
@@ -30,6 +32,7 @@ import {
   selector: 'app-checkout-details',
   templateUrl: './checkout-details.component.html',
   styleUrls: ['./checkout-details.component.css']
+//   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
 
@@ -133,11 +136,25 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
     deliveryDiscount: any = 0;
     deliveryDiscountDesc: any = "0%";
     queryValidate: boolean = false;
+    hideOnInit:boolean = true;
 
     // Timer Test 
     countDown: Subscription;
-    counter = 1800;
+    counter = 10;
     tick = 1000;
+
+    config: CountdownConfig = {
+        leftTime: 60,
+        format: 'HH:mm:ss',
+        prettyText: (text) => {
+          return text
+            .split(':')
+            .map((v) => `<span class="item">${v}</span>`)
+            .join('');
+        },
+    };
+
+    // @ViewChild('cd', { static: false }) private countdown: CheckoutDetailsComponent;
 
     constructor(
         private _databindService: DataBindService,
@@ -161,10 +178,32 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
 
      }
 
+    handleEvent(e: CountdownEvent) {
+        console.log('Actions', e);
+        // alert(JSON.stringify(e))
+
+        if(e.action == "start"){
+            
+            this.payDisable = false;
+            
+        }
+
+        if(e.action == 'done' && this.hasDeliveryFee == true){
+            this.payDisable = true;
+            this.getDeliveryFee()
+
+            // alert(this.hasDeliveryFee)
+        }
+    }
+
     // using async method for javascript function trigger 
     // allowing to use wait method, one function will wait until previous method is finished
     async ngOnInit() {
         // console.log('ngOnInit');
+
+        // this.countDown = timer(0, this.tick).subscribe(() => --this.counter);
+        // this.countdown.begin();
+        
 
         this.senderID = localStorage.getItem('sender_id');
         this.refID = localStorage.getItem('ref_id');
@@ -276,6 +315,8 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
         const discount = await this.getDiscount(this.cartID, this.deliveryFee)
         console.log("discount data ngoninit...", discount)
 
+        // this.payDisable = false
+
         this.subTotalDiscount = discount['data']['subTotalDiscount']
         this.subTotalDiscountDesc = '(' + discount['data']['subTotalDiscountDescription'] + ')'
         this.deliveryDiscount = discount['data']['deliveryDiscount']
@@ -321,9 +362,6 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
             this.userEmail = userEmailSes
             await this.toRepopulate('userEmail')
         }
-
-        // Timer test 
-        this.countDown = timer(0, this.tick).subscribe(() => --this.counter);
 
     }
 
@@ -1196,6 +1234,40 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
         }
     }
 
+    // resetTimer(){
+
+    //     this.counter = 10;
+    //     this.tick = 1000;
+    //     this.countDown=null;
+
+    //     console.log(this.counter + "|" + this.tick + "|" + this.countDown)
+    //     this.countDown = timer(0, this.tick).subscribe(() => {
+    //         --this.counter
+
+    //         if(this.counter == 0){
+    //             // alert('zero')
+    //             this.startTimer()
+    //         }
+    //     });
+    // }
+
+    // startTimer(){
+
+    //     this.counter = 10;
+    //     this.tick = 1000;
+    //     this.countDown=null;
+
+    //     console.log(this.counter + "|" + this.tick + "|" + this.countDown)
+    //     this.countDown = timer(0, this.tick).subscribe(() => {
+    //         --this.counter
+
+    //         if(this.counter == 0){
+    //             // alert('zero')
+    //             this.resetTimer()
+    //         }
+    //     });
+    // }
+
     async getDeliveryFee(){
 
         // alert('postcode: ' + 
@@ -1224,7 +1296,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
                 // alert('adhoc: ' + this.deliveryFee)
 
                 var isError = delivery['data'][0]['isError'];
-                var errorMessage = delivery['message'];
+                var errorMessage = delivery['data'][0]['message'];
             }else{
                 this.deliveryFee = delivery['data']['price'];
                 this.providerId = delivery['data']['providerId'];
@@ -1245,17 +1317,41 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
 
                 Swal.fire("Oops...", errorMessage, "error")
 
+                this.hasDeliveryFee = false;
+                this.payDisable = true;
+
             }else{
                 this.hasDeliveryFee = true;
+                
 
-                console.log("server time now(): "+ this.serverDateTime+"\n"+"this.deliveryValidUpTo: "+this.deliveryValidUpTo);
-                this.timerReset = this.timerReset + 1;
+                // console.log("server time now(): "+ this.serverDateTime+"\n"+"this.deliveryValidUpTo: "+this.deliveryValidUpTo);
+                // this.timerReset = this.timerReset + 1;
 
-                if(this.deliveryOption == "ADHOC"){
+                // if(this.deliveryOption == "ADHOC"){
 
                     // this.deliveryValidUpTo = "2021-09-23 10:01:14.843"
-                    this.timeCounter(this.serverDateTime,this.deliveryValidUpTo);
-                }
+                    // this.timeCounter(this.serverDateTime,this.deliveryValidUpTo);
+
+                    
+                    // Timer test 
+
+                    
+
+                    // this.countDown = timer(0, this.tick).subscribe(async (res: any) => {
+                    //     console.log('timer', res)
+                    //     --this.counter
+                    //     if(this.counter == 0){
+                    //         this.counter = 10
+
+                    //         // await this.getDeliveryFee()
+                    //     }
+                    // }, error => {
+
+                    // });
+
+                    
+
+                // }
                 
                 // calling countPrice again so that deliveryFee included in the FE calculation
                 // const countTotal = await this.countPrice(this.allProductInventory)
@@ -1263,7 +1359,12 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
 
                 // Swal.fire("Delivery Fees", "Additional charges RM " + this.deliveryFee, "info")
 
+                // reset timer 
+                document.getElementById("restart").click();
+
                 this.payDisable = false;
+
+                // alert(this.payDisable)
             }
 
 
@@ -1366,6 +1467,13 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
             this.apiService.getDiscount(cartId, deliveryCharge).subscribe(async (res: any) => {
     
                 if (res.message) {
+
+                    // alert(this.payDisable)
+                    // this.payDisable = false;
+                    // this.hasDeliveryFee = true;
+                    // this.payDisable = false
+
+                    // alert(this.payDisable)
     
                     resolve(res)
                     
@@ -1507,9 +1615,9 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
     transform(value: number): string {
       const minutes: number = Math.floor(value / 60);
       return (
-        ("00" + minutes).slice(-2) +
-        ":" +
-        ("00" + Math.floor(value - minutes * 60)).slice(-2)
+        ("00" + minutes).slice(-2) + "m" +
+        " " +
+        ("00" + Math.floor(value - minutes * 60)).slice(-2) + "s"
       );
     }
   }

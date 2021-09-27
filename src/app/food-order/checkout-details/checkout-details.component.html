@@ -74,7 +74,7 @@
                     <div *ngIf="store_close; else storeClosed">
                         <ng-container *ngIf="cartitemDetailsCount > 0 ;else emptyCartItem">
                             <!-- Now Its Working! -->
-                            <div style="padding: 10px; background-color: #ffe259;">
+                            <div style="padding: 10px; background-color: #ffe259; border-radius: 10px;">
                                 <span style="font-weight: bold;">CONTACT INFORMATION</span>
                             </div>
                             <!-- <div *ngIf="inputError" style="  border-radius: 25px;margin-top:10px;padding: 10px; background-color: #fa6a51c6;">
@@ -280,18 +280,33 @@
                                         </div>
                                     </div>
                                     
-                                    <div *ngIf="showCounter" style="margin-top: 20px;">
+                                    <div *ngIf="hasDeliveryFee" style="margin-top: 20px;">
                                         <hr>
 
-                                        <h4 class="alert-heading text-center bolder warning-text" *ngIf="showCountDownTime != 'false'">{{ showCountDownTime }}</h4>
-                                        <h5>Here {{counter | formatTime}}</h5>
+                                        <!-- <h4 class="alert-heading text-center bolder warning-text">{{counter | formatTime}}</h4> -->
+                                        <h4 class="alert-heading text-center bolder warning-text">
+                                            <!-- <countdown [config]="{leftTime: 30}"></countdown> -->
+                                            <!-- <countdown [config]="{ leftTime: 10 }"></countdown> -->
+                                            <countdown #cd (event)="handleEvent($event)" [config]="{ leftTime: 10 }"></countdown>
+                                            <div>
+                                                <!-- <a (click)="cd.pause()" class="btn btn-link btn-sm">pause</a>
+                                                <a (click)="cd.resume()" class="btn btn-link btn-sm">resume</a>
+                                                <a (click)="cd.stop()" class="btn btn-link btn-sm">stop</a> -->
+                                                <a (click)="cd.restart()" id="restart" class="btn btn-link btn-sm" [hidden]="true">restart</a>
+                                            </div>
+                                        </h4>
+                                        <!-- <h5>{{counter | formatTime}}</h5> -->
+
+                                        <!-- <countdown-timer [end]="date"></countdown-timer> -->
+                                        <!-- <countdown #cd [config]="config" (event)="handleEvent($event)"></countdown> -->
+                                        <!-- <countdown [config]="{leftTime: 30}"></countdown> -->
                                         
                                         <hr>
                                         <small class="italic">Delivery charges validity, the delivery charges may change after the validity expired</small>
                                     </div>
                                 </div>
 
-                                <button type="submit" class="btn btn-md col-lg-6 col-md-6 col-xs-12 col-sm-12 btn-success text-center" [disabled]="payDisable" style="border-radius: 0;">{{btnString}} &nbsp;&nbsp;<fa-icon [icon]="iconMoney"></fa-icon></button>
+                                <button type="submit" class="btn btn-md col-lg-6 col-md-6 col-xs-12 col-sm-12 btn-success text-center" [disabled]="payDisable" style="border-radius: 5px;">{{btnString}} &nbsp;&nbsp;<fa-icon [icon]="iconMoney"></fa-icon></button>
                                 <!-- <button (click)="goSkip($event)" class="btn btn-md col-lg-4 col-md-4 col-xs-12 col-sm-12 btn-success" style="border-radius: 0;">PAY NOW &nbsp;&nbsp;<fa-icon [icon]="iconMoney"></fa-icon></button> -->
                             
                             </form>
@@ -388,7 +403,7 @@
 
                                     </div>
     
-                                    <button type="submit" class="btn btn-md col-lg-6 col-md-6 col-xs-12 col-sm-12 btn-success text-center" style="border-radius: 0;">{{btnString}} &nbsp;&nbsp;<fa-icon [icon]="iconMoney"></fa-icon></button>
+                                    <button type="submit" class="btn btn-md col-lg-6 col-md-6 col-xs-12 col-sm-12 btn-success text-center" style="border-radius: 5px;">{{btnString}} &nbsp;&nbsp;<fa-icon [icon]="iconMoney"></fa-icon></button>
                                     <!-- <button (click)="goSkip($event)" class="btn btn-md col-lg-4 col-md-4 col-xs-12 col-sm-12 btn-success" style="border-radius: 0;">PAY NOW &nbsp;&nbsp;<fa-icon [icon]="iconMoney"></fa-icon></button> -->
                                 
                                 </form>
