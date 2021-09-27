@@ -145,7 +145,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
 
     config: CountdownConfig = {
         leftTime: 60,
-        format: 'HH:mm:ss',
+        format: 'mm:ss',
         prettyText: (text) => {
           return text
             .split(':')

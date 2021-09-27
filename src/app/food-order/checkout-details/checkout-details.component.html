@@ -287,7 +287,7 @@
                                         <h4 class="alert-heading text-center bolder warning-text">
                                             <!-- <countdown [config]="{leftTime: 30}"></countdown> -->
                                             <!-- <countdown [config]="{ leftTime: 10 }"></countdown> -->
-                                            <countdown #cd (event)="handleEvent($event)" [config]="{ leftTime: 600 }"></countdown>
+                                            <countdown #cd (event)="handleEvent($event)" [config]="{ leftTime: 600, format: 'mm:ss' }"></countdown>
                                             <div>
                                                 <!-- <a (click)="cd.pause()" class="btn btn-link btn-sm">pause</a>
                                                 <a (click)="cd.resume()" class="btn btn-link btn-sm">resume</a>
