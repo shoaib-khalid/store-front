@@ -958,6 +958,56 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
 
         // alert(JSON.stringify(customer));
 
+        if(customer == undefined){
+            this.hasDeliveryFee = false;
+            this.payDisable = true;
+
+                // alert('undefined lah')
+                // this.deliveryFee = 0;
+
+                const discount = await this.getDiscount(this.cartID, 0)
+                console.log("discount data ngoninit...", discount)
+
+                this.subTotalDiscount = discount['data']['subTotalDiscount']
+                this.subTotalDiscountDesc = '(' + discount['data']['subTotalDiscountDescription'] + ')'
+                this.deliveryDiscount = discount['data']['deliveryDiscount']
+                this.deliveryDiscountDesc = '(' + discount['data']['deliveryDiscountDescription'] + ')'
+
+                // Recalculate detail price after fetch discount 
+
+                if(discount['data']['subTotalDiscountDescription'] == null){
+                    this.subTotalDiscountDesc = "0%"
+                }
+
+                if(this.subTotalDiscount > this.subTotal){
+                    this.subTotalDiscount = this.subTotal;
+                }
+
+                var newsubTotal = this.subTotal - this.subTotalDiscount
+
+                // alert(this.subTotal + " | " + this.subTotalDiscount)
+
+                if(discount['data']['deliveryDiscountDescription'] == null){
+                    this.deliveryDiscountDesc = "0%"
+                }
+
+                if(this.deliveryDiscount > this.deliveryFee){
+                    this.deliveryDiscount = this.deliveryFee;
+                }
+                var newdeliveryFee = this.deliveryFee - this.deliveryDiscount
+
+                this.totalServiceCharges = (this.storeDeliveryPercentage == 0) ? this.storeDeliveryPercentage : ((this.storeDeliveryPercentage/100) * newsubTotal);
+
+                this.totalPrice = newsubTotal + newdeliveryFee + this.totalServiceCharges
+
+                // alert(newsubTotal + " | " + newdeliveryFee + " | " + this.totalServiceCharges + " | " + this.totalPrice)
+
+                if(this.totalPrice < 0){
+                    this.totalPrice = 0;
+                }
+
+        }
+
         this.customer_id = customer['id'];
         this.userMsisdn = customer['phoneNumber']
         this.userName = customer['name']
@@ -1010,6 +1060,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
                 this.queryValidate = true;
 
                 console.log("All field validated")
+                // alert('all field validated')
                 
 
         } else {
@@ -1020,6 +1071,8 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
             // "\nthis.userCities: " + this.userCities + 
             // "\nthisuserState.: " + this.userState + 
             // "\nthis.userCountries: " + this.userCountries)
+
+            // alert('field not validated')
         }
     }
 
