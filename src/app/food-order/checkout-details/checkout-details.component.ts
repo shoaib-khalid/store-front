@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy, Pipe, PipeTransform } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { Router } from '@angular/router';
 import { ApiService } from './../api.service';
@@ -13,9 +13,10 @@ import { faMoneyBillAlt } from '@fortawesome/free-solid-svg-icons';
 import { MalihuScrollbarService } from 'ngx-malihu-scrollbar';
 import { totalmem } from 'os';
 import Swal from 'sweetalert2'
-import { forkJoin } from 'rxjs';
+import { forkJoin, timer, Subscription } from 'rxjs';
 import { PlatformLocation } from "@angular/common";
 import { CookieService } from 'ngx-cookie-service';
+
 
 import {
     allPostcodes,
@@ -132,6 +133,11 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
     deliveryDiscount: any = 0;
     deliveryDiscountDesc: any = "0%";
     queryValidate: boolean = false;
+
+    // Timer Test 
+    countDown: Subscription;
+    counter = 1800;
+    tick = 1000;
 
     constructor(
         private _databindService: DataBindService,
@@ -316,6 +322,9 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
             await this.toRepopulate('userEmail')
         }
 
+        // Timer test 
+        this.countDown = timer(0, this.tick).subscribe(() => --this.counter);
+
     }
 
     getDeliveryOption(storeID){
@@ -457,6 +466,8 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
         // custom cleanup
         // this.mScrollbarService.destroy(document.body);
         this.mScrollbarService.destroy('#scrollable4');
+
+        this.countDown=null;
     }
 
     showSpinner() {
@@ -1487,3 +1498,18 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
     };
 
 }
+
+
+@Pipe({
+    name: "formatTime"
+  })
+  export class FormatTimePipe implements PipeTransform {
+    transform(value: number): string {
+      const minutes: number = Math.floor(value / 60);
+      return (
+        ("00" + minutes).slice(-2) +
+        ":" +
+        ("00" + Math.floor(value - minutes * 60)).slice(-2)
+      );
+    }
+  }

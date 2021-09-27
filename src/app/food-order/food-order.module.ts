@@ -19,7 +19,7 @@ import { StepCatalogueComponent } from './layout-catalogue/step-catalogue.compon
 import { DataBindService } from './databind.service';
 import { ModalCheckoutComponent } from './modal-checkout/modal-checkout.component';
 import { ModalProductComponent } from './modal-product/modal-product.component';
-import { CheckoutDetailsComponent } from './checkout-details/checkout-details.component';
+import { CheckoutDetailsComponent, FormatTimePipe } from './checkout-details/checkout-details.component';
 import { ModalCartComponent } from './modal-cart/modal-cart.component';
 
 // HTTP Client 
@@ -53,7 +53,8 @@ import { BannerCatalogueComponent } from './banner-catalogue/banner-catalogue.co
     NotFoundComponent,
     LandingComponent,
     RedirectionComponent,
-    BannerCatalogueComponent
+    BannerCatalogueComponent,
+    FormatTimePipe
   ],
   imports: [
     CommonModule,
@@ -87,6 +88,7 @@ import { BannerCatalogueComponent } from './banner-catalogue/banner-catalogue.co
       DataBindService,
       DatePipe,
       CookieService 
-    ]
+    ],
+    bootstrap: [CheckoutDetailsComponent]
 })
 export class FoodOrderModule { }
