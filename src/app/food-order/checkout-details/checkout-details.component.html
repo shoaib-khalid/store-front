@@ -283,7 +283,7 @@
                                     <div *ngIf="showCounter" style="margin-top: 20px;">
                                         <hr>
 
-                                        <h4 class="alert-heading text-center bolder warning-text" *ngIf="showCountDownTime != 'false'">{{ showCountDownTime }}</h4>
+                                        <h4 class="alert-heading text-center bolder warning-text" *ngIf="showCountDownTime != 'false'" [innerHTML]="showCountDownTime"></h4>
                                         
                                         <hr>
                                         <small class="italic">Delivery charges validity, the delivery charges may change after the validity expired</small>
