@@ -1459,7 +1459,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
         //   console.log("time: "+time)
 
       
-          return dateToShow = distance < 0 ? '' : time;
+          return dateToShow = distance < 0 ? false : time;
         };
       
       
