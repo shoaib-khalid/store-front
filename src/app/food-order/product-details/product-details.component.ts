@@ -125,8 +125,8 @@ export class ProductDetailsComponent implements OnInit {
 
         this.galleryOptions = [
             {
-                width: '450px',
-                height: '450px',
+                width: '350px',
+                height: '350px',
                 thumbnailsColumns: 3,
                 imageAnimation: NgxGalleryAnimation.Slide,
                 thumbnailsArrows: true,
@@ -143,12 +143,12 @@ export class ProductDetailsComponent implements OnInit {
             {
                 breakpoint: 767,
                 thumbnailsColumns: 2,
-                width: '100%',
+                width: '350px',
                 height: '350px',
-                imagePercent: 80,
-                thumbnailsPercent: 30,
-                thumbnailsMargin: 10,
-                thumbnailMargin: 5,
+                // imagePercent: 100,
+                // thumbnailsPercent: 30,
+                // thumbnailsMargin: 10,
+                // thumbnailMargin: 5,
             }
         ];
 

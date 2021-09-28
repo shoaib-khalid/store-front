@@ -12,9 +12,9 @@
                                 </div>
                             </div>
                             <div class="row" *ngFor="let item of cartitemDetails; let i = index;">
-                                <span class="btn btn-outline-warning" style="width: 100%; color: black; padding: 15px; 
-                                border-color: #ffb347 !important; 
-                                background-color: #fff3cd;">
+                                <span class="btn-outline-warning" style="width: 100%; color: black; padding: 15px; 
+                                border: 1px solid #ffb347 !important; 
+                                background-color: #fff3cd; border-radius: 5px;">
                                     <div class="row">
                                         <div class="col-9 text-left">
                                             <span id="price" class="quantity" style="font-size: 12px;">{{item.quantity}}&nbsp; X &nbsp;</span>
@@ -25,25 +25,30 @@
                                             <span id="price" style="font-size: 14px;">{{currencySymbol}} {{ (item.quantity * item.productPrice) | number : '1.2-2' }}</span>
                                         </div>
                                     </div>
+
+                                    <div class="col-12 text-left" *ngIf="item.productInventory">
+                                        <small class="text-danger">
+                                            <span class="badge badge-pill badge-warning" *ngFor="let variant_details of item.productInventory.productInventoryItems" style="margin-right: 5px;">
+                                                {{variant_details.productVariantAvailable.value}}
+                                            </span>
+                                        </small>
+                                    </div>
+                                    <div class="col-12 text-left" *ngIf="item.specialInstruction">
+                                        <small class="text-muted" >Instruction: <strong>{{item.specialInstruction}}</strong></small>
+                                    </div>
+                                    <div class="col-12 text-left" *ngIf="item.url">
+    
+                                        <img src="{{item.url}}" class="img-thumbnail" alt="..." style="height: 100px; width: 100px;">
+                                    </div>
+                                    
+
                                 </span>
 
-                                <div class="col-12 text-left" *ngIf="item.productInventory">
-                                    <small class="text-danger">
-                                        <span class="badge badge-pill badge-warning" *ngFor="let variant_details of item.productInventory.productInventoryItemList" style="margin-right: 5px;">
-                                            {{variant_details.productVariantAvailable.value}}
-                                        </span>
-                                    </small>
-                                </div>
-                                <div class="col-12 text-left" *ngIf="item.specialInstruction">
-                                    <small class="text-muted" >Instruction: <strong>{{item.specialInstruction}}</strong></small>
-                                </div>
-                                <div class="col-12 text-left" *ngIf="item.url">
-
-                                    <img src="{{item.url}}" class="img-thumbnail" alt="..." style="height: 100px; width: 100px;">
-                                </div>
                                 <div class="col-12">
                                     <hr class="nondotted">
                                 </div>
+
+                                
                                 
                             </div>
 
