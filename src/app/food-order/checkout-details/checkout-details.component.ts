@@ -190,7 +190,8 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
 
         if(e.action == 'done' && this.hasDeliveryFee == true){
             this.payDisable = true;
-            this.getDeliveryFee()
+            // this.getDeliveryFee()
+            this.countGrandTotal()
 
             // alert(this.hasDeliveryFee)
         }
@@ -312,56 +313,25 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
         // load states
         // this.mStates = getStates(); // no longer depend on json by miqdaad
 
-        const discount = await this.getDiscount(this.cartID, this.deliveryFee)
-        console.log("discount data ngoninit...", discount)
-
-        // this.payDisable = false
-
-        this.subTotalDiscount = discount['data']['subTotalDiscount']
-        this.subTotalDiscountDesc = '(' + discount['data']['subTotalDiscountDescription'] + ')'
-        this.deliveryDiscount = discount['data']['deliveryDiscount']
-        this.deliveryDiscountDesc = '(' + discount['data']['deliveryDiscountDescription'] + ')'
-
-        // Recalculate detail price after fetch discount 
-
-        if(discount['data']['subTotalDiscountDescription'] == null){
-            this.subTotalDiscountDesc = "0%"
-        }
-
-        if(this.subTotalDiscount > this.subTotal){
-            this.subTotalDiscount = this.subTotal;
-        }
-
-        var newsubTotal = this.subTotal - this.subTotalDiscount
-
-        // alert(this.subTotal + " | " + this.subTotalDiscount)
-
-        if(discount['data']['deliveryDiscountDescription'] == null){
-            this.deliveryDiscountDesc = "0%"
-        }
-
-        if(this.deliveryDiscount > this.deliveryFee){
-            this.deliveryDiscount = this.deliveryFee;
-        }
-        var newdeliveryFee = this.deliveryFee - this.deliveryDiscount
-
-        this.totalServiceCharges = (this.storeDeliveryPercentage == 0) ? this.storeDeliveryPercentage : ((this.storeDeliveryPercentage/100) * newsubTotal);
-
-        this.totalPrice = newsubTotal + newdeliveryFee + this.totalServiceCharges
-
-        // alert(newsubTotal + " | " + newdeliveryFee + " | " + this.totalServiceCharges + " | " + this.totalPrice)
-
-        if(this.totalPrice < 0){
-            this.totalPrice = 0;
-        }
-        
         var userEmailSes = localStorage.getItem('userEmail');
 
         // If userEmail exist, then rePopulate form Data
         if(this.userEmail !== 'undefined'){
             this.userEmail = userEmailSes
             await this.toRepopulate('userEmail')
+
+            // alert('here')
         }
+
+        this.countGrandTotal()
+
+        // this.payDisable = false
+
+    }
+
+    async countGrandTotal(){
+
+        await this.getDeliveryFee()
 
     }
 
@@ -899,6 +869,8 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
 
     async toRepopulate(userinfo){
 
+        // alert('change detected')
+
         let uuid = undefined;
 
         this.customer_id = null
@@ -962,63 +934,41 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
             this.hasDeliveryFee = false;
             this.payDisable = true;
 
-                // alert('undefined lah')
-                // this.deliveryFee = 0;
+            this.customer_id = null
+            this.userMsisdn = null
+            this.userName = null
+            this.userAddress = null
+            this.userPostcode = null
+            this.userCities = null
+            this.userState = null
+            // this.payDisable = true;
 
-                const discount = await this.getDiscount(this.cartID, 0)
-                console.log("discount data ngoninit...", discount)
+            // alert('undefined lah')
+            // this.deliveryFee = 0;
+            // alert('customer undefined')
 
-                this.subTotalDiscount = discount['data']['subTotalDiscount']
-                this.subTotalDiscountDesc = '(' + discount['data']['subTotalDiscountDescription'] + ')'
-                this.deliveryDiscount = discount['data']['deliveryDiscount']
-                this.deliveryDiscountDesc = '(' + discount['data']['deliveryDiscountDescription'] + ')'
+            this.countGrandTotal()
 
-                // Recalculate detail price after fetch discount 
+        }else{
 
-                if(discount['data']['subTotalDiscountDescription'] == null){
-                    this.subTotalDiscountDesc = "0%"
-                }
+            // alert('customer exists')
 
-                if(this.subTotalDiscount > this.subTotal){
-                    this.subTotalDiscount = this.subTotal;
-                }
+            this.customer_id = customer['id'];
+            this.userMsisdn = customer['phoneNumber']
+            this.userName = customer['name']
+            this.userAddress = customer['customerAddress'][0]['address']
+            this.userPostcode = customer['customerAddress'][0]['postCode']
+            this.userCities = customer['customerAddress'][0]['city']
+            this.userState = customer['customerAddress'][0]['state']
 
-                var newsubTotal = this.subTotal - this.subTotalDiscount
-
-                // alert(this.subTotal + " | " + this.subTotalDiscount)
-
-                if(discount['data']['deliveryDiscountDescription'] == null){
-                    this.deliveryDiscountDesc = "0%"
-                }
-
-                if(this.deliveryDiscount > this.deliveryFee){
-                    this.deliveryDiscount = this.deliveryFee;
-                }
-                var newdeliveryFee = this.deliveryFee - this.deliveryDiscount
-
-                this.totalServiceCharges = (this.storeDeliveryPercentage == 0) ? this.storeDeliveryPercentage : ((this.storeDeliveryPercentage/100) * newsubTotal);
-
-                this.totalPrice = newsubTotal + newdeliveryFee + this.totalServiceCharges
-
-                // alert(newsubTotal + " | " + newdeliveryFee + " | " + this.totalServiceCharges + " | " + this.totalPrice)
-
-                if(this.totalPrice < 0){
-                    this.totalPrice = 0;
-                }
-
+            this.countGrandTotal()
         }
 
-        this.customer_id = customer['id'];
-        this.userMsisdn = customer['phoneNumber']
-        this.userName = customer['name']
-        this.userAddress = customer['customerAddress'][0]['address']
-        this.userPostcode = customer['customerAddress'][0]['postCode']
-        this.userCities = customer['customerAddress'][0]['city']
-        this.userState = customer['customerAddress'][0]['state']
+        
 
         // alert(this.customer_id)
         // alert('toValidate')
-        await this.toValidate();
+        // await this.toValidate();
 
         // console.log('uuid: ' + uuid)
 
@@ -1036,14 +986,18 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
     }
 
     toValidate(){
+        // alert('masok')
         if (this.userEmail && this.userName && this.userMsisdn && this.userAddress && this.userPostcode 
             && this.userCities && this.userState && this.userCountries) {
-
+                // alert('all validated')
                 this.allFieldValidated = true;
 
                 // only if viewForm true get deliveryFees 
                 if(this.viewForm){
-                    this.getDeliveryFee()
+                    // this.getDeliveryFee()
+                    // this.countGrandTotal()
+
+                    this.countGrandTotal()
                 }
 
                 // if(this.isSelfPickup == false){
@@ -1064,6 +1018,8 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
                 
 
         } else {
+
+            // alert('here')
             // console.log("this.userName: " +  this.userName +
             // "\nthis.userMsisdn: " + this.userMsisdn + 
             // "\nthis.userAddress: " + this.userAddress + 
@@ -1073,6 +1029,8 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
             // "\nthis.userCountries: " + this.userCountries)
 
             // alert('field not validated')
+
+            this.countGrandTotal()
         }
     }
 
@@ -1209,14 +1167,16 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
 
             if(this.deliveryOption == "SCHEDULED"){
                 if(this.hasInitForm === true){
-                    this.getDeliveryFee()
+                    // this.getDeliveryFee()
+                    this.countGrandTotal()
                     this.showProvider = true;
                 }
             }
 
             if(this.deliveryOption == "ADHOC" || this.deliveryOption == "SELF"){
                 if(this.hasInitForm === true){
-                    this.getDeliveryFee()
+                    // this.getDeliveryFee()
+                    this.countGrandTotal()
                 }
             }
         }
@@ -1331,6 +1291,10 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
         const delivery = await this.postGetDelivery()
         console.log("delivery data...", delivery)
 
+        // alert('JSONSTRIGY: ' + JSON.stringify(delivery))
+
+        // alert(this.deliveryOption)
+
         if(this.deliveryOption == "SCHEDULED"){
     
             this.providerListing = delivery['data'];
@@ -1368,72 +1332,28 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
 
             if(isError){
 
-                Swal.fire("Oops...", errorMessage, "error")
+                // Swal.fire("Oops...", "Please complete contact information form")
 
                 this.hasDeliveryFee = false;
                 this.payDisable = true;
 
             }else{
                 this.hasDeliveryFee = true;
+
                 
-
-                // console.log("server time now(): "+ this.serverDateTime+"\n"+"this.deliveryValidUpTo: "+this.deliveryValidUpTo);
-                // this.timerReset = this.timerReset + 1;
-
-                // if(this.deliveryOption == "ADHOC"){
-
-                    // this.deliveryValidUpTo = "2021-09-23 10:01:14.843"
-                    // this.timeCounter(this.serverDateTime,this.deliveryValidUpTo);
-
-                    
-                    // Timer test 
-
-                    
-
-                    // this.countDown = timer(0, this.tick).subscribe(async (res: any) => {
-                    //     console.log('timer', res)
-                    //     --this.counter
-                    //     if(this.counter == 0){
-                    //         this.counter = 10
-
-                    //         // await this.getDeliveryFee()
-                    //     }
-                    // }, error => {
-
-                    // });
-
-                    
-
-                // }
-                
-                // calling countPrice again so that deliveryFee included in the FE calculation
-                // const countTotal = await this.countPrice(this.allProductInventory)
-                // this.totalPrice = this.subTotal + this.deliveryFee + this.totalServiceCharges
-
-                // Swal.fire("Delivery Fees", "Additional charges RM " + this.deliveryFee, "info")
-
-                // reset timer 
-                document.getElementById("restart").click();
 
                 this.payDisable = false;
 
-                // alert(this.payDisable)
             }
 
-
-
-            // this.totalPrice = this.subTotal + this.deliveryFee + this.totalServiceCharges
-
-            // if(this.totalPrice < 0){
-            //     this.totalPrice == 0;
-            // }
 
             this.hasInitForm = true;
         }
 
-
         const discount = await this.getDiscount(this.cartID, this.deliveryFee)
-        console.log("discount data...", discount)
+        console.log("discount data ngoninit...", discount)
+
+        // alert('DISCOUNT RESP: ' + JSON.stringify(discount))
 
         this.subTotalDiscount = discount['data']['subTotalDiscount']
         this.subTotalDiscountDesc = '(' + discount['data']['subTotalDiscountDescription'] + ')'
@@ -1452,6 +1372,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
 
         var newsubTotal = this.subTotal - this.subTotalDiscount
 
+        // alert(this.subTotal + " | " + this.subTotalDiscount)
 
         if(discount['data']['deliveryDiscountDescription'] == null){
             this.deliveryDiscountDesc = "0%"
@@ -1459,22 +1380,25 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
 
         if(this.deliveryDiscount > this.deliveryFee){
             this.deliveryDiscount = this.deliveryFee;
-
-            // alert('here' + this.deliveryDiscount + " | " + this.deliveryFee)
         }
 
-        
+        // alert(this.deliveryFee)
+
         var newdeliveryFee = this.deliveryFee - this.deliveryDiscount
 
         this.totalServiceCharges = (this.storeDeliveryPercentage == 0) ? this.storeDeliveryPercentage : ((this.storeDeliveryPercentage/100) * newsubTotal);
 
         this.totalPrice = newsubTotal + newdeliveryFee + this.totalServiceCharges
 
+        // alert(newsubTotal + " | " + newdeliveryFee + " | " + this.totalServiceCharges + " | " + this.totalPrice)
+
         if(this.totalPrice < 0){
             this.totalPrice = 0;
         }
-        
 
+        // reset timer 
+        document.getElementById("restart").click();
+    
     }
 
     postGetDelivery(){
@@ -1645,7 +1569,8 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
                 // stop current countdown
                 clearInterval(timer);
                 // calling getPrice again
-                this.getDeliveryFee();
+                // this.getDeliveryFee();
+                this.countGrandTotal()
                 return false;
             }
             if (this.timerReset > timeReset){
