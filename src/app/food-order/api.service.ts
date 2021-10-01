@@ -266,9 +266,7 @@ Endpoint: http://localhost:7071/stores/storeId/products?sortByCol=price&sortingO
         if(sortId == 1){
             // cheapest
             var url =
-            "stores/"+storeID+"/products?pageSize=10" +
-            "&page=0" +
-            "&status=ACTIVE" +
+            "stores/"+storeID+"/products?status=ACTIVE" +
             "&categoryId=" + categoryId +
             "&sortByCol=price" + 
             "&sortingOrder=ASC";
@@ -276,43 +274,33 @@ Endpoint: http://localhost:7071/stores/storeId/products?sortByCol=price&sortingO
         }else if(sortId == 2){
             // expensive
             var url =
-            "stores/"+storeID+"/products?pageSize=10" +
-            "&page=0" +
-            "&status=ACTIVE" +
+            "stores/"+storeID+"/products?status=ACTIVE" +
             "&categoryId=" + categoryId +
             "&sortByCol=price" + 
             "&sortingOrder=DESC";
         }else if(sortId == 3){
             // by A-Z 
             var url =
-            "stores/"+storeID+"/products?pageSize=10" +
-            "&page=0" +
-            "&status=ACTIVE" +
+            "stores/"+storeID+"/products?status=ACTIVE" +
             "&categoryId=" + categoryId +
             "&sortingOrder=ASC";
         }else if(sortId == 4){
             // by Z-A
             var url =
-            "stores/"+storeID+"/products?pageSize=10" +
-            "&page=0" +
-            "&status=ACTIVE" +
+            "stores/"+storeID+"/products?status=ACTIVE" +
             "&categoryId=" + categoryId +
             "&sortingOrder=DESC";
         }else if(sortId == 5){
             // by Most Recent
             var url =
-            "stores/"+storeID+"/products?pageSize=10" +
-            "&page=0" +
-            "&status=ACTIVE" +
+            "stores/"+storeID+"/products?status=ACTIVE" +
             "&categoryId=" + categoryId +
             "&sortByCol = created" +
             "&sortingOrder=DESC";
         }else{
             // non sorted 
             var url =
-            "stores/"+storeID+"/products?pageSize=10" +
-            "&page=0" +
-            "&status=ACTIVE" +
+            "stores/"+storeID+"/products?status=ACTIVE" +
             "&categoryId=" + categoryId;
         }
 
