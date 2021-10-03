@@ -1332,7 +1332,9 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
 
             if(isError){
 
-                // Swal.fire("Oops...", "Please complete contact information form")
+                if(errorMessage == "ERR_OUT_OF_SERVICE_AREA"){
+                    Swal.fire("Oops...", "Area out of service.")
+                }
 
                 this.hasDeliveryFee = false;
                 this.payDisable = true;
