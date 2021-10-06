@@ -261,48 +261,89 @@ export class ApiService {
             headers: new HttpHeaders().set("Authorization", `Bearer ${this.token}`),
         };
         
-Endpoint: http://localhost:7071/stores/storeId/products?sortByCol=price&sortingOrder=DESC
+// Endpoint: http://localhost:7071/stores/storeId/products?sortByCol=price&sortingOrder=DESC
 
-        if(sortId == 1){
-            // cheapest
-            var url =
-            "stores/"+storeID+"/products?status=ACTIVE" +
-            "&categoryId=" + categoryId +
-            "&sortByCol=price" + 
-            "&sortingOrder=ASC";
+        if(categoryId != null){
+            if(sortId == 1){
+                // cheapest
+                var url =
+                "stores/"+storeID+"/products?status=ACTIVE" +
+                "&categoryId=" + categoryId +
+                "&sortByCol=price" + 
+                "&sortingOrder=ASC";
+    
+            }else if(sortId == 2){
+                // expensive
+                var url =
+                "stores/"+storeID+"/products?status=ACTIVE" +
+                "&categoryId=" + categoryId +
+                "&sortByCol=price" + 
+                "&sortingOrder=DESC";
+            }else if(sortId == 3){
+                // by A-Z 
+                var url =
+                "stores/"+storeID+"/products?status=ACTIVE" +
+                "&categoryId=" + categoryId +
+                "&sortingOrder=ASC";
+            }else if(sortId == 4){
+                // by Z-A
+                var url =
+                "stores/"+storeID+"/products?status=ACTIVE" +
+                "&categoryId=" + categoryId +
+                "&sortingOrder=DESC";
+            }else if(sortId == 5){
+                // by Most Recent
+                var url =
+                "stores/"+storeID+"/products?status=ACTIVE" +
+                "&categoryId=" + categoryId +
+                "&sortByCol = created" +
+                "&sortingOrder=DESC";
+            }else{
+                // non sorted 
+                var url =
+                "stores/"+storeID+"/products?status=ACTIVE" +
+                "&categoryId=" + categoryId;
+            }
 
-        }else if(sortId == 2){
-            // expensive
-            var url =
-            "stores/"+storeID+"/products?status=ACTIVE" +
-            "&categoryId=" + categoryId +
-            "&sortByCol=price" + 
-            "&sortingOrder=DESC";
-        }else if(sortId == 3){
-            // by A-Z 
-            var url =
-            "stores/"+storeID+"/products?status=ACTIVE" +
-            "&categoryId=" + categoryId +
-            "&sortingOrder=ASC";
-        }else if(sortId == 4){
-            // by Z-A
-            var url =
-            "stores/"+storeID+"/products?status=ACTIVE" +
-            "&categoryId=" + categoryId +
-            "&sortingOrder=DESC";
-        }else if(sortId == 5){
-            // by Most Recent
-            var url =
-            "stores/"+storeID+"/products?status=ACTIVE" +
-            "&categoryId=" + categoryId +
-            "&sortByCol = created" +
-            "&sortingOrder=DESC";
         }else{
-            // non sorted 
-            var url =
-            "stores/"+storeID+"/products?status=ACTIVE" +
-            "&categoryId=" + categoryId;
+
+            if(sortId == 1){
+                // cheapest
+                var url =
+                "stores/"+storeID+"/products?status=ACTIVE" +
+                "&sortByCol=price" + 
+                "&sortingOrder=ASC";
+    
+            }else if(sortId == 2){
+                // expensive
+                var url =
+                "stores/"+storeID+"/products?status=ACTIVE" +
+                "&sortByCol=price" + 
+                "&sortingOrder=DESC";
+            }else if(sortId == 3){
+                // by A-Z 
+                var url =
+                "stores/"+storeID+"/products?status=ACTIVE" +
+                "&sortingOrder=ASC";
+            }else if(sortId == 4){
+                // by Z-A
+                var url =
+                "stores/"+storeID+"/products?status=ACTIVE" +
+                "&sortingOrder=DESC";
+            }else if(sortId == 5){
+                // by Most Recent
+                var url =
+                "stores/"+storeID+"/products?status=ACTIVE" +
+                "&sortByCol = created" +
+                "&sortingOrder=DESC";
+            }else{
+                // non sorted 
+                var url =
+                "stores/"+storeID+"/products?status=ACTIVE";
+            }
+            
         }
+        
 
         return this.http.get(this.productServiceURL + url, header);
     }

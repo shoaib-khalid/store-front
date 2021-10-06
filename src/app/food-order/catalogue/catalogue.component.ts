@@ -360,6 +360,13 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
 
     }
 
+    getAllProduct(){
+        this.catId = null
+        this.sortBy = null
+
+        this.getProduct(this.catId ,this.sortBy)
+    }
+
     getProduct(categoryId, sortId) {
 
         // alert(categoryId + " | " + sortId)

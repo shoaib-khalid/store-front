@@ -46,6 +46,17 @@
                     </div>
                 </div>
 
+                <div id="allcategory">
+                    <div class="card" style="border: none; background-color: transparent; height: auto;">
+                        
+                        <!-- <div class="card-body category shadow-sm" style="margin: 0px; border-radius: 5px; width: 150px; height: 150px; border: 1px solid #ffe259;" [ngStyle]="{'background-image': 'url(/assets/image/noimage2.jpg)'}">
+                            <span style="margin: 35px;"></span>
+                        </div> -->
+                        
+                        <a (click)="getAllProduct()" class="text-center details btn btn-outline-warning btn-lg" id="price" style="margin: 5px; font-size: 13px; font-weight: bold; color: black;">All</a>
+                    </div>
+                </div>
+
                 <div id="test" *ngFor="let item of categories; let i = index;">
                     <div class="card" style="border: none; background-color: transparent; height: auto;">
                         
@@ -86,6 +97,17 @@
                         </div> -->
                         
                         <a (click)="goToLanding()" class="text-center details selected btn btn-outline-warning btn-lg" id="price" style="margin: 5px; font-size: 13px; font-weight: bold;">Home</a>
+                    </div>
+                </div>
+
+                <div id="allcategory">
+                    <div class="card" style="border: none; background-color: transparent; height: auto;">
+                        
+                        <!-- <div class="card-body category shadow-sm" style="margin: 0px; border-radius: 5px; width: 150px; height: 150px; border: 1px solid #ffe259;" [ngStyle]="{'background-image': 'url(/assets/image/noimage2.jpg)'}">
+                            <span style="margin: 35px;"></span>
+                        </div> -->
+                        
+                        <a (click)="getAllProduct()" class="text-center details selected btn btn-outline-warning btn-lg" id="price" style="margin: 5px; font-size: 13px; font-weight: bold;">All</a>
                     </div>
                 </div>
 
