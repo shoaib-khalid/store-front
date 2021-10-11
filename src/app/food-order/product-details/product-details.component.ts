@@ -215,6 +215,14 @@ export class ProductDetailsComponent implements OnInit {
         this.inputQty = 1
     }
 
+    goToBack(){
+
+        var catId = localStorage.getItem("category_id")
+
+        this.route.navigate(['catalogue/'+catId]);
+        // alert('hello: ' + catId)
+    }
+
     getItemDetails(cartID){
 
         return new Promise(resolve => {

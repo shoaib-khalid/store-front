@@ -209,6 +209,8 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.storeID = params['storeId'];
                 this.catId = params['catId'];
 
+                localStorage.setItem('category_id', this.catId)
+
                 // this.activatedRoute.params.subscribe(params => {
         //     let date = params['store_id'];
         //     console.log(date); // Print the parameter to the console. 
@@ -233,6 +235,8 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
 
         /** spinner starts on init */
         this.spinner.show();
+
+        this.catId = localStorage.getItem("category_id")
 
         console.log('Catalogue On Page Load');
         // this is for initial base setup 
@@ -368,6 +372,8 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
         this.spinner.show();
 
         this.catId = categoryId
+
+        localStorage.setItem('category_id', this.catId)
 
         this.catalogueList = []
 
