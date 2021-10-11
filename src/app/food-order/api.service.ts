@@ -256,7 +256,7 @@ export class ApiService {
 
     // https://api.symplified.biz/product-service/v1/stores/b91e95f5-4af5-40ff-b7d2-d90b67eb595b/
     // products?pageSize=10&page=0&status=ACTIVE&categoryId=ad3e14db-54c8-4595-ba57-ee6c450bab99
-    getProductSByCategory(categoryId, storeID, sortId) {
+    getProductSByCategory(categoryId, storeID, sortId, pageNo) {
         const header = {
             headers: new HttpHeaders().set("Authorization", `Bearer ${this.token}`),
         };
@@ -268,6 +268,7 @@ export class ApiService {
                 // cheapest
                 var url =
                 "stores/"+storeID+"/products?status=ACTIVE" +
+                "&page=" + pageNo +
                 "&categoryId=" + categoryId +
                 "&sortByCol=price" + 
                 "&sortingOrder=ASC";
@@ -276,6 +277,7 @@ export class ApiService {
                 // expensive
                 var url =
                 "stores/"+storeID+"/products?status=ACTIVE" +
+                "&page=" + pageNo +
                 "&categoryId=" + categoryId +
                 "&sortByCol=price" + 
                 "&sortingOrder=DESC";
@@ -283,18 +285,21 @@ export class ApiService {
                 // by A-Z 
                 var url =
                 "stores/"+storeID+"/products?status=ACTIVE" +
+                "&page=" + pageNo +
                 "&categoryId=" + categoryId +
                 "&sortingOrder=ASC";
             }else if(sortId == 4){
                 // by Z-A
                 var url =
                 "stores/"+storeID+"/products?status=ACTIVE" +
+                "&page=" + pageNo +
                 "&categoryId=" + categoryId +
                 "&sortingOrder=DESC";
             }else if(sortId == 5){
                 // by Most Recent
                 var url =
                 "stores/"+storeID+"/products?status=ACTIVE" +
+                "&page=" + pageNo +
                 "&categoryId=" + categoryId +
                 "&sortByCol = created" +
                 "&sortingOrder=DESC";
@@ -302,7 +307,7 @@ export class ApiService {
                 // non sorted 
                 var url =
                 "stores/"+storeID+"/products?status=ACTIVE" +
-                "&categoryId=" + categoryId;
+                "&categoryId=" + categoryId + "&page=" + pageNo;
             }
 
         }else{
@@ -311,6 +316,7 @@ export class ApiService {
                 // cheapest
                 var url =
                 "stores/"+storeID+"/products?status=ACTIVE" +
+                "&page=" + pageNo +
                 "&sortByCol=price" + 
                 "&sortingOrder=ASC";
     
@@ -318,28 +324,32 @@ export class ApiService {
                 // expensive
                 var url =
                 "stores/"+storeID+"/products?status=ACTIVE" +
+                "&page=" + pageNo +
                 "&sortByCol=price" + 
                 "&sortingOrder=DESC";
             }else if(sortId == 3){
                 // by A-Z 
                 var url =
                 "stores/"+storeID+"/products?status=ACTIVE" +
+                "&page=" + pageNo +
                 "&sortingOrder=ASC";
             }else if(sortId == 4){
                 // by Z-A
                 var url =
                 "stores/"+storeID+"/products?status=ACTIVE" +
+                "&page=" + pageNo +
                 "&sortingOrder=DESC";
             }else if(sortId == 5){
                 // by Most Recent
                 var url =
                 "stores/"+storeID+"/products?status=ACTIVE" +
+                "&page=" + pageNo +
                 "&sortByCol = created" +
                 "&sortingOrder=DESC";
             }else{
                 // non sorted 
                 var url =
-                "stores/"+storeID+"/products?status=ACTIVE";
+                "stores/"+storeID+"/products?status=ACTIVE" + "&page=" + pageNo;
             }
             
         }

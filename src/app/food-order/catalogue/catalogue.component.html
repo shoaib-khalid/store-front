@@ -300,23 +300,23 @@
                     </ng-container>
 
                     <ng-template #havePrevious>
-                        <li class="page-item">
+                        <li class="page-item" (click)="goToPrev(currentPageElement)">
                             <span class="page-link">Previous</span>
                         </li>
                     </ng-template>
 
                     <!-- Middle Level pagination -->
                     <ng-container 
-                    *ngFor="let a of paginationArr; let index = index">
+                    *ngFor="let a of fakeArray; let index = index">
                         
                         <ng-container *ngIf="index == currentPageElement; else notActive">
-                            <li class="page-item active">
+                            <li class="page-item active" (click)="goToPage(index)">
                                 <span class="page-link">{{index + 1}}</span>
                             </li>
                         </ng-container>
                         
                         <ng-template #notActive>
-                            <li class="page-item active">
+                            <li class="page-item" (click)="goToPage(index)">
                                 <span class="page-link">{{index + 1}}</span>
                             </li>
                         </ng-template>
@@ -331,7 +331,7 @@
                     </ng-container>
 
                     <ng-template #haveNext>
-                        <li class="page-item">
+                        <li class="page-item" (click)="goToNext(currentPageElement)">
                             <span class="page-link">Next</span>
                         </li>
                     </ng-template>

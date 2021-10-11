@@ -137,7 +137,8 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
     nextPage: any;
     isLastPage: any;
     isFirstPage: any;
-    // fakeArray = new Array(12);
+    fakeArray: any = [];
+    page_no: number = 0;
 
     constructor(
         private _databindService: DataBindService, 
@@ -375,6 +376,28 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
         this.getProduct(this.catId ,this.sortBy)
     }
 
+    goToPrev(pageNo){
+
+        this.page_no = pageNo - 1
+
+        this.getProduct(this.catId ,this.sortBy)
+        // alert(goToPrev)
+    }
+
+    goToNext(pageNo){
+        this.page_no = pageNo + 1
+
+        this.getProduct(this.catId ,this.sortBy)
+        // alert(goToNext)
+    }
+
+    goToPage(pageNo){
+
+        this.page_no = pageNo
+
+        this.getProduct(this.catId ,this.sortBy)
+    }
+
 
     getProduct(categoryId, sortId) {
 
@@ -389,7 +412,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
 
         // console.log('Calling Backend getProductSByStoreID');
         // this.apiService.getProductSByStoreID(this.storeID).subscribe((res: any) => {
-        this.apiService.getProductSByCategory(categoryId, this.storeID, sortId).subscribe((res: any) => {
+        this.apiService.getProductSByCategory(categoryId, this.storeID, sortId, this.page_no).subscribe((res: any) => {
             // console.log('Receive Backend getProductSByStoreID');
             if (res.message) {
                 this.product = res.data.content;
@@ -404,7 +427,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
                 // alert(this.currentPageElement)
 
                 this.isLastPage = productPagination.last
-                this.isFirstPage = productPagination.last
+                this.isFirstPage = productPagination.first
 
                 if(this.isFirstPage == false){
                     this.previousPage = this.currentPage - 1
@@ -423,7 +446,13 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
                 console.log('previouse page: ' + this.previousPage)
                 console.log('next page: ' + this.nextPage)
 
+                this.fakeArray = new Array(totalPages);
+
                 this.paginationArr = [];
+
+                // if(this.isFirstPage){
+                //     this.paginationArr.push(this.currentPage);
+                // }
 
                 if(this.currentPage){
                     this.paginationArr.push(this.currentPage);
@@ -434,8 +463,12 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
                 }
 
                 if(this.nextPage){
-                    this.paginationArr.push(this.currentPage);
+                    this.paginationArr.push(this.nextPage);
                 }
+
+                // if(this.isLastPage){
+
+                // }
 
                 console.log('pagination Arr []: ' , this.paginationArr)
 
