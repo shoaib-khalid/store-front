@@ -75,6 +75,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
     fromAddToCart:boolean = false;
     catalogueList = [];
     allProductInventory = [];
+    paginationArr = [];
 
     //applicable for variant product logic
     singleInventoriesMode:boolean = false;
@@ -130,6 +131,13 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
     addToInstruction: string = "";
     sortBy:any = 0;
     visible:boolean = false;
+    currentPageElement: any;
+    currentPage: any;
+    previousPage: number;
+    nextPage: any;
+    isLastPage: any;
+    isFirstPage: any;
+    // fakeArray = new Array(12);
 
     constructor(
         private _databindService: DataBindService, 
@@ -367,6 +375,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
         this.getProduct(this.catId ,this.sortBy)
     }
 
+
     getProduct(categoryId, sortId) {
 
         // alert(categoryId + " | " + sortId)
@@ -384,7 +393,55 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
             // console.log('Receive Backend getProductSByStoreID');
             if (res.message) {
                 this.product = res.data.content;
+
+                let productPagination = res.data
+
+                let totalPages = productPagination.totalPages
+
+                this.currentPage = productPagination.pageable.pageNumber + 1
+                this.currentPageElement = productPagination.pageable.pageNumber
+
+                // alert(this.currentPageElement)
+
+                this.isLastPage = productPagination.last
+                this.isFirstPage = productPagination.last
+
+                if(this.isFirstPage == false){
+                    this.previousPage = this.currentPage - 1
+                }else{
+
+                }
+
+                if(this.isLastPage == false){
+                    this.nextPage = this.currentPage + 1
+                }else{
+
+                }
+
+
+                console.log('current page: ' + this.currentPage)
+                console.log('previouse page: ' + this.previousPage)
+                console.log('next page: ' + this.nextPage)
+
+                this.paginationArr = [];
+
+                if(this.currentPage){
+                    this.paginationArr.push(this.currentPage);
+                }
+
+                if(this.previousPage){
+                    this.paginationArr.push(this.previousPage);
+                }
+
+                if(this.nextPage){
+                    this.paginationArr.push(this.currentPage);
+                }
+
+                console.log('pagination Arr []: ' , this.paginationArr)
+
                 console.log('getProduct(): ', this.product);
+                console.log('productPagination: ', productPagination)
+                console.log('totalPages: ', totalPages)
                 // console.log('price: ', this.product[0].productInventories[1]);
 
                 // return false;

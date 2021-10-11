@@ -286,6 +286,59 @@
         </div>
         
     </div>
+
+    <div class="row" style="margin-top: 50px; margin-bottom: 100px;">
+        <div class="col d-flex justify-content-center">
+            <nav aria-label="...">
+                <ul class="pagination">
+                
+                    <!-- Previous pagination  -->
+                    <ng-container *ngIf="isFirstPage; else havePrevious">
+                        <li class="page-item disabled">
+                            <span class="page-link">Previous</span>
+                        </li>
+                    </ng-container>
+
+                    <ng-template #havePrevious>
+                        <li class="page-item">
+                            <span class="page-link">Previous</span>
+                        </li>
+                    </ng-template>
+
+                    <!-- Middle Level pagination -->
+                    <ng-container 
+                    *ngFor="let a of paginationArr; let index = index">
+                        
+                        <ng-container *ngIf="index == currentPageElement; else notActive">
+                            <li class="page-item active">
+                                <span class="page-link">{{index + 1}}</span>
+                            </li>
+                        </ng-container>
+                        
+                        <ng-template #notActive>
+                            <li class="page-item active">
+                                <span class="page-link">{{index + 1}}</span>
+                            </li>
+                        </ng-template>
+
+                    </ng-container>
+
+                    <!-- Next Pagination  -->
+                    <ng-container *ngIf="isLastPage; else haveNext">
+                        <li class="page-item disabled">
+                            <span class="page-link">Next</span>
+                        </li>
+                    </ng-container>
+
+                    <ng-template #haveNext>
+                        <li class="page-item">
+                            <span class="page-link">Next</span>
+                        </li>
+                    </ng-template>
+                </ul>
+            </nav>
+        </div>
+    </div>
 </div>
 
 

@@ -289,6 +289,33 @@ drag-scroll-item::-webkit-scrollbar-track {
     max-width: 600px !important;
 }
 
+.page-item.active .page-link {
+    z-index: 3;
+    color: #fff;
+    background-color: #ffc107;
+    border-color: #ffc107;
+}
+
+.page-link {
+    position: relative;
+    display: block;
+    padding: .5rem .75rem;
+    margin-left: -1px;
+    line-height: 1.25;
+    color: #ffc107;
+    background-color: #fff;
+    border: 1px solid #dee2e6;
+}
+
+.page-link:hover{
+    cursor: pointer;
+    background-color: #F3F5F6;
+}
+
+/* .page-item.active .page-link{
+    background: #FFE45C;
+} */
+
 
 /* for mobile */
 @media (min-width: 992px) {
