@@ -19,6 +19,7 @@ export class BannerCatalogueComponent implements OnInit {
     bannerExist: boolean = false;
     logoExist: boolean = false;
     storeDescription: any;
+    storeNameRaw: any;
 
   constructor(
     private apiService: ApiService,
@@ -88,6 +89,7 @@ export class BannerCatalogueComponent implements OnInit {
 
     this.storeID = storeInfo['id']
     this.storeDescription = storeInfo['storeDescription']
+    this.storeNameRaw = storeInfo['name']
     // this.storeName = storeInfo['name']
 
     console.log('Banner StoreID: ' + this.storeID)

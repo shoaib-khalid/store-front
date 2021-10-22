@@ -139,7 +139,7 @@
         <div class="position-relative">
             <!-- <div class="position-absolute top-100 start-50 translate-middle"></div> -->
             <footer class="tm-footer text-center fixed-bottom position-absolute" style="background-color: #FFE45C; border-top-left-radius: 25px; border-top-right-radius: 25px;">
-                <p (click)="showVersionPill($event)" style="cursor: pointer;"><strong>{{storeName}}</strong></p>
+                <p (click)="showVersionPill($event)" style="cursor: pointer;"><strong>{{storeNameRaw}}</strong></p>
                 <p *ngIf=(storeContact)><strong>Contact us: {{storeContact}}</strong></p>
                 <!-- <br> -->
                 <small *ngIf="showVersion" class="text-muted badge badge-pill badge-light" style="padding: 5px; font-size: 9px;">{{version}}</small>

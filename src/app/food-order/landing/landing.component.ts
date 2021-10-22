@@ -125,6 +125,7 @@ export class LandingComponent implements OnInit, AfterViewInit, OnDestroy {
     bannerImage:any;
     storeInformation:any = [];
     showVersion: boolean = false;
+    storeNameRaw: any;
 
     constructor(
         private _databindService: DataBindService, 
@@ -312,6 +313,8 @@ export class LandingComponent implements OnInit, AfterViewInit, OnDestroy {
 
                     return false
                 }
+
+                this.storeNameRaw = data.name
 
                 this.storeID = data.id;
 
