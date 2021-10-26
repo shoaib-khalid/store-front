@@ -1,6 +1,6 @@
 {
   "name": "store-front",
-  "version": "2.1.28-beta",
+  "version": "2.1.29-beta",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
