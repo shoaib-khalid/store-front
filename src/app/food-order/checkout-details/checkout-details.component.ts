@@ -1322,7 +1322,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
                 this.serverDateTime = delivery['timestamp'];
 
                 var isError = delivery['data']['isError'];
-                var errorMessage = delivery['message'];
+                var errorMessage = delivery['data']['message'];
             }
             
             // alert('delivery charge: '+this.deliveryFee)
@@ -1330,7 +1330,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
             // this.totalPrice = this.subTotal + this.deliveryFee;
             // console.log('total price : ' + this.totalPrice)
 
-            if(isError){
+            if(isError && this.allFieldValidated == true && this.deliveryOption != 'SELF'){
 
                 if(errorMessage == "ERR_OUT_OF_SERVICE_AREA"){
                     Swal.fire("Oops...", "Area out of service.")
