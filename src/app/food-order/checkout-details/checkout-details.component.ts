@@ -778,7 +778,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
             }
         }
 
-        this.apiService.postConfirmCOD(data, this.cartID).subscribe((res: any) => {
+        this.apiService.postConfirmCOD(data, this.cartID, this.isSaved).subscribe((res: any) => {
             // console.log('add item to order loop: ', res)
             if (res.message){
                 console.log('confirmed COD flow: '+ res.data)
