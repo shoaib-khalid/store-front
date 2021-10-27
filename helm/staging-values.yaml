@@ -31,7 +31,7 @@ fullnameOverride: ""
 image:
   pullPolicy: Always
   repository: kalsym/store-front
-  tag: 2.1.32-beta
+  tag: 2.1.33-beta
 imagePullSecrets:
 - name: kalsym-docker-hub
 ingress:
