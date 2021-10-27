@@ -504,13 +504,19 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
 
         console.log("initOrder initiated:");
 
-        // alert(this.userMsisdn)
-        
-        const orderId = await this.postInitOrder();
-        this.addItemOrder(orderId['id'])
-        this.orderId = orderId['id'];
+        if(this.paymentType == "ONLINEPAYMENT"){
 
-        console.log("initOrder received (orderId):"+ orderId['id']);
+            const orderId = await this.postInitOrder();
+            this.addItemOrder(orderId['id'])
+            this.orderId = orderId['id'];
+
+            console.log("initOrder received (orderId):"+ orderId['id']);
+
+        }else{
+            this.goCod()
+        }
+
+        // alert(this.userMsisdn)
 
         // forkJoin([initOrder, getOrderId]).subscribe(results => {
 
@@ -546,47 +552,26 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
             let price = cartItem.price
             let productPrice = cartItem.productPrice
 
-
             console.log("Checkout SKU: "+ sku);
-    
-            
-            // console.log("realOrderId: "+ JSON.stringify(realOrderId) + "")
-            // console.log("realOrderId: "+ JSON.stringify(orderId) + "")
 
             this.postAddItemToOrder(itemCode,orderId,price,productId,productPrice,quantity,sku,weight,productName,specialInstruction);
     
-            // await this.allProductInventory.forEach(allItem => {
-    
-            //     let price = allItem.price
-    
-            //     if(itemCode == allItem.itemCode){
-                    
-            //         // console.log("itemCode: " + itemCode +
-            //         // "\norderId: " + orderId +
-            //         // "\nprice: " + price +
-            //         // "\nproductId: " + productId +
-            //         // "\nproductPrice: " + price +
-            //         // "\nquantity: " + quantity +
-            //         // "\nsku: " + sku +
-            //         // "\nweight: " + weight);
-                    
-            //         this.postAddItemToOrder(itemCode,orderId,price,productId,price,quantity,sku,weight,productName,specialInstruction);
-    
-            //     }
-            // });
-    
         })
+
+        this.visible = true;
+
+        this.goPay()
 
         // console.log('go Here tak?')
     
-        if(this.paymentType == "ONLINEPAYMENT"){
-            // start the loading 
-            this.visible = true;
+        // if(this.paymentType == "ONLINEPAYMENT"){
+        //     // start the loading 
+        //     this.visible = true;
 
-            this.goPay()
-        }else{
-            this.goCod(orderId)
-        }
+        //     this.goPay()
+        // }else{
+        //     this.goCod()
+        // }
         
     }
     
@@ -709,49 +694,12 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
         
     }
 
-    // countPrice(productList:any){
-
-    //     this.subTotal = 0
-    //     this.totalServiceCharges = 0
-
-    //     // console.log('in countPrice Obj: ', this.cartitemDetails)
-
-    //     // console.log('productList: ' , productList)
-
-    //     // console.log("this.cartitemDetails: "+this.cartitemDetails);
-
-    //     this.cartitemDetails.forEach(cartItem => {
-    //         productList.map(allProduct => {
-    //             // console.log("allProduct.itemCode : " + allProduct.itemCode + "\ncartItem.itemCode : " + cartItem.itemCode);
-    //             if(allProduct.itemCode == cartItem.itemCode){
-    //                 this.subTotal = this.subTotal + (allProduct.price * cartItem.quantity);
-    //             }
-    //         })
-    //     });
-
-    //     this.totalServiceCharges = (this.storeDeliveryPercentage == 0) ? this.storeDeliveryPercentage : ((this.storeDeliveryPercentage/100) * this.subTotal);
-
-
-    //     this.totalPrice = this.subTotal + this.deliveryFee + this.totalServiceCharges
-
-    //     console.log(typeof(this.totalPrice))
-    //     console.log(typeof(this.subTotal))
-    //     console.log(typeof(this.deliveryFee))
-    //     console.log(typeof(this.totalServiceCharges))
-
-    //     console.log("Sub-total : "+this.subTotal);
-    //     console.log("Service Charges : "+this.subTotal);
-    //     console.log("Delivery Charges : "+this.deliveryFee);
-    //     console.log("Grant Total : "+this.totalPrice);
-        
-    // }
-
     goSkip(){
         this.route.navigate(['thankyou/SUCCESS/ORDER_CONFIRMED']);   
         // http://cinema-online.test:4200/thankyou/SUCCESS/ORDER_CONFIRMED
     }
 
-    goCod(orderId){
+    goCod(){
 
         // alert("cart id: " + this.cartID)
 
@@ -759,7 +707,8 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
         
         let data = { 
             "cartId": this.cartID, 
-            "customerId": this.customer_id, 
+            "customerId": this.customer_id,
+            "customerNotes": this.customerNotes, 
             "orderPaymentDetails": { 
                 "accountName": this.userName, 
                 "deliveryQuotationAmount": this.deliveryFee, 
@@ -779,7 +728,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
             }
         }
 
-        this.apiService.postConfirmCOD(data, this.cartID, orderId).subscribe((res: any) => {
+        this.apiService.postConfirmCOD(data, this.cartID).subscribe((res: any) => {
             // console.log('add item to order loop: ', res)
             if (res.message){
                 console.log('confirmed COD flow: '+ res.data)
