@@ -501,7 +501,7 @@ export class ApiService {
     }   
     
     // ref : http://209.58.160.20:7001/orders/placeOrder?cartId=0439aee0-b57f-4cf5-81c4-f93d6103c57f
-    postConfirmCOD(data, cartId):Observable<any> {
+    postConfirmCOD(data, cartId, orderId):Observable<any> {
         // data sample : { "created": "2021-05-26T01:59:19.698Z", "customerId": "string", "id": "string", "isOpen": true, "storeId": "string", "updated": "2021-05-26T01:59:19.699Z"}
         const httpOptions = {
             headers: new HttpHeaders(
@@ -512,7 +512,7 @@ export class ApiService {
         }
         
         // const url = "http://209.58.160.20:7001/orders/placeOrder?cartId=" + cartId;
-        const url = this.orderServiceURL + "orders/placeOrder?cartId=" + cartId;
+        const url = this.orderServiceURL + "orders/placeOrder?cartId=" + cartId + "&orderId=" + orderId;
         return this.http.post(url, data, httpOptions);
     }
 

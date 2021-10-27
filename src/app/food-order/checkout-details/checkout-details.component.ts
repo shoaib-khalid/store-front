@@ -531,6 +531,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
 
     async addItemOrder(orderId){
         console.log('cartitemDetails')
+
         await this.cartitemDetails.map(async cartItem => {
             console.log('cartitemDetails in')
     
@@ -584,7 +585,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
 
             this.goPay()
         }else{
-            this.goCod()
+            this.goCod(orderId)
         }
         
     }
@@ -750,7 +751,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
         // http://cinema-online.test:4200/thankyou/SUCCESS/ORDER_CONFIRMED
     }
 
-    goCod(){
+    goCod(orderId){
 
         // alert("cart id: " + this.cartID)
 
@@ -778,7 +779,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
             }
         }
 
-        this.apiService.postConfirmCOD(data, this.cartID).subscribe((res: any) => {
+        this.apiService.postConfirmCOD(data, this.cartID, orderId).subscribe((res: any) => {
             // console.log('add item to order loop: ', res)
             if (res.message){
                 console.log('confirmed COD flow: '+ res.data)
