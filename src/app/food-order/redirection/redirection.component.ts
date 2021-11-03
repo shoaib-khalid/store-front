@@ -81,7 +81,7 @@ export class RedirectionComponent implements OnInit {
 
         // set back the cartID 
         localStorage.setItem('cart_id', this.storeID)
-        localStorage.setItem('payment_id', this.paymentType)
+        localStorage.setItem('payment_type', this.paymentType)
         localStorage.setItem('anonym_cart_id', this.storeID)
 
         // checkCart() will wait getProduct() to finished 
