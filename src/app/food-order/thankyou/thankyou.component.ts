@@ -19,6 +19,7 @@ export class ThankyouComponent implements OnInit {
     refID:any;
     storeID:any;
     cartID:any;
+    paymentType:string = "ONLINEPAYMENT";
 
     assets = {};
     logoExist: boolean = true;
@@ -72,6 +73,7 @@ export class ThankyouComponent implements OnInit {
     this.refID = localStorage.getItem('ref_id');
     this.storeID = localStorage.getItem('store_id');
     this.cartID = localStorage.getItem('cart_id');
+    this.paymentType = localStorage.getItem('payment_type');
 
     // call asset api to get logo
     const assetData = await this.getAssets(temp_storeID)
