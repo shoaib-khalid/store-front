@@ -1424,7 +1424,7 @@ export class LandingComponent implements OnInit, AfterViewInit, OnDestroy {
 
         // front end quantity
         let minQtty = 1;
-        let maxQtty = 10;
+        let maxQtty = 99999;
         if ((this.cartitemDetails[index].quantity <= minQtty) && operation == "-1") {
             this.cartitemDetails[index].quantity = minQtty;
             Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + "Item can't be less than " + minQtty + "</small>", "error")
