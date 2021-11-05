@@ -695,7 +695,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
     }
 
     goSkip(){
-        this.route.navigate(['thankyou/SUCCESS/ORDER_CONFIRMED']);   
+        this.route.navigate(['thankyou/SUCCESS/COD/ORDER_CONFIRMED']);   
         // http://cinema-online.test:4200/thankyou/SUCCESS/ORDER_CONFIRMED
     }
 
