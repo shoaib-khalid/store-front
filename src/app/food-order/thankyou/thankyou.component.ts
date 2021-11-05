@@ -19,11 +19,11 @@ export class ThankyouComponent implements OnInit {
     refID:any;
     storeID:any;
     cartID:any;
-    paymentType:string = "ONLINEPAYMENT";
-
+    
     assets = {};
     logoExist: boolean = true;
     status_id: any;
+    payment_type:string = "ONLINEPAYMENT";
     msg: any;
     successPay: boolean = false;
     failed_msg: string = "";
@@ -36,6 +36,7 @@ export class ThankyouComponent implements OnInit {
         // get url parameter style e.g http://209.58.160.20:8090/thankyou?txid=PY160321055629630e&refId=R123123111&status=SUCCESS
         this.activatedRoute.params.subscribe(params => {
         this.status_id = params['status_id']
+        this.payment_type = params['payment_type']
         this.msg = params['msg']
         // this.payStatus = params['status'];
         // console.log(this.payTxID + "-" + this.payRefID + "-" + this.payStatus); 
@@ -73,7 +74,6 @@ export class ThankyouComponent implements OnInit {
     this.refID = localStorage.getItem('ref_id');
     this.storeID = localStorage.getItem('store_id');
     this.cartID = localStorage.getItem('cart_id');
-    this.paymentType = localStorage.getItem('payment_type');
 
     // call asset api to get logo
     const assetData = await this.getAssets(temp_storeID)

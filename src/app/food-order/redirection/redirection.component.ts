@@ -96,7 +96,7 @@ export class RedirectionComponent implements OnInit {
 
         // console.log(this.currBaseURL);
 
-        const url = "https://" + this.subDomain + ".symplified." + domainTLD + "/thankyou/"+this.status_id+"/"+this.msg
+        const url = "https://" + this.subDomain + ".symplified." + domainTLD + "/thankyou/"+this.status_id+"/"+this.paymentType+"/"+this.msg
         // const testurl = "http://" + this.subDomain + ".test:4200/thankyou/"+this.status_id+"/"+this.msg
 
         // alert('Domain:' + this.currBaseURL + '| subDomain: ' + this.subDomain + '| TLD: ' + domainTLD)

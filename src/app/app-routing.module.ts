@@ -23,7 +23,7 @@ const routes: Routes = [
     { path: "checkout", component: StepCheckoutComponent },
     // { path: "thankyou/:txid/:refId/:status", component: ThankyouComponent },
     { path: "thankyou", component: ThankyouComponent },
-    { path: "thankyou/:status_id/:msg", component: ThankyouComponent },
+    { path: "thankyou/:status_id/:payment_type/:msg", component: ThankyouComponent },
     // http://209.58.160.20:8090/thankyou?txid=PY160321055629630e&refId=R123123111&status=SUCCESS
     // { path: "product/:category/:senderId/:storeId", component: StepCatalogueComponent },
     // { path: "products", 
