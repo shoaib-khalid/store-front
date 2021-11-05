@@ -53,7 +53,7 @@
                             <span style="margin: 35px;"></span>
                         </div> -->
                         
-                        <a (click)="getAllProduct()" class="text-center details btn btn-outline-warning btn-lg" id="price" style="margin: 5px; font-size: 13px; font-weight: bold; color: black;">All</a>
+                        <a (click)="getAllProduct()" [ngClass]="{'selected' : this.selectedMenu === 'all'}" class="text-center details btn btn-outline-warning btn-lg" id="price" style="margin: 5px; font-size: 13px; font-weight: bold; color: black;">All</a>
                     </div>
                 </div>
 
@@ -74,7 +74,7 @@
                             </div> -->
                         </ng-template>
                         
-                        <a (click)="getProduct(item.id)" class="text-center details btn btn-outline-warning btn-lg" id="price" style="margin: 5px; font-size: 13px; font-weight: bold; color: black;">{{ item.name }}</a>
+                        <a (click)="getProduct(item.id)" [ngClass]="{'selected' : this.selectedMenu === item.id}" class="text-center details btn btn-outline-warning btn-lg" id="price" style="margin: 5px; font-size: 13px; font-weight: bold; color: black;">{{ item.name }}</a>
                     </div>
                 </div> 
             </div>
