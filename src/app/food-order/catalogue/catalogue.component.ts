@@ -139,6 +139,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
     isFirstPage: any;
     fakeArray: any = [];
     page_no: number = 0;
+    selectedMenu: string = "";
 
     constructor(
         private _databindService: DataBindService, 
@@ -408,6 +409,15 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
         // alert(categoryId + " | " + sortId)
 
         // this.visible = true;
+
+        if (!categoryId && !sortId){
+            this.selectedMenu = 'all';
+        } else {
+            this.selectedMenu = categoryId;
+        }
+
+        console.log("this.selectedMenu",this.selectedMenu)
+
         this.spinner.show();
 
         this.catId = categoryId

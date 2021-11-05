@@ -156,19 +156,20 @@ drag-scroll-item::-webkit-scrollbar-track {
   }
 
   .selected{
-    color: black;
-}
+    background-color: #ffb347 !important;
+    color: black !important;
+  }
 
   .selected:hover{
-    color: #ffb347 !important;
-}
+    color: black !important;
+  }
 
   .selected:active{
-      color: #ffb347 !important;
+    color: black !important;
   }
 
   .selected:focus{
-    color: #ffb347 !important;
+    color: black !important;
 }
 
 .selected:visited{
