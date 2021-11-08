@@ -1,0 +1,14 @@
+Version 2.1.36-beta
+-------------------------
+Date:08-Nov-2021
+Developer:Ahmad Miqdaad
+
+1. make discound banner currency dynamic
+
+Version 2.1.35-beta
+-------------------------
+Date:06-Nov-2021
+Developer:Ahmad Miqdaad
+
+1. update TQ msg (spelling error which shoaib highlighted)
+2. highlight category selection. previously not working
