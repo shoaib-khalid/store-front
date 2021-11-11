@@ -116,7 +116,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
     disableForm:boolean = false;
     dayArr = ['SUNDAY', 'MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY'];
 
-    store_close:boolean = true;
+    store_open:boolean = true;
     storeTimingObj:any = {};
 
     currencySymbol:string = "";
@@ -1880,15 +1880,25 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
                                 console.log("WE ARE OPEN !");
                             }else{
                                 console.log("OH No, sorry! between 5.30pm and 6.30pm");
-                                this.store_close = false
+                                this.store_open = false
                             }
 
                         } else {
                             console.log("WERE ARE CLOSED")
-                            this.store_close = false
+                            this.store_open = false
                         }
                     }
                 });
+
+                // check is snooze
+                let isSnooze = res.data.isSnooze;
+                console.log("tengok",isSnooze);
+                
+                if (isSnooze === true) {
+                    this.store_open = false
+                } else {
+                    this.store_open = true
+                }
 
             } else {
             }

@@ -69,7 +69,7 @@
                 <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 text-center border border-secondary" id="mobilespacer"
                  style="padding: 10px; background-color: white; border-radius: 15px; border-color: #ffb347 !important;">
 
-                    <div *ngIf="store_close; else storeClosed">
+                    <div *ngIf="store_open; else storeClosed">
                         <ng-container *ngIf="cartitemDetailsCount > 0 ;else emptyCartItem">
                             <!-- Now Its Working! -->
                             <div style="padding: 10px; background-color: #ffe259; border-radius: 10px;">
