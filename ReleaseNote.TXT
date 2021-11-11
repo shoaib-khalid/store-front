@@ -1,3 +1,10 @@
+Version 2.1.37-beta
+-------------------------
+Date:11-Nov-2021
+Developer:Naqiuddeen
+
+1. implement store open and close based on snooze button
+
 Version 2.1.36-beta
 -------------------------
 Date:08-Nov-2021
