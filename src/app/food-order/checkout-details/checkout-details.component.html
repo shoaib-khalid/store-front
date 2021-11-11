@@ -69,7 +69,7 @@
                 <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 text-center border border-secondary" id="mobilespacer"
                  style="padding: 10px; background-color: white; border-radius: 15px; border-color: #ffb347 !important;">
 
-                    <div *ngIf="store_open; else storeClosed">
+                    <div *ngIf="store_open === true && isSnooze === false">
                         <ng-container *ngIf="cartitemDetailsCount > 0 ;else emptyCartItem">
                             <!-- Now Its Working! -->
                             <div style="padding: 10px; background-color: #ffe259; border-radius: 10px;">
@@ -403,7 +403,7 @@
                         
                     </div>
 
-                    <ng-template #storeClosed>
+                    <ng-container *ngIf="store_open === false && isSnooze === false">
                         <div class="alert alert-danger" role="alert">
                             <h4 class="alert-heading">We are closed!</h4>
                             <p>We are closed now our opening hours are as per below</p>
@@ -414,7 +414,15 @@
                             
                             <!-- <p class="mb-0">Whenever you need to, be sure to use margin utilities to keep things nice and tidy.</p> -->
                         </div>
-                    </ng-template>
+                    </ng-container>
+                    
+                    <ng-container *ngIf="store_open === true && isSnooze === true">
+                        <div class="alert alert-danger" role="alert">
+                            <h4 class="alert-heading">We are closed!</h4>
+                            <p>Sorry our store close for a while</p>
+                            
+                        </div>
+                    </ng-container>
 
                     <ng-template #emptyCartItem>
                         <div class="alert alert-warning" role="alert">

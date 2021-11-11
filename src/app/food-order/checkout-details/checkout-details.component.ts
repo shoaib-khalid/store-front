@@ -103,6 +103,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
     dayArr = ['SUNDAY', 'MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY'];
 
     store_open:boolean = true;
+    isSnooze:boolean = false;
     storeTimingObj:any = {};
 
     currencySymbol:string = "";
@@ -425,15 +426,8 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
             } 
         });
 
-        let isSnooze =storeInfo['isSnooze'];
-        console.log("tengok",isSnooze);
+        this.isSnooze = storeInfo['isSnooze'];
         
-        if (isSnooze === true) {
-            this.store_open = false
-        } else {
-            this.store_open = true
-        }
-
         // get list of statest 
         const statesList = await this.getStatesByID(this.CountryID);
 
