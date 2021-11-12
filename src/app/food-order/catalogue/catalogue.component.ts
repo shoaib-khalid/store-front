@@ -1844,7 +1844,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     getStoreHour(){
-        this.apiService.getStoreHoursByID(this.storeID).subscribe((res: any) => {
+        this.apiService.getStoreHoursByID(this.storeID).subscribe(async (res: any) => {
             console.log('store business hour: ', res)
             if (res.message){
                 console.log('storeTiming : ', res.data.storeTiming)
@@ -1891,10 +1891,9 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
                 });
 
                 // check is snooze
-                let isSnooze = res.data.isSnooze;
-                console.log("tengok",isSnooze);
+                let isSnoozeData = await this.getTimingSnooze(this.storeID)
                 
-                if (isSnooze === true) {
+                if (isSnoozeData["isSnooze"] === true) {
                     this.store_open = false
                 } else {
                     this.store_open = true
@@ -1905,6 +1904,22 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
         }, error => {
             console.log(error)
         }) 
+    }
+
+    getTimingSnooze(storeID){
+
+        return new Promise(resolve => {
+            this.apiService.getTimingSnooze(storeID).subscribe(async (res: any) => {
+                if (res.message){
+                    resolve(res.data)
+                } else {
+                    console.log('getDeliveryOption operation failed')
+                }
+            }, error => {
+                console.log(error)
+            })
+        })
+
     }
 
     clearSI(){

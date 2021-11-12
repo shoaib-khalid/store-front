@@ -99,7 +99,20 @@ export class ApiService {
     // product service
     // ===============
 
+    getTimingSnooze(storeID){
+
+        const header = {
+            headers: new HttpHeaders().set("Authorization", `Bearer ${this.token}`),
+        };
+        const url =
+            "stores/" + storeID +
+            "/timings/snooze";
+
+        return this.http.get(this.productServiceURL + url, header);
+    }
+
     // Ref : http://209.58.160.20:7071/swagger-ui.html#/store-asset-controller/getStoreAssetsUsingGET
+
     getStoreAssets(storeID){
         const header = {
             headers: new HttpHeaders().set("Authorization", `Bearer ${this.token}`),

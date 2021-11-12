@@ -201,15 +201,22 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
     // using async method for javascript function trigger 
     // allowing to use wait method, one function will wait until previous method is finished
     async ngOnInit() {
-        // console.log('ngOnInit');
+        console.log('ngOnInit bermula');
+
+
 
         // this.countDown = timer(0, this.tick).subscribe(() => --this.counter);
         // this.countdown.begin();
-        
 
         this.senderID = localStorage.getItem('sender_id');
         this.refID = localStorage.getItem('ref_id');
         this.storeID = localStorage.getItem('store_id');
+
+        console.log("this.storeID bermula:", this.storeID)
+        const snoozeResp = await this.getTimingSnooze(this.storeID);
+        console.log("bermula:",snoozeResp["isSnooze"])
+
+        this.isSnooze = snoozeResp["isSnooze"];
 
         // this.storeDeliveryPercentage = localStorage.getItem('store_delivery_percentage');
 
@@ -328,18 +335,33 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
 
         // this.payDisable = false
 
+        
+
     }
 
     async countGrandTotal(){
-
         await this.getDeliveryFee()
-
     }
 
     getDeliveryOption(storeID){
 
         return new Promise(resolve => {
             this.apiService.getDeliveryOption(storeID).subscribe(async (res: any) => {
+                if (res.message){
+                    resolve(res.data)
+                } else {
+                    console.log('getDeliveryOption operation failed')
+                }
+            }, error => {
+                console.log(error)
+            })
+        })
+    }
+
+    getTimingSnooze(storeID){
+
+        return new Promise(resolve => {
+            this.apiService.getTimingSnooze(storeID).subscribe(async (res: any) => {
                 if (res.message){
                     resolve(res.data)
                 } else {
@@ -425,8 +447,6 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
                 }
             } 
         });
-
-        this.isSnooze = storeInfo['isSnooze'];
         
         // get list of statest 
         const statesList = await this.getStatesByID(this.CountryID);
@@ -1554,3 +1574,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
       );
     }
   }
+
+function getTimingSnooze() {
+    throw new Error('Function not implemented.');
+}
