@@ -119,6 +119,9 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
     store_open:boolean = true;
     storeTimingObj:any = {};
 
+    isSnooze:boolean = false;
+    snoozeEndTime:string;
+
     currencySymbol:string = "";
     logoImage:any;
     catId:any;
@@ -1893,11 +1896,8 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
                 // check is snooze
                 let isSnoozeData = await this.getTimingSnooze(this.storeID)
                 
-                if (isSnoozeData["isSnooze"] === true) {
-                    this.store_open = false
-                } else {
-                    this.store_open = true
-                }
+                this.isSnooze = isSnoozeData["isSnooze"];
+                this.snoozeEndTime = isSnoozeData["snoozeEndTime"];
 
             } else {
             }

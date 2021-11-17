@@ -104,6 +104,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
 
     store_open:boolean = true;
     isSnooze:boolean = false;
+    snoozeEndTime:string;
     storeTimingObj:any = {};
 
     currencySymbol:string = "";
@@ -212,11 +213,9 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
         this.refID = localStorage.getItem('ref_id');
         this.storeID = localStorage.getItem('store_id');
 
-        console.log("this.storeID bermula:", this.storeID)
         const snoozeResp = await this.getTimingSnooze(this.storeID);
-        console.log("bermula:",snoozeResp["isSnooze"])
-
         this.isSnooze = snoozeResp["isSnooze"];
+        this.snoozeEndTime = snoozeResp["snoozeEndTime"];
 
         // this.storeDeliveryPercentage = localStorage.getItem('store_delivery_percentage');
 
