@@ -10,10 +10,22 @@
 
 <!-- <food-app-banner-catalogue></food-app-banner-catalogue> -->
 
-<div class="position-absolute" *ngIf="!store_open">
+<div class="position-absolute" *ngIf="store_open === false && isSnooze === false">
     <div style="text-align: center;" class="fixed-top alert alert-danger alert-dismissible fade show header" role="alert">
         <marquee width="40%" direction="left">
             Sorry, We are closed now
+        </marquee>
+        
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+</div>
+
+<div class="position-absolute" *ngIf="store_open === true && isSnooze === true">
+    <div style="text-align: center;" class="fixed-top alert alert-danger alert-dismissible fade show header" role="alert">
+        <marquee width="40%" direction="left">
+            Sorry, We are closed now... We'll re-open at {{ snoozeEndTime | date: 'h:mm a'}}
         </marquee>
         
         <button type="button" class="close" data-dismiss="alert" aria-label="Close">

@@ -420,7 +420,7 @@
                         <div class="alert alert-danger" role="alert">
                             <h4 class="alert-heading">We are closed!</h4>
                             <p>Sorry our store close for a while</p>
-                            
+                            <p *ngIf="snoozeEndTime">We'll re-open at {{ snoozeEndTime | date: 'h:mm a'}}</p>
                         </div>
                     </ng-container>
 
