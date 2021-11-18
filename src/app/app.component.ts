@@ -13,6 +13,7 @@ export class AppComponent implements OnInit {
     currBaseURL: any;
     storeName: string;
     storeNameRaw: any;
+    googleAnalyticId: string;
 
   constructor(
     private platformLocation: PlatformLocation,
@@ -33,11 +34,14 @@ export class AppComponent implements OnInit {
         console.log("FROM INDEX Store Info: ", storeInfo)
 
         this.storeNameRaw = storeInfo['name']
-
+        
         const pageTitle = this.storeNameRaw + " Store"
         this.titleService.setTitle(pageTitle)
         
-
+        this.googleAnalyticId = storeInfo['googleAnalyticId'];
+        if (this.googleAnalyticId) {
+            this.loadScript(this.googleAnalyticId);
+        }
   }
 
 
@@ -51,6 +55,26 @@ export class AppComponent implements OnInit {
 
         }
     })
+  }
+
+  loadScript(googleAnalyticId) {
+    let node = document.createElement('script'); // creates the script tag
+    node.src = 'https://www.googletagmanager.com/gtag/js?id='+ googleAnalyticId; // sets the source (insert url in between quotes)
+    node.type = 'text/javascript'; // set the script type
+    node.async = true; // makes script run asynchronously
+
+    let content = `
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+    
+        gtag('config', '${googleAnalyticId}');`;
+    // and give it some content
+    const newContent = document.createTextNode(content);
+    node.appendChild(newContent);
+
+    // append to head of document
+    document.getElementsByTagName('head')[0].appendChild(node);
   }
 
 }
