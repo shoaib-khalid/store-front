@@ -1,3 +1,10 @@
+Version 2.1.39-beta
+-------------------------
+Date:18-Nov-2021
+Developer: Ahmad Miqdaad
+
+1. KB-164 - Add custom script in header for individual store
+
 Version 2.1.38-beta
 -------------------------
 Date:17-Nov-2021
