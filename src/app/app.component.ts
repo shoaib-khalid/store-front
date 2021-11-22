@@ -63,8 +63,8 @@ export class AppComponent implements OnInit {
      * First section
      */
      let node = document.createElement('script'); // creates the script tag
-     node.src = 'https://www.googletagmanager.com/gtag/js?id='+ googleAnalyticId; // sets the source (insert url in between quotes)
      node.async = true; // makes script run asynchronously
+     node.src = 'https://www.googletagmanager.com/gtag/js?id='+ googleAnalyticId; // sets the source (insert url in between quotes)
  
      document.getElementsByTagName('head')[0].appendChild(node);
  
