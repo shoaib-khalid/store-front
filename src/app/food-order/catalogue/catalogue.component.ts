@@ -121,6 +121,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
 
     isSnooze:boolean = false;
     snoozeEndTime:string;
+    snoozeReason: string;
 
     currencySymbol:string = "";
     logoImage:any;
@@ -1898,6 +1899,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
                 
                 this.isSnooze = isSnoozeData["isSnooze"];
                 this.snoozeEndTime = isSnoozeData["snoozeEndTime"];
+                this.snoozeReason = isSnoozeData["snoozeReason"];
 
             } else {
             }
