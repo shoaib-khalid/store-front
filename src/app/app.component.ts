@@ -60,8 +60,12 @@ export class AppComponent implements OnInit {
   loadScript(googleAnalyticId) {
     let node = document.createElement('script'); // creates the script tag
     node.src = 'https://www.googletagmanager.com/gtag/js?id='+ googleAnalyticId; // sets the source (insert url in between quotes)
-    node.type = 'text/javascript'; // set the script type
     node.async = true; // makes script run asynchronously
+
+    document.getElementsByTagName('head')[0].appendChild(node);
+
+
+    let node2 = document.createElement('script'); // creates the script tag
 
     let content = `
         window.dataLayer = window.dataLayer || [];
@@ -71,10 +75,12 @@ export class AppComponent implements OnInit {
         gtag('config', '${googleAnalyticId}');`;
     // and give it some content
     const newContent = document.createTextNode(content);
-    node.appendChild(newContent);
+    node2.appendChild(newContent);
+
+    document.getElementsByTagName('head')[0].appendChild(node2);
+
 
     // append to head of document
-    document.getElementsByTagName('head')[0].appendChild(node);
   }
 
 }
