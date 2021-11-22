@@ -58,29 +58,46 @@ export class AppComponent implements OnInit {
   }
 
   loadScript(googleAnalyticId) {
-    let node = document.createElement('script'); // creates the script tag
-    node.src = 'https://www.googletagmanager.com/gtag/js?id='+ googleAnalyticId; // sets the source (insert url in between quotes)
-    node.async = true; // makes script run asynchronously
 
-    document.getElementsByTagName('head')[0].appendChild(node);
-
-
-    let node2 = document.createElement('script'); // creates the script tag
-
-    let content = `
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-    
-        gtag('config', '${googleAnalyticId}');`;
-    // and give it some content
-    const newContent = document.createTextNode(content);
-    node2.appendChild(newContent);
-
-    document.getElementsByTagName('head')[0].appendChild(node2);
-
-
-    // append to head of document
+    /**
+     * First section
+     */
+     let node = document.createElement('script'); // creates the script tag
+     node.src = 'https://www.googletagmanager.com/gtag/js?id='+ googleAnalyticId; // sets the source (insert url in between quotes)
+     node.async = true; // makes script run asynchronously
+ 
+     document.getElementsByTagName('head')[0].appendChild(node);
+ 
+     /**
+      * Second section
+      */
+     let node2 = document.createElement('script'); // creates the script tag
+ 
+     let content2 = `
+     window.dataLayer = window.dataLayer || [];
+     function gtag(){dataLayer.push(arguments);}
+     gtag('js', new Date());
+ 
+     gtag('config', '${googleAnalyticId}');`;
+     // and give it some content
+     const newContent2 = document.createTextNode(content2);
+     node2.appendChild(newContent2);
+ 
+     document.getElementsByTagName('head')[0].appendChild(node2);
+ 
+     /**
+      * Third section
+      */
+     let node3 = document.createElement('script'); // creates the script tag
+ 
+     let content3 = `Static.COOKIE_BANNER_CAPABLE = true;`;
+     // and give it some content
+     const newContent3 = document.createTextNode(content3);
+     node3.appendChild(newContent3);
+ 
+     document.getElementsByTagName('head')[0].appendChild(node3);
+ 
+     // append to head of document
   }
 
 }
