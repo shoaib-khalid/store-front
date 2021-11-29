@@ -1215,6 +1215,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
 
         // If COD and region is PAKISTAN then allow proceed button 
         if(this.paymentType == "COD" && this.CountryID == "PAK"){
+            this.hasDeliveryFee = true;
             this.payDisable = false;   
         }
     }
