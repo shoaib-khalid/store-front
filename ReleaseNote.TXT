@@ -1,3 +1,10 @@
+Version 2.1.40-beta
+-------------------------
+Date:29-Nov-2021
+Developer: Naqiuddeen
+
+1. fix payment for Pakistan
+
 Version 2.1.39-beta
 -------------------------
 Date:18-Nov-2021
