@@ -6,6 +6,8 @@ import { NgxGalleryOptions, NgxGalleryImage, NgxGalleryAnimation } from 'ngx-gal
 import Swal from 'sweetalert2'
 
 import { faCartPlus, faEye, faShoppingCart, faShoppingBag, faArrowCircleLeft, faMinusCircle, faPlusCircle, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import { ProductService } from 'src/app/core/services/product/product.service';
+import { element } from 'protractor';
 
 @Component({
   selector: 'app-product-details',
@@ -23,106 +25,173 @@ export class ProductDetailsComponent implements OnInit {
     iconTrash = faTrashAlt;
     iconAddItem = faCartPlus;
 
-    productSeoName: any;
-    productId: any;
+    // store
+    store:any;
+    storeID:any;
+    storeName:any;
+    storeDeliveryPercentage:any;
+    storeBaseURL:any;
+    storeCurrency:string = "";
+    
+    // product
+    product: any = {};
 
-    detailsObj: any = {};
-    product:any[] = [];
+    productSeoName: any;
     productAssets:any;
 
-    galleryOptions: NgxGalleryOptions[];
-    galleryImages: NgxGalleryImage[];
+    displayedProductPrice:any = 0;
+    displayedProductItemCode: any;
+    displayedProductSku: any;
+
+    // combo
+    combos: any = [];
+    currentCombo: any = [];
+
+    // images
     imageCollection = [];
-    currentVariant:any = [];
+    galleryOptions: NgxGalleryOptions[] = [];
+    galleryImages: NgxGalleryImage[] = [];
 
-    itemWithinProduct:any;
-
+    // variant
+    currentVariant:any = [];    
     requestParamVariant:any = [];
     requestParamVariantNew:any = [];
-    variantOfSelected: any;
-    productPrice:any = 0;
-    productItemCode: any;
-    storeID:any;
-    storeDeliveryPercentage:any;
-    storeName:any;
-    inputQty:any;
+    
+    // inventory item
+    productInventories:any;
+    selectedInventoryItems: any;
 
-    cartID:any;
-    cartitemDetails:any = {};
-    cartitemDetailsCount:any;
+    // cart
+    cartitemDetails:any = [];
+    cartitemDetailsCount:number;
+    cartLength:number;
+    
+    // client
     senderID:any;
 
-    currBaseURL:any;
-    localURL:any;
-    cartLength:number;
-    currencySymbol:string = "";
-    addToInstruction: string = "";
-    productSku: any;
+    // user input
+    userInputQuantity:number = 1;
+    userInputInstruction: string = "";
 
     constructor(
         private activatedRoute: ActivatedRoute,
         private route: Router,
         private apiService: ApiService,
-        private platformLocation: PlatformLocation
-        ) {
+        private platformLocation: PlatformLocation,
+        private _productService: ProductService
+    ) {
 
-        this.currBaseURL = (this.platformLocation as any).location.origin;
-        this.localURL = this.currBaseURL.match(/localhost/g);
-        console.log('Base URL: ' + this.currBaseURL)
+        // Get current base URL
+        this.storeBaseURL = (this.platformLocation as any).location.origin;
+        // Get subdomain name from the base URL
+        let subdomain = this.storeBaseURL.split('.')[0];
+        // Remove unnecessary string from the subdomain name to get the store name 
+        this.storeName = subdomain.replace(/^(https?:|)\/\//, '');
 
-
-        if(this.localURL != null){
-            console.log('Location: Staging')
-        } else {
-            console.log('Location: Prod')
-            var host = this.currBaseURL
-            var subdomain = host.split('.')[0]
-
-            console.log('Domain: ' + subdomain)
-            console.log('removed https: ' + subdomain.replace(/^(https?:|)\/\//, ''))
-
-            this.storeName = subdomain.replace(/^(https?:|)\/\//, '')
-        }
-
-
+        // ger product seoName from path parameter
         this.activatedRoute.params.subscribe(params => {
             this.productSeoName = params['prodSeoName'];
-            this.storeName = (params['storeName']) ? params['storeName'] : this.storeName;
-            console.log('product name before: ' + this.productSeoName); // Print the parameter to the console.             
         });
 
-        // this.productId = ""
+    }
 
-        // if(this.storeName === undefined){
-        //     this.storeName = "elo"
-        // }
+    // -----------------------------------------------------------------------------------------------------
+    // @ Accessors
+    // -----------------------------------------------------------------------------------------------------
 
-        this.cartID = localStorage.getItem("anonym_cart_id")
-        // this.storeID = "af2cda1a-d4ac-4a9e-b51b-fc5b32578e5a"
-        console.log('storeName: ' + this.storeName)
+    /**
+     * Getter for cartID
+     */
+    get cartID$(): string
+    {
+        return localStorage.getItem("anonym_cart_id");
+    }
 
-   }
+    /**
+     * Setter for cartID
+     */
+     set cartID(value: string)
+     {
+        localStorage.setItem('anonym_cart_id', value);
+     }
+
+    // -----------------------------------------------------------------------------------------------------
+    // @ Lifecycle hooks
+    // -----------------------------------------------------------------------------------------------------
+
 
     async ngOnInit() {
 
-        this.inputQty = 1
-
-        this.cartID = localStorage.getItem("anonym_cart_id")
-        console.log('cart session: ' + this.cartID)
-
-        if(!this.cartID){
-            console.log('cart session not exist!')
-            
-        }else{
-            console.log('cart id exist ' + this.cartID)
-
-            const cartDetails = await this.getItemDetails(this.cartID)
-            console.log("cart item details ", cartDetails)
-            console.log("cart item count is " + cartDetails['length'])
-
+        // get current cartItem to be displayed at checkout button 
+        // (this will now current cart item quantity)
+        if (this.cartID$) {
+            const cartDetails = await this.getCartItem(this.cartID$)
             this.cartLength = cartDetails['length']
         }
 
+        /**
+         * STORE
+         */
+
+        // get store info
+        const storeInfo = await this.getStoreInfo(this.storeName)
+        this.store = storeInfo[0];
+        this.storeID = storeInfo[0]['id'];
+        this.storeDeliveryPercentage = storeInfo[0]['serviceChargesPercentage'];
+
+        // get getStoreHour
+        this.getStoreHour(this.storeID);
+
+        // set to local storage
+        localStorage.setItem('store_id', this.storeID);
+        localStorage.setItem('store_delivery_percentage', this.storeDeliveryPercentage);
+        
+        /**
+         * PRODUCT
+         */
+
+        // get product info
+        const _product = await this.getProductDetailsByName(this.productSeoName, this.storeID)        
+        this.product = _product[0];
+        this.productAssets = this.product.productAssets;
+        this.productInventories = this.product.productInventories
+
+        // get cheapest item price
+        let _cheapestItem = this.productInventories.reduce((r, e) => r.price < e.price ? r : e);
+
+        // set initial selectedInventoryItems to the cheapest item
+        this.selectedInventoryItems = _cheapestItem.productInventoryItems;
+
+        if (this.selectedInventoryItems) {
+            this.displayedProductPrice = _cheapestItem.price;
+            this.displayedProductItemCode = _cheapestItem.itemCode;
+            this.displayedProductSku = _cheapestItem.sku;
+        } else {
+            this.displayedProductPrice = this.productInventories.price;
+            this.displayedProductItemCode = this.productInventories.itemCode;
+            this.displayedProductSku = this.productInventories.sku;
+        }
+
+        // get product package if exists
+        if (this.product.isPackage) {
+            this._productService.getProductPackageOptions(this.product.id)
+            .subscribe((response)=>{
+                console.log("response:", response);
+                this.combos = response["data"];
+                
+                this.combos.forEach(element => {
+                    this.currentCombo[element.id] = [];
+                });
+
+            });
+        }
+
+        
+        /**
+         * ASSETS GALLERY
+         */
+
+        // set galleryOptions
         this.galleryOptions = [
             {
                 width: '350px',
@@ -152,28 +221,77 @@ export class ProductDetailsComponent implements OnInit {
             }
         ];
 
-        await this.getVariantFlow()
+        // set currentVariant
+        this.selectedInventoryItems.forEach(item => {
+            this.currentVariant.push(item.productVariantAvailableId)
+        });
 
-        this.getStoreHour();
+        // set assets images
+        this.productAssets.forEach( object => {
+            let _imageObject = {
+                small   : '' + object.url,
+                medium  : '' + object.url,
+                big     : '' + object.url
+            }
+
+            // fist this will push all images expect the one that are currently display
+            if(object.itemCode != this.displayedProductItemCode){
+                this.imageCollection.push(_imageObject)
+            } 
+        });
+
+        // loop second one to push the one that are currently display in first array
+        this.productAssets.forEach( object => {
+            let _imageObject = {
+                small   : '' + object.url,
+                medium  : '' + object.url,
+                big     : '' + object.url
+            }
+            
+            if(object.itemCode == this.displayedProductItemCode){
+                this.imageCollection.unshift(_imageObject)
+            }
+        });
+
+        // set to galerry images
+        this.galleryImages = this.imageCollection
+
+        /**
+         * VARIANTS
+         */
+
+        // logic to extract current selected variant and to reconstruct new object with its string identifier 
+        // basically it create new array of object from this.product.productVariants to => this.requestParamVariant
+        let _productVariants = this.product.productVariants
+        console.log("this.product.productVariants", this.product.productVariants)
+        console.log("this.currentVariant", this.currentVariant);
+        _productVariants.map(variantBase => {
+            let _productVariantsAvailable = variantBase.productVariantsAvailable;
+            _productVariantsAvailable.forEach(element => {
+                this.currentVariant.map(currentVariant => {
+                    if(currentVariant.indexOf(element.id) > -1){
+                        let _data = {
+                            basename: variantBase.name,
+                            variantID: element.id,
+                        }
+                        this.requestParamVariant.push(_data)
+                    }
+                })
+
+            })
+        });
+        console.log("this.requestParamVariant", this.requestParamVariant) // amd you'll see
 
     }
 
-    async getStoreHour(){
+    // -----------------------------------------------------------------------------------------------------
+    // @ Private methods
+    // -----------------------------------------------------------------------------------------------------
 
-        const storeInfo = await this.getStoreInfo(this.storeName)
-        console.log('getStoreHour storeID: ', storeInfo)
-
-        this.storeID = storeInfo[0]['id']
-
-        this.apiService.getStoreHoursByID(this.storeID).subscribe((res: any) => {
-            console.log('store business hour: ', res)
-            if (res.message){
-                console.log('storeTiming : ', res.data.storeTiming)
-                
-                this.currencySymbol =  res.data.regionCountry.currencySymbol;
-
-                console.log('symbol currency: ', this.currencySymbol)
-
+    async getStoreHour(storeId: string){
+        this.apiService.getStoreHoursByID(storeId).subscribe((res: any) => {
+            if (res.message){                
+                this.storeCurrency =  res.data.regionCountry.currencySymbol;
             } else {
             }
         }, error => {
@@ -181,102 +299,59 @@ export class ProductDetailsComponent implements OnInit {
         }) 
     }
 
-    goToCheckout(){
-
-        console.log(this.senderID+"-"+this.cartID+"-"+this.storeID)
-
-        this.route.navigate(['checkout']);
-    }
-
-    async addToCart(productPrice){
-        // alert('itemCode: ' + this.productItemCode + "| productID: " + this.productId + "| quantity: " + this.inputQty)
-
-        if(!this.cartID){
-            const created_cart = await this.createCart()
-            console.log("creating anonymous cart finished...", created_cart)
-            this.cartID = created_cart['id'];
-
-            console.log('new cart_id created: ' + this.cartID)
-
-            localStorage.setItem('anonym_cart_id', this.cartID)
-            
-        }else{
-            console.log('cart id exist ' + this.cartID)
-        }
-
-        await this.addItemToCart(this.cartID, this.productItemCode, this.productId, this.inputQty, productPrice, this.productSku, this.addToInstruction)
-
-        const cartDetails = await this.getItemDetails(this.cartID)
-        console.log("cart item details ", cartDetails)
-        console.log("cart item count is " + cartDetails['length'])
-
-        this.cartLength = cartDetails['length']
-
-        this.inputQty = 1
-    }
-
-    goToBack(){
-
-        var catId = localStorage.getItem("category_id")
-
-        this.route.navigate(['catalogue/'+catId]);
-        // alert('hello: ' + catId)
-    }
-
-    getItemDetails(cartID){
+    getCartItem(cartID){
 
         return new Promise(resolve => {
-
             // check count Item in Cart 
-            this.apiService.getCartItemByCartID(cartID).subscribe(async (res: any) => {
-                // console.log('cart item by cart ID 3: ', res.data.content)
+            this.apiService.getCartItemByCartID(cartID).subscribe((res: any) => {
 
-                resolve(res.data.content)
+                // resolve the data first for cartLength usage in above ngInit
+                resolve(res.data.content);
 
-                this.cartitemDetails = []
-
+                // count quantity from the backend and set to frontend
                 if (res.message){
-
-                    var quantity = 0;
+                    let quantity = 0;
 
                     this.cartitemDetails = res.data.content;
-
-                    await this.cartitemDetails.forEach(item => {
-
-                        quantity = quantity + item.quantity
-                        // console.log("miqdaad: "+JSON.stringify(allItem.quantity * allItem.price)+"\n");
+                    this.cartitemDetails.forEach(item => {
+                        quantity = quantity + item.quantity;
                     });
 
-                    this.cartitemDetailsCount = quantity
-                    
+                    // set item quantity in cart
+                    this.cartitemDetailsCount = quantity;
                 }
-
             }, error => {
                 Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
-
             }) 
             
         });
 
     }
 
-    addItemToCart(cartID, itemCode, productID, qty, price, sku, instruction){
-        console.log("starting to add item to cart...")
-
-        // alert(instruction)
-
-        // return false;
+    createCart(){
         return new Promise(resolve => {
+            let data = {
+                "created": "2021-04-01T04:51:01.765Z",
+                "customerId": this.senderID,
+                "id": "",
+                "storeId": this.storeID,
+                "updated": "2021-04-01T04:51:01.765Z"
+            }
+            
+            this.apiService.postCreateCart(data).subscribe((res: any) => {
+                // resolve hold data as return 
+                resolve(res.data)
+            }, error => {
+                Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
+            }) 
+            
+        });
+        
+    }
 
-            // let data = {
-            //     "cartId": cartID,
-            //     "id": "",
-            //     "itemCode": itemCode,
-            //     "productId": productID,
-            //     "quantity": qty,
-            //     "specialInstruction": instruction
-            // }
+    addItemToCart(cartID, itemCode, productID, qty, price, sku, instruction){
 
+        return new Promise(resolve => {
             let data = {
                 "cartId": cartID,
                 "id": "",
@@ -290,200 +365,51 @@ export class ProductDetailsComponent implements OnInit {
                 "specialInstruction": instruction
             }
 
+            if(this.product.isPackage){
+                data["cartSubItem"] = [];
+
+                // loop all combos from backend
+                this.combos.forEach(item => {
+                    // compare it with current selected combo by user
+                    if (this.currentCombo[item.id]) {
+                        // loop the selected current combo
+                        this.currentCombo[item.id].forEach(element => {
+                            // get productPakageOptionDetail from this.combo[].productPackageOptionDetail where it's subitem.productId == element (id in this.currentcombo array)
+                            let productPakageOptionDetail = item.productPackageOptionDetail.find(subitem => subitem.productId === element);
+                                                        
+                            if (productPakageOptionDetail){
+                                // push to cart
+                                data["cartSubItem"].push(
+                                    {
+                                        productId: element,
+                                        itemCode: productPakageOptionDetail.productInventory[0].itemCode,  // this assume all product under fnb have only 1 inventory
+                                        quantity: 1,
+                                        productPrice: 0,
+                                        specialInstruction: null
+                                    }
+                                );
+                            }
+                        });
+                    }
+                });
+            }
+
             // add to cart 
             this.apiService.postAddToCart(data).subscribe((res: any) => {
-                
                 resolve(res.data)
-
                 Swal.fire("Great!", "Item successfully added to cart", "success")
-
             }, error => {
                 Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
             }) 
-                
         });
-
     }
 
-    createCart(){
-        console.log("creating anonymous cart...")
-
-        return new Promise(resolve => {
-
-            let data = {
-                "created": "2021-04-01T04:51:01.765Z",
-                "customerId": this.senderID,
-                "id": "",
-                "storeId": this.storeID,
-                "updated": "2021-04-01T04:51:01.765Z"
-            }
-
-            this.apiService.postCreateCart(data).subscribe((res: any) => {
-                // resolve hold data as return 
-                resolve(res.data)
-
-            }, error => {
-                Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
-                // console.log('failed at postCreateCart')
-            }) 
-            
-        });
-
-    }
-
-
-    async getVariantFlow(){
-
-        this.galleryImages = [];
-        this.imageCollection = [];
-        this.requestParamVariant = []
-
-
-        const storeInfo = await this.getStoreInfo(this.storeName)
-        console.log('promised storeInfo details: ', storeInfo)
-
-        this.storeID = storeInfo[0]['id']
-        this.storeDeliveryPercentage = storeInfo[0]['serviceChargesPercentage']
-
-        console.log('store id: ' + this.storeID)
-        console.log('store_delivery_percentage id: ' + this.storeDeliveryPercentage)
-        localStorage.setItem('store_id', this.storeID);
-        localStorage.setItem('store_delivery_percentage', this.storeDeliveryPercentage);
-        
-        const prodName = await this.getProductDetailsByName(this.productSeoName, this.storeID)
-
-        console.log('promised prodName details: ', prodName)
-
-        this.productId = prodName[0]['id']
-        // this.productId = '676d58ce-5561-482f-a024-0728ef40b173'
-        // this.productId = '2803e270-0e8c-40c0-8af5-98275dcf5894'
-        // this.productId = 'b7b956ab-5a3d-46ee-a82d-ad520ed85c4e'
-        // this.productId = 'c9543ed3-3208-41ff-a621-3d67b81521d1'
-
-        // const prodDetails = await this.getProductByID(this.productId)
-
-        // console.log('promised prod details: ' , prodDetails)
-
-        this.detailsObj = prodName[0]
-        this.product = prodName[0]
-
-        this.productAssets = this.detailsObj.productAssets;
-        
-        console.log("detailsObj: "+ prodName[0]['description']);
-        console.log("this.productAssets: ", this.productAssets);
-
-    
-        // Variant logic
-
-        this.itemWithinProduct = this.detailsObj.productInventories
-
-        console.log('item within product: ', this.itemWithinProduct)
-
-        this.currentVariant = []
-
-        // let variantOfSelected = this.selectedProduct.productInventoryItems
-        let minimum_item = this.itemWithinProduct.reduce((r, e) => r.price < e.price ? r : e);
-        console.log('minimum item: ', minimum_item)
-
-        this.variantOfSelected = minimum_item.productInventoryItems
-        this.productPrice = minimum_item.price;
-        this.productItemCode = minimum_item.itemCode;
-        this.productSku = minimum_item.sku;
-
-
-        this.variantOfSelected.forEach(variants => {
-
-            console.log('selected item variant id: ', variants.productVariantAvailableId)
-
-            this.currentVariant.push(variants.productVariantAvailableId)
-        });
-
-        console.log('current variant obj:', this.currentVariant)
-        // end of redundant code activity 
-
-        // image collection logic 
-
-        this.productAssets.forEach( obj => {
-            // console.log('productAssets: ', obj.url);
-
-            let img_obj = {
-                small: ''+obj.url+'',
-                medium: ''+obj.url+'',
-                big: ''+obj.url+''
-            }
-
-            console.log(obj.itemCode + " |||| " + this.productItemCode)
-            if(obj.itemCode != this.productItemCode){
-                this.imageCollection.push(img_obj)
-            }
-            
-        });
-
-        this.productAssets.forEach( obj => {
-            // console.log('productAssets: ', obj.url);
-            let img_obj = {
-                small: ''+obj.url+'',
-                medium: ''+obj.url+'',
-                big: ''+obj.url+''
-            }
-            
-            if(obj.itemCode == this.productItemCode){
-                this.imageCollection.unshift(img_obj)
-            }
-            
-        });
-
-        console.log('imageCollection: ', this.imageCollection);
-        this.galleryImages = this.imageCollection
-
-        // logic to extract current selected variant and to reconstruct new object with its string identifier 
-        let allVariantObjBase = this.detailsObj.productVariants
-
-        console.log('allVariantObjBase: ' , allVariantObjBase)
-
-        allVariantObjBase.map(variantBase => {
-
-            console.log(variantBase)
-
-            let productVariantsAvailable = variantBase.productVariantsAvailable
-            
-            productVariantsAvailable.forEach(element => {
-                console.log('element: ' + element.id + " basename: " + variantBase.name)
-
-                this.currentVariant.map(currentVariant => {
-                    console.log('currentVariant: ', currentVariant)
-
-                    if(currentVariant.indexOf(element.id) > -1){
-                        console.log(element.id + ' exist in array')
-
-                        let data = {
-                            basename: variantBase.name,
-                            variantID: element.id,
-                        }
-
-                        this.requestParamVariant.push(data)
-                    }
-                })
-
-            })
-
-        })
-
-        console.log('requestParamVariant: ' , this.requestParamVariant)
-        
-    }
-
-    getStoreInfo(store_name){
-        console.log('initialize getStoreInfo...')
-        
+    getStoreInfo(storeName){        
         return new Promise( resolve => {
-        
-            this.apiService.getStoreInfo(store_name).subscribe((res: any) => {
-    
+            this.apiService.getStoreInfo(storeName).subscribe((res: any) => {
                 if (res.message){
                     resolve(res.data.content)
                 } 
-    
             }, error => {
                 Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
             }) 
@@ -491,105 +417,29 @@ export class ProductDetailsComponent implements OnInit {
     }
 
     getProductDetailsByName(seo_name, store_id){
-        console.log('getProductDetailsByName(): ' + seo_name)
-
-        return new Promise( resolve => {
-            
+        return new Promise( resolve => {            
             this.apiService.getProductSByName(seo_name, store_id).subscribe((res: any) => {
-    
                 if (res.message){
-                    // resolve(res.data.content[0])
                     resolve(res.data.content)
                 } 
-    
             }, error => {
                 Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
             }) 
         })
-    }
-
-    getProductByID(product_id){
-        
-        return new Promise( resolve => {
-            
-            this.apiService.getProductSByProductID(product_id).subscribe((res: any) => {
-    
-                if (res.message){
-                    resolve(res.data)
-                } 
-    
-            }, error => {
-                Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
-            }) 
-        })
-
-    }
-
-    onChangeVariant(id, type, productID){
-
-        // alert(id + "|" + type + "|" + productID)
-        
-
-        this.requestParamVariant.map( variant => {
-            if(variant.basename == type && variant.variantID != id){
-
-                console.log(variant.variantID + ' (' + type + ') has been replaced with ' + id + '(' + type + ')')
-
-                this.requestParamVariant.find( oldVariant => oldVariant.basename === type).variantID = id
-            }
-            
-        })
-
-        this.requestParamVariantNew = []        
-
-        this.requestParamVariant.forEach(el => {
-
-            this.requestParamVariantNew.push(el.variantID)
-            
-        });
-
-        console.log('updated request param: ', this.requestParamVariantNew)
-
-        this.findInventory(productID)
-
-        // return false;
-
-        // this.apiService.getUpdatedByVariant(this.storeID, productID, this.requestParamVariant).subscribe((res: any) => {
-        //     console.log('cart item by cart ID: ', res.data)
-
-        //     if (res.data){
-        //         console.log('getUpdatedByVariant response: ', res.data)
-
-
-        //         this.popupPrice = res.data[0].price
-        //         this.popupItemCode = res.data[0].itemCode
-
-        //         console.log('update price variant: ' + this.popupPrice)
-        //     } 
-
-        // }, error => {
-        //     Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
-        // }) 
-
     }
 
     findInventory(productID) {
-        var toFind = this.requestParamVariantNew
 
-        console.log('test: ', productID)
-        var productArr = this.detailsObj
+        let toFind = this.requestParamVariantNew
 
-        console.log('product: ', productArr)
+        let productArr = this.product
+        let inventories = productArr.productInventories
+        let assetsArr = productArr.productAssets
 
-        var inventories = productArr.productInventories
 
-        var assetsArr = productArr.productAssets
-
-        console.log('inventories: ', inventories)
-        var flag = true;
-        var selectedItem;
-
-        var productInventoryItems;
+        let flag = true;
+        let selectedItem;
+        let productInventoryItems;
         
         for (let i = 0; i < inventories.length; i++) {
             flag=true;
@@ -601,64 +451,145 @@ export class ProductDetailsComponent implements OnInit {
                 if(toFind.includes(productInventoryItems[j].productVariantAvailableId)){
                     continue;
                 }else{
-                    flag=false;
+                    flag = false;
                     break;
                 }
             }
 
             if(flag){
-                console.log('selected item: ', selectedItem)
 
-                this.productPrice = selectedItem.price
-                this.productItemCode = selectedItem.itemCode
-                this.productSku = selectedItem.sku
+                this.displayedProductPrice = selectedItem.price
+                this.displayedProductItemCode = selectedItem.itemCode
+                this.displayedProductSku = selectedItem.sku
 
                 // reorder image collection 
-
                 this.galleryImages = [];
                 this.imageCollection = [];
 
                 this.productAssets = assetsArr;
 
                 // rearrange imageCollection 
-                this.productAssets.forEach( obj => {
+                this.productAssets.forEach( object => {
                     // console.log('productAssets: ', obj.url);
-                    let img_obj = {
-                        small: ''+obj.url+'',
-                        medium: ''+obj.url+'',
-                        big: ''+obj.url+''
+                    let _imageObject = {
+                        small   : '' + object.url,
+                        medium  : '' + object.url,
+                        big     : '' + object.url
                     }
                     
-                    if(obj.itemCode != this.productItemCode){
-                        this.imageCollection.push(img_obj)
+                    if(object.itemCode != this.displayedProductItemCode){
+                        this.imageCollection.push(_imageObject)
                     }
                     
                 });
 
-                this.productAssets.forEach( obj => {
-                    // console.log('productAssets: ', obj.url);
-                    let img_obj = {
-                        small: ''+obj.url+'',
-                        medium: ''+obj.url+'',
-                        big: ''+obj.url+''
+                this.productAssets.forEach( object => {
+                    let _imageObject = {
+                        small   : '' + object.url,
+                        medium  : '' + object.url,
+                        big     : '' + object.url
                     }
                     
-                    if(obj.itemCode == this.productItemCode){
-                        this.imageCollection.unshift(img_obj)
+                    if(object.itemCode == this.displayedProductItemCode){
+                        this.imageCollection.unshift(_imageObject)
                     }
                     
                 });
 
-
-                console.log('new imageCollection: ', this.imageCollection);
-                
                 this.galleryImages = this.imageCollection
                 // end of reorder image collection
-
-                console.log('popup details: ' + this.productPrice + " | " + this.productItemCode + " | " + this.productSku)
             }
             
         }
+    }
+
+    // -----------------------------------------------------------------------------------------------------
+    // @ Public methods
+    // -----------------------------------------------------------------------------------------------------
+
+    goToCheckout(){
+        this.route.navigate(['checkout']);
+    }
+
+    async addToCart(){
+
+        if(!this.cartID$){
+            const created_cart = await this.createCart()
+            console.log("creating anonymous cart finished...", created_cart)
+            this.cartID = created_cart['id'];
+
+            console.log('new cart_id created: ' + this.cartID$)
+
+            localStorage.setItem('anonym_cart_id', this.cartID$)
+            
+        } else {
+            console.log('cart id exist ' + this.cartID$)
+        }
+
+        await this.addItemToCart(this.cartID$, this.displayedProductItemCode, this.product.id, this.userInputQuantity, this.displayedProductPrice, this.displayedProductSku, this.userInputInstruction)
+
+        const cartDetails = await this.getCartItem(this.cartID$)
+        console.log("cart item details ", cartDetails)
+        console.log("cart item count is " + cartDetails['length'])
+
+        this.cartLength = cartDetails['length']
+
+        // reset user input
+        this.userInputQuantity = 1;
+        this.userInputInstruction = "";
+    }
+
+    goToBack(){
+        var catId = localStorage.getItem("category_id")
+        this.route.navigate(['catalogue/'+catId]);
+    }
+
+    onChangeVariant(id, type, productID){     
+
+        this.requestParamVariant.map( variant => {
+            if(variant.basename == type && variant.variantID != id){
+                this.requestParamVariant.find( oldVariant => oldVariant.basename === type).variantID = id
+            }
+        });
+
+        this.requestParamVariantNew = [];
+        this.requestParamVariant.forEach(element => {
+            this.requestParamVariantNew.push(element.variantID)
+        });
+
+        this.findInventory(productID)
+    }
+
+    onChangeCombo(comboId, event){
+
+        let productID = event.target.value;
+
+        // remove only unchecked item in array
+        if (event.target.checked === false) {
+            let index = this.currentCombo[comboId].indexOf(productID);
+            if (index !== -1) {
+                this.currentCombo[comboId].splice(index, 1);
+                return;
+            }
+        }
+
+        let currentComboSetting = this.combos.find(item => item.id === comboId);
+
+        // remove first item in array if it exceed totalAllow
+        if (this.currentCombo[comboId].length >= currentComboSetting.totalAllow){
+            this.currentCombo[comboId].shift();
+        }
+
+        // set currentCombo
+        this.combos.forEach(combo => {
+            combo.productPackageOptionDetail.forEach(item => {
+                    
+
+                if(item.productId === productID){
+                    this.currentCombo[comboId].push(item.productId)
+                }
+            });
+        });
     }
 
 }

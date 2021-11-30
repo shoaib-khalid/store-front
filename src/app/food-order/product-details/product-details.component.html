@@ -10,10 +10,10 @@
             </div>
             <div class="col-lg-5 col-md-5 col-xs-12 col-sm-12" style="background-color: #FFF0C2; padding: 25px 25px 25px 25px;">
 
-                <h5 class="font-weight-bold text-center">{{detailsObj.name | uppercase}}</h5>
+                <h5 class="font-weight-bold text-center">{{product.name | uppercase}}</h5>
                 <div style="padding-top: 25px; padding-bottom: 25px;" class="text-justify">
-                    <div *ngIf="detailsObj.description != null; else noDesc">
-                        <span style="font-size: 13px;" [innerHTML]="detailsObj.description" >
+                    <div *ngIf="product.description != null; else noDesc">
+                        <span style="font-size: 13px;" [innerHTML]="product.description" >
                             
                         </span>
                     </div>
@@ -27,57 +27,90 @@
                     
                 </div>
                 <!-- variant option  -->
-                <fieldset id="{{variant.name}}" *ngFor="let variant of detailsObj.productVariants; let i = index;" style="margin-top: 15px;">
-                    <div class="row">
-                        <div class="col">
-                            <label for="{{variant.name}}" style="font-weight: bold; font-size: 12px;">{{variant.name | uppercase}} : </label>
+                <ng-container *ngIf="!product.isPackage">
+                    <fieldset id="{{variant.name}}" *ngFor="let variant of product.productVariants; let i = index;" style="margin-top: 15px;">
+                        <div class="row">
+                            <div class="col">
+                                <label for="{{variant.name}}" style="font-weight: bold; font-size: 12px;">{{variant.name | uppercase}} : </label>
+                            </div>
+                           
                         </div>
-                       
-                    </div>
+    
+                        <div class="row text-center">
+                            <div class="col text-center">
+                                <ul class="donate-now">
+                                    <li *ngFor="let option of variant.productVariantsAvailable; let i = index;">
+                                        <input type="radio" 
+                                            id="{{variant.name + i}}" 
+                                            value="{{option.value}}" 
+                                            name="{{variant.name}}" 
+                                            [checked]="currentVariant.indexOf(option.id) > -1"
+                                            (change)="onChangeVariant(option.id, variant.name, option.productId)"
+                                        >
+                                        <label for="{{variant.name + i}}">{{option.value}}</label>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </fieldset>
+                </ng-container>
 
-                    <div class="row text-center">
-                        <div class="col text-center">
-                            <ul class="donate-now">
-                                <li *ngFor="let option of variant.productVariantsAvailable; let i = index;">
-                                    <input type="radio" 
-                                    id="{{variant.name + i}}" 
-                                    value="{{option.value}}" 
-                                    name="{{variant.name}}" 
-                                    [checked]="currentVariant.indexOf(option.id) > -1"
-                                    (change)="onChangeVariant(option.id, variant.name, option.productId)"
-                                    >
-                                    <label for="{{variant.name + i}}">{{option.value}}</label>
-                                </li>
-                            </ul>
+                <!-- combo option  -->
+                <ng-container *ngIf="product.isPackage">
+                    <fieldset id="{{combo.title}}" *ngFor="let combo of combos; let i = index;" style="margin-top: 15px;">
+                        <div class="row">
+                            <div class="col">
+                                <label for="{{combo.title}}" style="font-weight: bold; font-size: 12px;">{{combo.title | uppercase}} : (SELECT {{ combo.totalAllow }} OF {{ combo.productPackageOptionDetail.length }})</label>
+                            </div>
+                           
                         </div>
-                    </div>
-                </fieldset>
+    
+                        <div class="row text-center">
+                            <div class="col text-center">
+                                <ul class="donate-now">
+                                    <li *ngFor="let option of combo.productPackageOptionDetail; let i = index;">
+                                        <input 
+                                            type="checkbox" 
+                                            [id]="'combo-checkbox-' + combo.id + '-' + option.productId" 
+                                            [value]="option.productId" 
+                                            [name]="'combo-checkbox-' + combo.id + '-' + option.productId"
+                                            [checked]="currentCombo[combo.id].indexOf(option.productId) > -1"
+                                            (change)="onChangeCombo(combo.id, $event)"
+                                        >
+                                        <label [for]="'combo-checkbox-' + combo.id + '-' + option.productId">{{option.product.name}}</label>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </fieldset>
+                </ng-container>
 
                 <div class="row" style="margin-top: 50px; margin-bottom: 50px;">
                     <div class="col-lg-6 col-md-6 col-xs-12 col-sm-12 text-center">
-                        <h5 class="font-weight-bold">PRICE : {{currencySymbol}} {{ productPrice | number: '1.2-2' }}</h5>
+                        <h5 class="font-weight-bold">PRICE : {{storeCurrency}} {{ displayedProductPrice | number: '1.2-2' }}</h5>
                         <!-- <br> -->
                         
                     </div>
                     <div class="col-lg-6 col-md-6 col-xs-12 col-sm-12">
-                        <form action="
-                        ">
+                        <form action="">
                             <ng-number-picker 
-                            name="inputQty" 
-                            [(ngModel)]="inputQty" 
-                            [(value)]="inputQty" 
-                            [min]="1" [max]="100" 
-                            [postfix]="'unit'" 
-                            [size]="'sm'"
-                            [inputReadOnly]="true"></ng-number-picker>
+                                name="userInputQuantity" 
+                                [(ngModel)]="userInputQuantity" 
+                                [(value)]="userInputQuantity" 
+                                [min]="1" [max]="100" 
+                                [postfix]="'unit'" 
+                                [size]="'sm'"
+                                [inputReadOnly]="true"
+                                ngDefaultControl>
+                            </ng-number-picker>
                         </form>
                         <!-- <button type="button" class="btn btn-warning btn-block">Add to Cart</button> -->
                     </div>
                     <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12">
                         <div class="form-group">
                             <label for="instruction">Special Instruction</label>
-                            <textarea name="addToInstruction" [(ngModel)]="addToInstruction" [(value)]="addToInstruction" class="form-control form-control-lg" id="instruction" aria-describedby="instruction" cols="30" rows="4" style="font-size: 12px;"></textarea>
-                            <!-- <input type="text" name="addToInstruction" [(ngModel)]="addToInstruction" [(value)]="addToInstruction" class="form-control form-control-lg" id="instruction" aria-describedby="instruction"> -->
+                            <textarea name="userInputInstruction" [(ngModel)]="userInputInstruction" [(value)]="userInputInstruction" class="form-control form-control-lg" id="instruction" aria-describedby="instruction" cols="30" rows="4" style="font-size: 12px;"></textarea>
+                            <!-- <input type="text" name="userInputInstruction" [(ngModel)]="userInputInstruction" [(value)]="userInputInstruction" class="form-control form-control-lg" id="instruction" aria-describedby="instruction"> -->
                             <!-- <small id="emailHelp" class="form-text text-muted">Example ("extra mayonnaise, extra spicy, cut in half and etc...")</small> -->
                         </div>
                     </div>
@@ -85,7 +118,7 @@
                 
                 <div class="row">
                     <div class="col">
-                        <button (click)="addToCart(productPrice)" type="button" class="btn btn-warning btn-sm btn-block">
+                        <button (click)="addToCart()" type="button" class="btn btn-warning btn-sm btn-block">
                             Add to Cart&nbsp;<fa-icon [icon]="iconAddItem"></fa-icon>
                         </button>
                     </div>

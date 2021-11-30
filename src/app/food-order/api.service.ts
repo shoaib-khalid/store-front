@@ -372,7 +372,7 @@ export class ApiService {
     }
 
     // Ref : http://209.58.160.20:7071/swagger-ui.html#/store-product-controller/getStoreProductsUsingGET
-    getProductSByName(name, store_id) {
+    getProductSByName(seo_name, store_id) {
         const header = {
             headers: new HttpHeaders().set("Authorization", `Bearer ${this.token}`),
         };
@@ -383,10 +383,7 @@ export class ApiService {
             "&featured=true" +
             "&page=0" +
             "&pageSize=20" +
-            "&seoName=" +
-            name;
-
-        console.log('URL: ' + this.productServiceURL + url)
+            "&seoName=" + encodeURI(seo_name);
 
         return this.http.get(this.productServiceURL + url, header);
     }

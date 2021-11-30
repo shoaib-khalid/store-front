@@ -9,4 +9,5 @@ export interface IAppConfig {
         orderServiceURL: string;
         deliveryServiceURL: string;
     };
+    logging: number;
 }
