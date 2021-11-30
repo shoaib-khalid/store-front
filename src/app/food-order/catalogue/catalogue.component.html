@@ -390,28 +390,60 @@ data-backdrop="static" data-keyboard="false">
                             <div class="col-6 text-center">
                                 
                                 <!-- variant option  -->
-                                <fieldset id="{{variant.name}}" *ngFor="let variant of detailsObj.productVariants; let i = index;">
-                                    <div class="row">
-                                        <label for="{{variant.name}}" style="font-weight: bold; font-size: 12px;">{{variant.name | uppercase}}</label>
-                                    </div>
+                                <ng-container *ngIf="!detailsObj.isPackage">
+                                    <fieldset id="{{variant.name}}" *ngFor="let variant of detailsObj.productVariants; let i = index;">
+                                        <div class="row">
+                                            <label for="{{variant.name}}" style="font-weight: bold; font-size: 12px;">{{variant.name | uppercase}}</label>
+                                        </div>
+    
+                                        <div class="row">
+                                            <ul class="donate-now">
+                                                <!-- <form> -->
+                                                    <li *ngFor="let option of variant.productVariantsAvailable; let i = index;">
+                                                        <input type="radio" 
+                                                        id="{{variant.name + i}}" 
+                                                        value="{{option.value}}" 
+                                                        name="{{variant.name}}" 
+                                                        [checked]="currentVariant.indexOf(option.id) > -1"
+                                                        (change)="onChangeVariant(option.id, variant.name, option.productId)"
+                                                        >
+                                                        <label for="{{variant.name + i}}">{{option.value}}</label>
+                                                    </li>
+                                                <!-- </form> -->
+                                            </ul>
+                                        </div>
+                                    </fieldset>
+                                </ng-container>
 
-                                    <div class="row">
-                                        <ul class="donate-now">
-                                            <!-- <form> -->
-                                                <li *ngFor="let option of variant.productVariantsAvailable; let i = index;">
-                                                    <input type="radio" 
-                                                    id="{{variant.name + i}}" 
-                                                    value="{{option.value}}" 
-                                                    name="{{variant.name}}" 
-                                                    [checked]="currentVariant.indexOf(option.id) > -1"
-                                                    (change)="onChangeVariant(option.id, variant.name, option.productId)"
-                                                    >
-                                                    <label for="{{variant.name + i}}">{{option.value}}</label>
-                                                </li>
-                                            <!-- </form> -->
-                                        </ul>
-                                    </div>
-                                </fieldset>
+                                <!-- combo option  -->
+                                <ng-container *ngIf="detailsObj.isPackage">
+                                    <fieldset id="{{combo.title}}" *ngFor="let combo of combos; let i = index;" style="margin-top: 15px;">
+                                        <div class="row">
+                                            <div class="col">
+                                                <label for="{{combo.title}}" style="font-weight: bold; font-size: 12px;">{{combo.title | uppercase}} : (SELECT {{ combo.totalAllow }} OF {{ combo.productPackageOptionDetail.length }})</label>
+                                            </div>
+                                        
+                                        </div>
+                    
+                                        <div class="row text-center">
+                                            <div class="col text-center">
+                                                <ul class="donate-now">
+                                                    <li *ngFor="let option of combo.productPackageOptionDetail; let i = index;">
+                                                        <input 
+                                                            type="checkbox" 
+                                                            [id]="'combo-checkbox-' + combo.id + '-' + option.productId" 
+                                                            [value]="option.productId" 
+                                                            [name]="'combo-checkbox-' + combo.id + '-' + option.productId"
+                                                            [checked]="currentCombo[combo.id].indexOf(option.productId) > -1"
+                                                            (change)="onChangeCombo(combo.id, $event)"
+                                                        >
+                                                        <label [for]="'combo-checkbox-' + combo.id + '-' + option.productId">{{option.product.name}}</label>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                </ng-container>
                             
                                 <div style="padding-top: 70px;">
                                     <!-- <h5 id="price">PRICE : RM {{ detailPrice | number: '1.2-2'}}</h5> -->

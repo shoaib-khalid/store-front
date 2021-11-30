@@ -40,8 +40,13 @@
     
                                         <img src="{{item.url}}" class="img-thumbnail" alt="..." style="height: 100px; width: 100px;">
                                     </div>
-                                    
-
+                                    <div class="col-12 text-left" *ngIf="item.cartSubItem">
+                                        <small class="text-danger">
+                                            <span class="badge badge-pill badge-warning" *ngFor="let combo of item.cartSubItem" style="margin-right: 5px;">
+                                                {{combo.productInventory.product.name}}
+                                            </span>
+                                        </small>
+                                    </div>
                                 </span>
 
                                 <div class="col-12">

@@ -20,6 +20,7 @@ import { PlatformLocation } from "@angular/common";
 import { not } from '@angular/compiler/src/output/output_ast';
 import { finished } from 'stream';
 import { NgxSpinnerService } from "ngx-spinner";
+import { ProductService } from 'src/app/core/services/product/product.service';
 
 
 
@@ -144,6 +145,10 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
     page_no: number = 0;
     selectedMenu: string = "";
 
+    // combo
+    combos: any = [];
+    currentCombo: any = [];
+
     constructor(
         private _databindService: DataBindService, 
         private route: Router,
@@ -151,7 +156,8 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
         private mScrollbarService: MalihuScrollbarService,
         private apiService: ApiService,
         private platformLocation: PlatformLocation,
-        private spinner: NgxSpinnerService
+        private spinner: NgxSpinnerService,
+        private _productService: ProductService
     ) { 
         
         // init clear localStorage
@@ -436,7 +442,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
             if (res.message) {
                 this.product = res.data.content;
 
-                let productPagination = res.data
+                let productPagination = res.data;
 
                 let totalPages = productPagination.totalPages
 
@@ -699,6 +705,37 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
                 "weight": weight,
                 "SKU": sku,
                 "specialInstruction": instruction
+            }
+
+            if(this.detailsObj.isPackage){
+                data["cartSubItem"] = [];
+
+                // loop all combos from backend
+                this.combos.forEach(item => {
+                    // compare it with current selected combo by user
+                    if (this.currentCombo[item.id]) {
+                        // loop the selected current combo
+                        this.currentCombo[item.id].forEach(element => {
+                            // get productPakageOptionDetail from this.combo[].productPackageOptionDetail where it's subitem.productId == element (id in this.currentcombo array)
+                            let productPakageOptionDetail = item.productPackageOptionDetail.find(subitem => subitem.productId === element);
+                            console.log("productPakageOptionDetail", productPakageOptionDetail)   
+                            if (productPakageOptionDetail){
+                                // push to cart
+                                data["cartSubItem"].push(
+                                    {
+                                        SKU: productPakageOptionDetail.productInventory[0].sku,
+                                        productName: productPakageOptionDetail.product.name,
+                                        productId: element,
+                                        itemCode: productPakageOptionDetail.productInventory[0].itemCode,  // this assume all product under fnb have only 1 inventory
+                                        quantity: 1,
+                                        productPrice: 0,
+                                        specialInstruction: null
+                                    }
+                                );
+                            }
+                        });
+                    }
+                });
             }
 
             console.log('addItemToCart request data: ' , data)
@@ -1241,7 +1278,21 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
 
             if (res.message) {
                 this.details = product_details;
-                // console.log('details data: ' , this.details['name']);
+                console.log('details data: ' , this.details);
+
+                // get product package if exists
+                if (this.details["isPackage"]) {
+                    this._productService.getProductPackageOptions(this.details["id"])
+                    .subscribe((response)=>{
+                        console.log("response:", response);
+                        this.combos = response["data"];
+                        
+                        this.combos.forEach(element => {
+                            this.currentCombo[element.id] = [];
+                        });
+
+                    });
+                }
 
                 // when product id is triggered, kindly fetch product image
                 this.galleryImagesInit = 'assets/image/food-sample1.jpg';
@@ -1401,6 +1452,38 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
         //     Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
         // }) 
 
+    }
+
+    onChangeCombo(comboId, event){
+
+        let productID = event.target.value;
+
+        // remove only unchecked item in array
+        if (event.target.checked === false) {
+            let index = this.currentCombo[comboId].indexOf(productID);
+            if (index !== -1) {
+                this.currentCombo[comboId].splice(index, 1);
+                return;
+            }
+        }
+
+        let currentComboSetting = this.combos.find(item => item.id === comboId);
+
+        // remove first item in array if it exceed totalAllow
+        if (this.currentCombo[comboId].length >= currentComboSetting.totalAllow){
+            this.currentCombo[comboId].shift();
+        }
+
+        // set currentCombo
+        this.combos.forEach(combo => {
+            combo.productPackageOptionDetail.forEach(item => {
+                    
+
+                if(item.productId === productID){
+                    this.currentCombo[comboId].push(item.productId)
+                }
+            });
+        });
     }
 
     findInventory(productID) {
