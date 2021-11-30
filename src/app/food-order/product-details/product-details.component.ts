@@ -376,11 +376,13 @@ export class ProductDetailsComponent implements OnInit {
                         this.currentCombo[item.id].forEach(element => {
                             // get productPakageOptionDetail from this.combo[].productPackageOptionDetail where it's subitem.productId == element (id in this.currentcombo array)
                             let productPakageOptionDetail = item.productPackageOptionDetail.find(subitem => subitem.productId === element);
-                                                        
+                            console.log("productPakageOptionDetail", productPakageOptionDetail)   
                             if (productPakageOptionDetail){
                                 // push to cart
                                 data["cartSubItem"].push(
                                     {
+                                        SKU: productPakageOptionDetail.productInventory[0].sku,
+                                        productName: productPakageOptionDetail.product.name,
                                         productId: element,
                                         itemCode: productPakageOptionDetail.productInventory[0].itemCode,  // this assume all product under fnb have only 1 inventory
                                         quantity: 1,
