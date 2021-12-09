@@ -530,104 +530,48 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
 
         if(this.paymentType == "ONLINEPAYMENT"){
 
-            const orderId = await this.postInitOrder();
-            this.addItemOrder(orderId['id'])
-            this.orderId = orderId['id'];
+            await this.goOnlinePay();
 
-            console.log("initOrder received (orderId):"+ orderId['id']);
+            this.visible = true;
+
+            
 
         }else{
             this.goCod()
         }
-
-        // alert(this.userMsisdn)
-
-        // forkJoin([initOrder, getOrderId]).subscribe(results => {
-
-        //     let objGet = results[1]
-
-        //     // always get latest order id 
-        //     this.orderId = objGet['data'].content[0].id
-
-        //     // console.log('result 1: ', objPost)
-        //     console.log('orderID: ', this.orderId)
-
-        //     this.addItemOrder(this.orderId)
-
-        // }, error =>{
-        //     Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
-        // });
-    }
-
-    async addItemOrder(orderId){
-        console.log('cartitemDetails')
-
-        await this.cartitemDetails.map(async cartItem => {
-            console.log('cartitemDetails in')
-    
-            let realOrderId = orderId;
-            let itemCode = cartItem.itemCode
-            let productId = cartItem.productId
-            let quantity = cartItem.quantity
-            let sku = cartItem.sku
-            let weight = cartItem.weight
-            let productName = cartItem.productName
-            let specialInstruction = cartItem.specialInstruction
-            let price = cartItem.price
-            let productPrice = cartItem.productPrice
-
-            console.log("Checkout SKU: "+ sku);
-
-            this.postAddItemToOrder(itemCode,orderId,price,productId,productPrice,quantity,sku,weight,productName,specialInstruction);
-    
-        })
-
-        this.visible = true;
-
-        this.goPay()
-
-        // console.log('go Here tak?')
-    
-        // if(this.paymentType == "ONLINEPAYMENT"){
-        //     // start the loading 
-        //     this.visible = true;
-
-        //     this.goPay()
-        // }else{
-        //     this.goCod()
-        // }
-        
     }
     
-    postAddItemToOrder(itemCode,orderId,price,productId,productPrice,quantity,sku,weight,productName,specialInstruction) {
-    
-        console.log("itemCode: " + itemCode +
-        "\norderId: " + orderId +
-        "\nprice: " + price +
-        "\nproductId: " + productId +
-        "\nproductPrice: " + productPrice +
-        "\nquantity: " + quantity +
-        "\nsku: " + sku +
-        "\nweight: " + weight) +
-        "\nspecialInstruction: " + specialInstruction;
-    
-        let data = {
-            "itemCode": itemCode,
-            "orderId": orderId,
-            "price": price,
-            "productId": productId,
-            "productPrice": productPrice,
-            "quantity": quantity,
-            "SKU": sku,
-            "weight": weight,
-            "productName": productName,
-            "specialInstruction": specialInstruction
+    goOnlinePay() {
+        let data = { 
+            "cartId": this.cartID, 
+            "customerId": this.customer_id,
+            "customerNotes": this.customerNotes, 
+            "orderPaymentDetails": { 
+                "accountName": this.userName, 
+                "deliveryQuotationAmount": this.deliveryFee, 
+                "deliveryQuotationReferenceId": this.deliveryRef, 
+                "gatewayId": "" 
+            }, 
+            "orderShipmentDetails": { 
+                "address": this.userAddress,
+                "city": this.userCities, 
+                "country": this.userCountries, 
+                "deliveryProviderId": this.providerId, 
+                "email": this.userEmail, 
+                "phoneNumber": this.userMsisdn, 
+                "receiverName": this.userName, 
+                "state": this.userState, 
+                "zipcode": this.userPostcode
+            }
         }
-    
-        this.apiService.postAddItemToOrder(data).subscribe((res: any) => {
+
+        this.apiService.postConfirmCOD(data, this.cartID, this.isSaved).subscribe((res: any) => {
             // console.log('add item to order loop: ', res)
             if (res.message){
-                console.log('item succesfully added: '+ res.data)
+                console.log('confirmed Online Payment flow: ', res.data.id)
+                this.orderId = res.data.id;
+
+                this.goPay();
             } else {
             }
         }, error => {
@@ -725,10 +669,6 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
 
     goCod(){
 
-        // alert("cart id: " + this.cartID)
-
-        // return false;
-        
         let data = { 
             "cartId": this.cartID, 
             "customerId": this.customer_id,
@@ -881,7 +821,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
 
             var validRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
 
-            if (this.userEmail == "" || this.userEmail === undefined) {
+            if (this.userEmail == "" || this.userEmail === undefined || this.userEmail === null) {
                 console.log("Email can't be empty");
                 this.emailError = "Email can't be empty";
                 return false;
@@ -1270,13 +1210,24 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
 
         // alert(this.deliveryOption)
 
+        let isError;
+        let errorMessage;
+
         if(this.deliveryOption == "SCHEDULED"){
     
             this.providerListing = delivery['data'];
             this.showProvider = true;
 
-            console.log('PROVIDER: ', this.providerListing)
-        }else{
+            this.deliveryFee = delivery['data'][0]['price'];
+            this.providerId = delivery['data'][0]['providerId'];
+            this.deliveryRef = delivery['data'][0]['refId'];
+            this.deliveryValidUpTo = delivery['data'][0]['validUpTo'];
+            this.serverDateTime = delivery['timestamp'];
+
+            isError = delivery['data'][0]['isError'];
+            errorMessage = delivery['data'][0]['message'];
+
+        } else {
 
             if(this.deliveryOption == "ADHOC"){
                 this.deliveryFee = delivery['data'][0]['price'];
@@ -1287,8 +1238,8 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
 
                 // alert('adhoc: ' + this.deliveryFee)
 
-                var isError = delivery['data'][0]['isError'];
-                var errorMessage = delivery['data'][0]['message'];
+                isError = delivery['data'][0]['isError'];
+                errorMessage = delivery['data'][0]['message'];
             }else{
                 this.deliveryFee = delivery['data']['price'];
                 this.providerId = delivery['data']['providerId'];
@@ -1296,35 +1247,28 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
                 this.deliveryValidUpTo = delivery['data']['validUpTo'];
                 this.serverDateTime = delivery['timestamp'];
 
-                var isError = delivery['data']['isError'];
-                var errorMessage = delivery['data']['message'];
+                isError = delivery['data']['isError'];
+                errorMessage = delivery['data']['message'];
             }
-            
-            // alert('delivery charge: '+this.deliveryFee)
-
-            // this.totalPrice = this.subTotal + this.deliveryFee;
-            // console.log('total price : ' + this.totalPrice)
-
-            if(isError && this.allFieldValidated == true && this.deliveryOption != 'SELF'){
-
-                if(errorMessage == "ERR_OUT_OF_SERVICE_AREA"){
-                    Swal.fire("Oops...", "Area out of service.")
-                }
-
-                this.hasDeliveryFee = false;
-                this.payDisable = true;
-
-            }else{
-                this.hasDeliveryFee = true;
-
-                
-
-                this.payDisable = false;
-
-            }
-
 
             this.hasInitForm = true;
+        }
+
+        // -----------------------
+        // Check if there's error in backend response
+        // -----------------------
+
+        if(isError && this.allFieldValidated == true && this.deliveryOption != 'SELF'){
+
+            if(errorMessage == "ERR_OUT_OF_SERVICE_AREA"){
+                Swal.fire("Oops...", "Area out of service.")
+            }
+
+            this.hasDeliveryFee = false;
+            this.payDisable = true;
+        } else{
+            this.hasDeliveryFee = true;
+            this.payDisable = false;
         }
 
         const discount = await this.getDiscount(this.cartID, this.deliveryFee)
@@ -1374,7 +1318,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
         }
 
         // reset timer 
-        document.getElementById("restart").click();
+        // document.getElementById("restart").click();
     
     }
 

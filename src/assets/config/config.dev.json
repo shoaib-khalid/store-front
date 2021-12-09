@@ -8,5 +8,6 @@
         "payServiceURL": "https://api.symplified.it/payment-service/v1/",
         "orderServiceURL": "https://api.symplified.it/order-service/v1/",
         "deliveryServiceURL": "https://api.symplified.it/delivery-service/v1/"
-    }
+    },
+    "logging": 0
 }

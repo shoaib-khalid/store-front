@@ -1,3 +1,18 @@
+Version 2.1.42-beta
+-------------------------
+Date:30-Nov-2021
+Developer: Ahmad Miqdaad
+
+1. fix Jnt Pay Button
+
+Version 2.1.41-beta
+-------------------------
+Date:30-Nov-2021
+Developer: Ahmad Miqdaad
+
+1. new place order flow
+2. new combo for product detail
+
 Version 2.1.40-beta
 -------------------------
 Date:29-Nov-2021
