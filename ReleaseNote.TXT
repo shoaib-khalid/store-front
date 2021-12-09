@@ -1,6 +1,11 @@
+Version 2.1.43-beta
+-------------------------
+Date:9-Dec-2021
+Developer: Wafi
+
 Version 2.1.42-beta
 -------------------------
-Date:30-Nov-2021
+Date:9-Dec-2021
 Developer: Ahmad Miqdaad
 
 1. fix Jnt Pay Button
