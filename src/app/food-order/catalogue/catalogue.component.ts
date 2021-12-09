@@ -1,5 +1,5 @@
 import { Component, OnInit, AfterViewInit, OnDestroy, HostListener } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 
 import { Category } from './food-order/../../models/Category';
 import { Product } from './food-order/../../models/Product';
@@ -21,6 +21,7 @@ import { not } from '@angular/compiler/src/output/output_ast';
 import { finished } from 'stream';
 import { NgxSpinnerService } from "ngx-spinner";
 
+declare let gtag: Function;
 
 
 @Component({
@@ -144,6 +145,8 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
     fakeArray: any = [];
     page_no: number = 0;
     selectedMenu: string = "";
+    urlAfterRedirects: string;
+    googleAnalyticId: any;
 
     constructor(
         private _databindService: DataBindService, 
@@ -240,7 +243,19 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
             });
 
             localStorage.setItem('sender_id', this.senderID)
+            
 
+            this.route.events.subscribe(event => {
+                console.log("router2 ", this.route.url);
+          
+                if(event instanceof NavigationEnd){
+          
+                  console.log("event.urlAfterRedirects ", event.urlAfterRedirects);
+                  this.urlAfterRedirects = event.urlAfterRedirects;
+
+                //   gtag('config', this.googleAnalyticId, {'page_path': event.urlAfterRedirects});
+                }
+              })
         }
 
     }
@@ -368,6 +383,10 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
                 localStorage.setItem('store_id', this.storeID);
                 localStorage.setItem('store_delivery_percentage', this.storeDeliveryPercentage);
 
+                // this.googleAnalyticId = data.googleAnalyticId;
+                // if (this.googleAnalyticId) {
+                //     this.loadScript(this.googleAnalyticId);
+                // }
             } else {
                 Swal.fire("Great!", "Item failed", "error")
             }
@@ -377,6 +396,53 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
         }) 
 
     }
+
+    loadScript(googleAnalyticId) {
+
+        /**
+         * First section
+         */
+         let node = document.createElement('script'); // creates the script tag
+         node.async = true; // makes script run asynchronously
+         node.src = 'https://www.googletagmanager.com/gtag/js?id='+ googleAnalyticId; // sets the source (insert url in between quotes)
+     
+         document.getElementsByTagName('head')[0].appendChild(node);
+     
+         /**
+          * Second section
+          */
+         let node2 = document.createElement('script'); // creates the script tag
+     
+         let content2 = `
+         window.dataLayer = window.dataLayer || [];
+         function gtag(){dataLayer.push(arguments);}
+         gtag('js', new Date());
+     
+         gtag('config', '${googleAnalyticId}');`;
+         // and give it some content
+         const newContent2 = document.createTextNode(content2);
+         node2.appendChild(newContent2);
+     
+         document.getElementsByTagName('head')[0].appendChild(node2);
+     
+         /**
+          * Third section
+          */
+         let node3 = document.createElement('script'); // creates the script tag
+     
+         let content3 = `Static.COOKIE_BANNER_CAPABLE = true;`;
+         // and give it some content
+         const newContent3 = document.createTextNode(content3);
+         node3.appendChild(newContent3);
+     
+         document.getElementsByTagName('head')[0].appendChild(node3);
+     
+         // append to head of document
+    
+         console.log("googleAnalyticId ", googleAnalyticId);
+         console.log("event.urlAfterRedirectsAfter ", this.urlAfterRedirects);
+         gtag('config', googleAnalyticId, {'page_path': this.urlAfterRedirects});
+      }
 
     getAllProduct(){
         this.catId = null

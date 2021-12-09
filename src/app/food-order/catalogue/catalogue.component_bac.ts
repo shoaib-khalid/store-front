@@ -1,5 +1,5 @@
 import { Component, OnInit, AfterViewInit, OnDestroy, HostListener } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 
 import { Category } from './food-order/../../models/Category';
 import { Product } from './food-order/../../models/Product';
@@ -221,6 +221,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
 
             localStorage.setItem('sender_id', this.senderID)
 
+            
         }
 
     }

@@ -1,7 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import { PlatformLocation } from "@angular/common";
+import { isPlatformBrowser, PlatformLocation } from "@angular/common";
 import { Title, Meta } from '@angular/platform-browser'; 
 import { ApiService } from './food-order/api.service';
+import { Router, NavigationEnd } from '@angular/router';
+import { GoogleAnalyticsService } from './food-order/googleAnalytics.service';
+
+
+declare let gtag: Function;
+declare let ga: any;
+
 
 @Component({
   selector: 'app-root',
@@ -14,18 +21,60 @@ export class AppComponent implements OnInit {
     storeName: string;
     storeNameRaw: any;
     googleAnalyticId: string;
-
+    urlAfterRedirectsS = '';
   constructor(
     private platformLocation: PlatformLocation,
     private titleService: Title,
-    private apiService: ApiService
+    private apiService: ApiService,
+    private router: Router,
   ) {
         this.currBaseURL = (this.platformLocation as any).location.origin;
 
         var host = this.currBaseURL
         var subdomain = host.split('.')[0]
 
-        this.storeName = subdomain.replace(/^(https?:|)\/\//, '')
+        this.storeName = subdomain.replace(/^(https?:|)\/\//, '')    
+        
+        
+        this.router.events.subscribe(event => {
+            if (event instanceof NavigationEnd) {
+              this.urlAfterRedirectsS = event.urlAfterRedirects;              
+              console.log("this.urlAfterRedirects ", this.urlAfterRedirectsS);
+              
+            }
+          }
+        );
+
+        // GoogleAnalyticsService.loadGoogleAnalytics(this.googleAnalyticId);
+        // this.router.events.subscribe(event => {
+        //     if (event instanceof NavigationEnd) {
+        //       (window as any).ga('set', 'page', event.urlAfterRedirects);
+        //       (window as any).ga('send', 'pageview');
+        //       console.log("event.urlAfterRedirects ", event.urlAfterRedirects);
+        //     }
+        //   }
+        // );
+        console.log("googleAnalyticId ", this.googleAnalyticId);
+ 
+  }
+  ngAfterViewInit() {
+    this.initGoogleAnalyticsPageView()
+  }
+
+  private initGoogleAnalyticsPageView() {
+    const interval = setInterval(() => {
+      if ((window as any).ga && (window as any).ga.getAll) {
+        this.router.events.subscribe(event => {
+          const ga = (window as any).ga
+          if (event instanceof NavigationEnd) {
+            const tracker = ga.getAll()[0]
+            tracker.set('page', event.urlAfterRedirects)
+            tracker.send('pageview')
+          }
+        })
+        clearInterval(interval)
+      }
+    }, 50)
   }
 
   async ngOnInit(){
@@ -39,9 +88,13 @@ export class AppComponent implements OnInit {
         this.titleService.setTitle(pageTitle)
         
         this.googleAnalyticId = storeInfo['googleAnalyticId'];
-        if (this.googleAnalyticId) {
-            this.loadScript(this.googleAnalyticId);
+        GoogleAnalyticsService.loadGoogleAnalytics(this.googleAnalyticId);
+        if (this.urlAfterRedirectsS) {
+            (window as any).ga('set', 'page', this.urlAfterRedirectsS);
+              (window as any).ga('send', 'pageview');
         }
+        console.log("googleAnalyticId ", this.googleAnalyticId);
+
   }
 
 
@@ -98,6 +151,10 @@ export class AppComponent implements OnInit {
      document.getElementsByTagName('head')[0].appendChild(node3);
  
      // append to head of document
+
+    //  console.log("googleAnalyticId ", googleAnalyticId);
+    //   console.log("event.urlAfterRedirectsAfter ", this.urlAfterRedirects);
+    //   gtag('config', googleAnalyticId, {'page_path': this.urlAfterRedirects});
   }
 
 }
