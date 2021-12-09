@@ -1210,13 +1210,24 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
 
         // alert(this.deliveryOption)
 
+        let isError;
+        let errorMessage;
+
         if(this.deliveryOption == "SCHEDULED"){
     
             this.providerListing = delivery['data'];
             this.showProvider = true;
 
-            console.log('PROVIDER: ', this.providerListing)
-        }else{
+            this.deliveryFee = delivery['data'][0]['price'];
+            this.providerId = delivery['data'][0]['providerId'];
+            this.deliveryRef = delivery['data'][0]['refId'];
+            this.deliveryValidUpTo = delivery['data'][0]['validUpTo'];
+            this.serverDateTime = delivery['timestamp'];
+
+            isError = delivery['data'][0]['isError'];
+            errorMessage = delivery['data'][0]['message'];
+
+        } else {
 
             if(this.deliveryOption == "ADHOC"){
                 this.deliveryFee = delivery['data'][0]['price'];
@@ -1227,8 +1238,8 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
 
                 // alert('adhoc: ' + this.deliveryFee)
 
-                var isError = delivery['data'][0]['isError'];
-                var errorMessage = delivery['data'][0]['message'];
+                isError = delivery['data'][0]['isError'];
+                errorMessage = delivery['data'][0]['message'];
             }else{
                 this.deliveryFee = delivery['data']['price'];
                 this.providerId = delivery['data']['providerId'];
@@ -1236,35 +1247,28 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
                 this.deliveryValidUpTo = delivery['data']['validUpTo'];
                 this.serverDateTime = delivery['timestamp'];
 
-                var isError = delivery['data']['isError'];
-                var errorMessage = delivery['data']['message'];
+                isError = delivery['data']['isError'];
+                errorMessage = delivery['data']['message'];
             }
-            
-            // alert('delivery charge: '+this.deliveryFee)
-
-            // this.totalPrice = this.subTotal + this.deliveryFee;
-            // console.log('total price : ' + this.totalPrice)
-
-            if(isError && this.allFieldValidated == true && this.deliveryOption != 'SELF'){
-
-                if(errorMessage == "ERR_OUT_OF_SERVICE_AREA"){
-                    Swal.fire("Oops...", "Area out of service.")
-                }
-
-                this.hasDeliveryFee = false;
-                this.payDisable = true;
-
-            }else{
-                this.hasDeliveryFee = true;
-
-                
-
-                this.payDisable = false;
-
-            }
-
 
             this.hasInitForm = true;
+        }
+
+        // -----------------------
+        // Check if there's error in backend response
+        // -----------------------
+
+        if(isError && this.allFieldValidated == true && this.deliveryOption != 'SELF'){
+
+            if(errorMessage == "ERR_OUT_OF_SERVICE_AREA"){
+                Swal.fire("Oops...", "Area out of service.")
+            }
+
+            this.hasDeliveryFee = false;
+            this.payDisable = true;
+        } else{
+            this.hasDeliveryFee = true;
+            this.payDisable = false;
         }
 
         const discount = await this.getDiscount(this.cartID, this.deliveryFee)
