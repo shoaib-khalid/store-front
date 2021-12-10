@@ -46,7 +46,8 @@ export class AppComponent implements OnInit {
             this.googleAnalyticId = res['googleAnalyticId']
             console.log("googleAnalyticId0 ", this.googleAnalyticId);
             console.log("this.urlAfterRedirects ", this.urlAfterRedirectsS);
-
+            
+            
             // register google tag manager
             const script = document.createElement('script');
             script.async = true;
@@ -62,19 +63,22 @@ export class AppComponent implements OnInit {
             gtag('config', '${this.googleAnalyticId}');
             `;
             document.head.appendChild(gaScript);
+            gtag('config', this.googleAnalyticId, 
+                   {
+                     'page_path': this.urlAfterRedirectsS
+                   }
+                  );
         });
         
 
-        // this.router.events.subscribe(event => {
-        //     console.log("router ", this.router.url);
-      
-        //     if(event instanceof NavigationEnd){
+        this.router.events.subscribe(event => {      
+            if(event instanceof NavigationEnd){
 
-        //       console.log("googleAnalyticId1 ", this.googleAnalyticId);
-        //       this.urlAfterRedirectsS = event.urlAfterRedirects;              
-        //       console.log("event.urlAfterRedirects ", this.urlAfterRedirectsS);
-        //     }
-        //   })
+              console.log("googleAnalyticId1 ", this.googleAnalyticId);
+              this.urlAfterRedirectsS = event.urlAfterRedirects;              
+              console.log("event.urlAfterRedirects ", this.urlAfterRedirectsS);
+            }
+          })
 
         // GoogleAnalyticsService.loadGoogleAnalytics(this.googleAnalyticId);
         // this.router.events.subscribe(event => {
@@ -118,23 +122,23 @@ export class AppComponent implements OnInit {
         const pageTitle = this.storeNameRaw + " Store"
         this.titleService.setTitle(pageTitle)
         
-        timer(500)
-        .pipe(
-        filter(() => has.call(window, 'ga')),
-        take(1),
-        switchMap(() => {
-            return this.router.events.pipe(
-            filter((e) => e instanceof NavigationEnd),
-            tap((e: NavigationEnd) => {
-                console.log("NavigationEnd", e);
+        // timer(500)
+        // .pipe(
+        // filter(() => has.call(window, 'ga')),
+        // take(1),
+        // switchMap(() => {
+        //     return this.router.events.pipe(
+        //     filter((e) => e instanceof NavigationEnd),
+        //     tap((e: NavigationEnd) => {
+        //         console.log("NavigationEnd", e);
                 
-                this.googleAnalyticsService.logPageView(e.url);
-            })
-            );
-        }),
-        takeUntil(this.destroy$)
-        )
-        .subscribe();
+        //         this.googleAnalyticsService.logPageView(e.url);
+        //     })
+        //     );
+        // }),
+        // takeUntil(this.destroy$)
+        // )
+        // .subscribe();
   }
 
   getMerchantInfo(storename){
