@@ -51,6 +51,16 @@
   .Checked+label {
     background: #ffb347;
   }
+
+  .donate-now input[type="checkbox"] {
+    opacity: 0.01;
+    z-index: 100;
+  }
+  
+  .donate-now input[type="checkbox"]:checked+label,
+  .Checked+label {
+    background: #ffb347;
+  }
   
   .donate-now label {
     padding: 5px;

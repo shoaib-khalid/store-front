@@ -33,7 +33,6 @@ const routes: Routes = [
     // ]},
 
     { path: "products/name/:prodSeoName", component: ProductDetailsComponent },
-    { path: "products/name/:prodSeoName/:storeName", component: ProductDetailsComponent },
 
     { path: "return", component: RedirectionComponent },
     { path: "return/:name/:email/:phone/:amount/:hash/:status_id/:order_id/:transaction_id/:msg", component: RedirectionComponent },
