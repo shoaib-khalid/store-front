@@ -1,13 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { isPlatformBrowser, PlatformLocation } from "@angular/common";
 import { Title, Meta } from '@angular/platform-browser'; 
 import { ApiService } from './food-order/api.service';
 import { Router, NavigationEnd } from '@angular/router';
 import { GoogleAnalyticsService } from './food-order/googleAnalytics.service';
+import { timer } from 'rxjs/internal/observable/timer';
+import { filter } from 'rxjs/internal/operators/filter';
+import { switchMap, take, takeUntil, tap } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 
 
 declare let gtag: Function;
-declare let ga: any;
+const has = Object.prototype.hasOwnProperty;
 
 
 @Component({
@@ -22,11 +26,14 @@ export class AppComponent implements OnInit {
     storeNameRaw: any;
     googleAnalyticId: string;
     urlAfterRedirectsS = '';
+    private destroy$ = new Subject<void>();
+
   constructor(
     private platformLocation: PlatformLocation,
     private titleService: Title,
     private apiService: ApiService,
     private router: Router,
+    private googleAnalyticsService: GoogleAnalyticsService
   ) {
         this.currBaseURL = (this.platformLocation as any).location.origin;
 
@@ -35,15 +42,39 @@ export class AppComponent implements OnInit {
 
         this.storeName = subdomain.replace(/^(https?:|)\/\//, '')    
         
+        this.getMerchantInfo(this.storeName).then((res)=>{
+            this.googleAnalyticId = res['googleAnalyticId']
+            console.log("googleAnalyticId0 ", this.googleAnalyticId);
+            console.log("this.urlAfterRedirects ", this.urlAfterRedirectsS);
+
+            // register google tag manager
+            const script = document.createElement('script');
+            script.async = true;
+            script.src = 'https://www.googletagmanager.com/gtag/js?id=' + this.googleAnalyticId;
+            document.head.appendChild(script);
+
+            // register google analytics
+            const gaScript = document.createElement('script');
+            gaScript.innerHTML = `
+            window.dataLayer = window.dataLayer || [];
+            function gtag() { dataLayer.push(arguments); }
+            gtag('js', new Date());
+            gtag('config', '${this.googleAnalyticId}');
+            `;
+            document.head.appendChild(gaScript);
+        });
         
-        this.router.events.subscribe(event => {
-            if (event instanceof NavigationEnd) {
-              this.urlAfterRedirectsS = event.urlAfterRedirects;              
-              console.log("this.urlAfterRedirects ", this.urlAfterRedirectsS);
-              
-            }
-          }
-        );
+
+        // this.router.events.subscribe(event => {
+        //     console.log("router ", this.router.url);
+      
+        //     if(event instanceof NavigationEnd){
+
+        //       console.log("googleAnalyticId1 ", this.googleAnalyticId);
+        //       this.urlAfterRedirectsS = event.urlAfterRedirects;              
+        //       console.log("event.urlAfterRedirects ", this.urlAfterRedirectsS);
+        //     }
+        //   })
 
         // GoogleAnalyticsService.loadGoogleAnalytics(this.googleAnalyticId);
         // this.router.events.subscribe(event => {
@@ -54,27 +85,27 @@ export class AppComponent implements OnInit {
         //     }
         //   }
         // );
-        console.log("googleAnalyticId ", this.googleAnalyticId);
+        
  
   }
   ngAfterViewInit() {
-    this.initGoogleAnalyticsPageView()
+    // this.initGoogleAnalyticsPageView()
   }
 
+  
+
   private initGoogleAnalyticsPageView() {
-    const interval = setInterval(() => {
-      if ((window as any).ga && (window as any).ga.getAll) {
-        this.router.events.subscribe(event => {
-          const ga = (window as any).ga
-          if (event instanceof NavigationEnd) {
-            const tracker = ga.getAll()[0]
-            tracker.set('page', event.urlAfterRedirects)
-            tracker.send('pageview')
-          }
-        })
-        clearInterval(interval)
-      }
-    }, 50)
+    this.getMerchantInfo(this.storeName).then((res)=>{
+        console.log("res", res)
+        this.googleAnalyticId = res['googleAnalyticId']
+        console.log("googleAnalyticId0 ", this.googleAnalyticId);
+        console.log("this.urlAfterRedirects ", this.urlAfterRedirectsS);
+        gtag('config', this.googleAnalyticId, {'page_path': this.urlAfterRedirectsS});
+        const script = document.createElement('script');
+        script.async = true;
+        script.src = 'https://www.googletagmanager.com/gtag/js?id=' + this.googleAnalyticId;
+        document.head.prepend(script);
+    });
   }
 
   async ngOnInit(){
@@ -87,16 +118,24 @@ export class AppComponent implements OnInit {
         const pageTitle = this.storeNameRaw + " Store"
         this.titleService.setTitle(pageTitle)
         
-        this.googleAnalyticId = storeInfo['googleAnalyticId'];
-        GoogleAnalyticsService.loadGoogleAnalytics(this.googleAnalyticId);
-        if (this.urlAfterRedirectsS) {
-            (window as any).ga('set', 'page', this.urlAfterRedirectsS);
-              (window as any).ga('send', 'pageview');
-        }
-        console.log("googleAnalyticId ", this.googleAnalyticId);
-
+        timer(500)
+        .pipe(
+        filter(() => has.call(window, 'ga')),
+        take(1),
+        switchMap(() => {
+            return this.router.events.pipe(
+            filter((e) => e instanceof NavigationEnd),
+            tap((e: NavigationEnd) => {
+                console.log("NavigationEnd", e);
+                
+                this.googleAnalyticsService.logPageView(e.url);
+            })
+            );
+        }),
+        takeUntil(this.destroy$)
+        )
+        .subscribe();
   }
-
 
   getMerchantInfo(storename){
     console.log('Banner Calling BACKEND getStoreInfo');
@@ -110,7 +149,7 @@ export class AppComponent implements OnInit {
     })
   }
 
-  loadScript(googleAnalyticId) {
+  loadScript(googleAnalyticId, urlAfterRedirectsS) {
 
     /**
      * First section
@@ -131,7 +170,7 @@ export class AppComponent implements OnInit {
      function gtag(){dataLayer.push(arguments);}
      gtag('js', new Date());
  
-     gtag('config', '${googleAnalyticId}');`;
+     gtag('config', '${googleAnalyticId}', {'page_path': ${urlAfterRedirectsS}});`;
      // and give it some content
      const newContent2 = document.createTextNode(content2);
      node2.appendChild(newContent2);

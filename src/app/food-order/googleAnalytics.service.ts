@@ -1,25 +1,44 @@
-import { Injectable } from '@angular/core';
+import { Injectable } from "@angular/core";
 
-@Injectable()
-export class GoogleAnalyticsService {
-
-  constructor() { }
-
-  /**
-   * load analytics
-   * @param trackingID
-   */
-  static loadGoogleAnalytics(trackingID: string): void {
-    const gaScript1 = document.createElement('script');
-    gaScript1.innerText = `window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;ga(\'create\', \'${ trackingID }\', \'auto\');`;
-
-    const gaScript = document.createElement('script');
-    gaScript.setAttribute('async', 'true');
-    gaScript.setAttribute('src', 'https://www.google-analytics.com/analytics.js');
-    
-
-    document.documentElement.firstChild.appendChild(gaScript1);
-    document.documentElement.firstChild.appendChild(gaScript);
+type Tracker = {
+    send: (
+      hitType: string,
+      category: string,
+      action: string,
+      label?: string
+    ) => void;
+  };
+  
+  declare const ga: {
+    (...args: any[]): () => void;
+    getAll: () => Tracker[];
+  };
+  
+  const has = Object.prototype.hasOwnProperty;
+  
+  @Injectable({ providedIn: "root" })
+  export class GoogleAnalyticsService {
+    logCustomEvent(
+      eventCategory: string,
+      eventAction: string,
+      eventLabel?: string
+    ) {
+      ga(() => {
+        if (has.call(window, "ga")) {
+          const tracker = ga.getAll();
+          if (tracker?.length > 0) {
+            tracker[0]?.send("event", eventCategory, eventAction, eventLabel);
+          }
+        }
+      });
+    }
+  
+    logPageView(url: string) {
+      ga(() => {
+        if (has.call(window, "ga")) {
+          ga("set", "page", url);
+          ga("send", "pageview");
+        }
+      });
+    }
   }
-
-}
