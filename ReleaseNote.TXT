@@ -4,6 +4,7 @@ Date:13-Dec-2021
 Developer: Ahmad Miqdaad
 
 1. Fix checkout form
+2. Fix Google Analytic
 
 Version 2.1.43-beta
 -------------------------
