@@ -97,7 +97,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
     showCountDownTime:any;
     timerReset:number = 0;
 
-    payDisable:boolean = true;
+    displayGetPrice:boolean = true;
 
     disableForm:boolean = false;
     dayArr = ['SUNDAY', 'MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY'];
@@ -187,12 +187,12 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
 
         if(e.action == "start"){
             
-            this.payDisable = false;
+            this.displayGetPrice = false;
             
         }
 
         if(e.action == 'done' && this.hasDeliveryFee == true){
-            this.payDisable = true;
+            this.displayGetPrice = true;
             // this.getDeliveryFee()
             this.countGrandTotal()
 
@@ -334,7 +334,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
 
         this.countGrandTotal()
 
-        // this.payDisable = false
+        // this.displayGetPrice = false
 
         
 
@@ -521,10 +521,10 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
     async initOrder(){
 
         // wait for delivery service to get quotation
-        if (this.hasDeliveryFee === false && this.isSelfPickup === false) {
-            Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'> Please wait for us to calculate delivery fee</small>", "error")
-            return false;
-        }
+        // if (this.hasDeliveryFee === false && this.isSelfPickup === false) {
+        //     Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'> Please wait for us to calculate delivery fee</small>", "error")
+        //     return false;
+        // }
 
         console.log("initOrder initiated:");
 
@@ -794,7 +794,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
         this.userPostcode = null
         this.userCities = null
         this.userState = null
-        this.payDisable = true;
+        this.displayGetPrice = true;
 
         if (userinfo === 'userMsisdn') {
             const regex = new RegExp('^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\.\/0-9]*$');
@@ -846,7 +846,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
 
         if(customer == undefined){
             this.hasDeliveryFee = false;
-            this.payDisable = true;
+            this.displayGetPrice = true;
 
             this.customer_id = null
             this.userMsisdn = null
@@ -855,7 +855,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
             this.userPostcode = null
             this.userCities = null
             this.userState = null
-            // this.payDisable = true;
+            // this.displayGetPrice = true;
 
             // alert('undefined lah')
             // this.deliveryFee = 0;
@@ -899,6 +899,10 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
         // later add function to calculate delivery charges
     }
 
+    inputChanged() {
+        this.displayGetPrice = true;
+    }
+
     toValidate(){
         // alert('masok')
         if (this.userEmail && this.userName && this.userMsisdn && this.userAddress && this.userPostcode 
@@ -917,11 +921,11 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
                 // if(this.isSelfPickup == false){
                 //     this.getDeliveryFee()
                 // }else{
-                //     this.payDisable = false;
+                //     this.displayGetPrice = false;
                 // }
 
                 // if(this.deliveryOption == "ADHOC" || this.deliveryOption == "SELF"){
-                //     this.payDisable = false;
+                //     this.displayGetPrice = false;
                 // }
                 
 
@@ -942,9 +946,12 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
             // "\nthisuserState.: " + this.userState + 
             // "\nthis.userCountries: " + this.userCountries)
 
-            // alert('field not validated')
+            // alert('field not validated');
 
-            this.countGrandTotal()
+            this.displayGetPrice = true;
+            this.allFieldValidated = false;
+
+            // this.countGrandTotal()
         }
     }
 
@@ -1077,7 +1084,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
         }else{
             this.viewForm = !this.viewForm
 
-            this.payDisable = true;
+            this.displayGetPrice = true;
 
             if(this.deliveryOption == "SCHEDULED"){
                 if(this.hasInitForm === true){
@@ -1158,7 +1165,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
         // If COD and region is PAKISTAN then allow proceed button 
         if(this.paymentType == "COD" && this.CountryID == "PAK"){
             this.hasDeliveryFee = true;
-            this.payDisable = false;   
+            this.displayGetPrice = false;   
         }
     }
 
@@ -1210,24 +1217,13 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
 
         // alert(this.deliveryOption)
 
-        let isError;
-        let errorMessage;
-
         if(this.deliveryOption == "SCHEDULED"){
     
             this.providerListing = delivery['data'];
             this.showProvider = true;
 
-            this.deliveryFee = delivery['data'][0]['price'];
-            this.providerId = delivery['data'][0]['providerId'];
-            this.deliveryRef = delivery['data'][0]['refId'];
-            this.deliveryValidUpTo = delivery['data'][0]['validUpTo'];
-            this.serverDateTime = delivery['timestamp'];
-
-            isError = delivery['data'][0]['isError'];
-            errorMessage = delivery['data'][0]['message'];
-
-        } else {
+            console.log('PROVIDER: ', this.providerListing)
+        }else{
 
             if(this.deliveryOption == "ADHOC"){
                 this.deliveryFee = delivery['data'][0]['price'];
@@ -1238,8 +1234,8 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
 
                 // alert('adhoc: ' + this.deliveryFee)
 
-                isError = delivery['data'][0]['isError'];
-                errorMessage = delivery['data'][0]['message'];
+                var isError = delivery['data'][0]['isError'];
+                var errorMessage = delivery['data'][0]['message'];
             }else{
                 this.deliveryFee = delivery['data']['price'];
                 this.providerId = delivery['data']['providerId'];
@@ -1247,28 +1243,39 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
                 this.deliveryValidUpTo = delivery['data']['validUpTo'];
                 this.serverDateTime = delivery['timestamp'];
 
-                isError = delivery['data']['isError'];
-                errorMessage = delivery['data']['message'];
+                var isError = delivery['data']['isError'];
+                var errorMessage = delivery['data']['message'];
             }
+            
+            // alert('delivery charge: '+this.deliveryFee)
+
+            // this.totalPrice = this.subTotal + this.deliveryFee;
+            // console.log('total price : ' + this.totalPrice)
+
+            if(isError && this.allFieldValidated == true && this.deliveryOption != 'SELF'){
+
+                if(errorMessage == "ERR_OUT_OF_SERVICE_AREA"){
+                    Swal.fire("Oops...", "Service Provider Message: Area out of service.")
+                } else if(errorMessage == "ERR_INVALID_PHONE_NUMBER"){
+                    Swal.fire("Oops...", "Service Provider Message: Invalid phonenumber")
+                } else {
+                    Swal.fire("Oops...", "Service Provider Message: " + errorMessage)
+                }
+
+                this.hasDeliveryFee = false;
+                this.displayGetPrice = true;
+
+            } else{
+                this.hasDeliveryFee = true;
+
+                
+
+                this.displayGetPrice = false;
+
+            }
+
 
             this.hasInitForm = true;
-        }
-
-        // -----------------------
-        // Check if there's error in backend response
-        // -----------------------
-
-        if(isError && this.allFieldValidated == true && this.deliveryOption != 'SELF'){
-
-            if(errorMessage == "ERR_OUT_OF_SERVICE_AREA"){
-                Swal.fire("Oops...", "Area out of service.")
-            }
-
-            this.hasDeliveryFee = false;
-            this.payDisable = true;
-        } else{
-            this.hasDeliveryFee = true;
-            this.payDisable = false;
         }
 
         const discount = await this.getDiscount(this.cartID, this.deliveryFee)
@@ -1318,7 +1325,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
         }
 
         // reset timer 
-        // document.getElementById("restart").click();
+        document.getElementById("restart").click();
     
     }
 
@@ -1366,12 +1373,12 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
     
                 if (res.message) {
 
-                    // alert(this.payDisable)
-                    // this.payDisable = false;
+                    // alert(this.displayGetPrice)
+                    // this.displayGetPrice = false;
                     // this.hasDeliveryFee = true;
-                    // this.payDisable = false
+                    // this.displayGetPrice = false
 
-                    // alert(this.payDisable)
+                    // alert(this.displayGetPrice)
     
                     resolve(res)
                     
