@@ -108,7 +108,7 @@
                                 </div>
 
                                 <!-- remove focusout(toRepopulate) in phonenumber field, for future use when API query by phonenumber is ready  -->
-                                <input type="text" id="msisdn" name="userMsisdn" aria-describedby="phoneFeedback" [(ngModel)]="userMsisdn" [(value)]="userMsisdn" autocomplete="disabled" placeholder="Phone No" required>
+                                <input type="text" id="msisdn" name="userMsisdn" aria-describedby="phoneFeedback" [(ngModel)]="userMsisdn" (change)="inputChanged()" (input)="inputChanged()" [(value)]="userMsisdn" autocomplete="disabled" placeholder="Phone No" required>
                                 <div id="phoneFeedback" class="invalid-feedback">
                                     {{phoneError}}
                                 </div>
@@ -141,18 +141,18 @@
                                     </label>
                                 </div>
                                 <br>
-                                <input type="text" id="name" name="userName" [(ngModel)]="userName" [(value)]="userName" (change)="toValidate()" autocomplete="disabled" placeholder="Full name" required>
+                                <input type="text" id="name" name="userName" [(ngModel)]="userName" [(value)]="userName" (change)="inputChanged()" (input)="inputChanged()" autocomplete="disabled" placeholder="Full name" required>
                                 <br>
                                 <br>
-                                <textarea name="userAddress" id="address" [(ngModel)]="userAddress" [(value)]="userAddress" (change)="toValidate()" autocomplete="disabled" placeholder="Address" cols="30" rows="4" required></textarea>
+                                <textarea name="userAddress" id="address" [(ngModel)]="userAddress" [(value)]="userAddress" (change)="inputChanged()" (input)="inputChanged()" autocomplete="disabled" placeholder="Address" cols="30" rows="4" required></textarea>
                                 <br>
-                                <input type="text" name="userPostcode" [(ngModel)]="userPostcode" [(value)]="userPostcode" (change)="toValidate()" autocomplete="disabled" placeholder="Postcode" required>
+                                <input type="text" name="userPostcode" [(ngModel)]="userPostcode" [(value)]="userPostcode" (change)="inputChanged()" (input)="inputChanged()" autocomplete="disabled" placeholder="Postcode" required>
                                 <br>
-                                <input type="text" name="userCities" [(ngModel)]="userCities" [(value)]="userCities" (change)="toValidate()" autocomplete="disabled" placeholder="Cities" required>
+                                <input type="text" name="userCities" [(ngModel)]="userCities" [(value)]="userCities" (change)="inputChanged()" (input)="inputChanged()" autocomplete="disabled" placeholder="Cities" required>
                                 <br>
                                 <div class="row">
                                     <div class="col-lg-6 col-md-6 col-xs-12 col-sm-12">
-                                        <select name="userState" id="state" [(ngModel)]="userState" [(value)]="userState" (change)="toValidate()" autocomplete="disabled" required>
+                                        <select name="userState" id="state" [(ngModel)]="userState" [(value)]="userState" (change)="inputChanged()" (input)="inputChanged()" autocomplete="disabled" required>
                                             <option selected="true" disabled="" value="">Choose States</option>
                                             <option *ngFor="let mState of mStates" [value]="mState.name">
                                                 {{mState.name}}
@@ -161,7 +161,7 @@
                                     </div>
 
                                     <div class="col-lg-6 col-md-6 col-xs-12 col-sm-12">
-                                        <input type="text" name="userCountries" [(ngModel)]="userCountries" [(value)]="userCountries" (change)="toValidate()" autocomplete="disabled" readonly placeholder="Countries" required>
+                                        <input type="text" name="userCountries" [(ngModel)]="userCountries" [(value)]="userCountries" (change)="inputChanged()" (input)="inputChanged()" autocomplete="disabled" readonly placeholder="Countries" required>
                                     </div>
                                     <!-- <div class="col-lg-6 col-md-6 col-xs-12 col-sm-12">
                                         <select name="userCountries" id="countries" [(ngModel)]="userCountries" [(value)]="userCountries" (change)="toValidate()" autocomplete="disabled" required>
@@ -296,7 +296,12 @@
                                     </div> -->
                                 </div>
 
-                                <button type="submit" class="btn btn-md col-lg-6 col-md-6 col-xs-12 col-sm-12 btn-success text-center" [disabled]="payDisable" style="border-radius: 5px;">{{btnString}} &nbsp;&nbsp;<fa-icon [icon]="iconMoney"></fa-icon></button>
+                                <ng-container *ngIf="displayGetPrice === true">
+                                    <a id="btn-get-price-quotation" (click)="toValidate()" class="btn btn-md col-lg-6 col-md-6 col-xs-12 col-sm-12 btn-success text-center" style="border-radius: 5px;">Get Price Quotation &nbsp;&nbsp;<fa-icon [icon]="iconMoney"></fa-icon></a>
+                                </ng-container>
+                                <ng-container *ngIf="displayGetPrice === false">
+                                    <button id="btn-pay-now" type="submit" class="btn btn-md col-lg-6 col-md-6 col-xs-12 col-sm-12 btn-success text-center" style="border-radius: 5px;">{{btnString}} &nbsp;&nbsp;<fa-icon [icon]="iconMoney"></fa-icon></button>
+                                </ng-container>
                                 <!-- <button (click)="goSkip($event)" class="btn btn-md col-lg-4 col-md-4 col-xs-12 col-sm-12 btn-success" style="border-radius: 0;">PAY NOW &nbsp;&nbsp;<fa-icon [icon]="iconMoney"></fa-icon></button> -->
                             
                             </form>
