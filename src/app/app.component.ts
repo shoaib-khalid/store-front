@@ -40,45 +40,80 @@ export class AppComponent implements OnInit {
         var host = this.currBaseURL
         var subdomain = host.split('.')[0]
 
-        this.storeName = subdomain.replace(/^(https?:|)\/\//, '')    
+        this.storeName = subdomain.replace(/^(https?:|)\/\//, '');
+
+
         
         this.getMerchantInfo(this.storeName).then((res)=>{
             this.googleAnalyticId = res['googleAnalyticId']
             console.log("googleAnalyticId0 ", this.googleAnalyticId);
             console.log("this.urlAfterRedirects ", this.urlAfterRedirectsS);
-            
+
             
             // register google tag manager
             const script = document.createElement('script');
+            script.type = 'text/javascript';
             script.async = true;
-            script.src = 'https://www.googletagmanager.com/gtag/js?id=' + this.googleAnalyticId;
+            script.src = 'https://www.google-analytics.com/analytics.js';
             document.head.appendChild(script);
+            
+            
+            // register google tag manager
+            const script2 = document.createElement('script');
+            script2.async = true;
+            script2.src = 'https://www.googletagmanager.com/gtag/js?id=UA-96184893-1';
+            document.head.appendChild(script2);
 
-            // register google analytics
+
+            
             const gaScript = document.createElement('script');
             gaScript.innerHTML = `
             window.dataLayer = window.dataLayer || [];
             function gtag() { dataLayer.push(arguments); }
             gtag('js', new Date());
-            gtag('config', '${this.googleAnalyticId}');
+            gtag('config', 'UA-96184893-1');
             `;
             document.head.appendChild(gaScript);
-            gtag('config', this.googleAnalyticId, 
-                   {
-                     'page_path': this.urlAfterRedirectsS
-                   }
-                  );
+
+            this.router.events.subscribe(event => {
+                console.log("router ", this.router.url);
+          
+                if(event instanceof NavigationEnd){
+          
+                    console.log("event.urlAfterRedirects ", event.urlAfterRedirects);
+                    // register google analytics
+
+                    gtag('config', 'UA-96184893-1', {'page_path': event.urlAfterRedirects});
+                    
+                }
+    
+            });
+
+            // gtag('config', this.googleAnalyticId, 
+            //        {
+            //          'page_path': this.urlAfterRedirectsS
+            //        }
+            //       );
         });
-        
 
-        this.router.events.subscribe(event => {      
-            if(event instanceof NavigationEnd){
+        // this.router.events.pipe(
+        //     filter(event => event instanceof NavigationEnd)
+        //   ).subscribe((event: NavigationEnd) => {
+        //     /** START : Code to Track Page View  */
+        //      gtag('event', 'page_view', {
+        //         page_path: event.urlAfterRedirects
+        //      })
+        //     /** END */
+        //   })
 
-              console.log("googleAnalyticId1 ", this.googleAnalyticId);
-              this.urlAfterRedirectsS = event.urlAfterRedirects;              
-              console.log("event.urlAfterRedirects ", this.urlAfterRedirectsS);
-            }
-          })
+        // this.router.events.subscribe(event => {      
+        //     if(event instanceof NavigationEnd){
+
+        //       console.log("googleAnalyticId1 ", this.googleAnalyticId);
+        //       this.urlAfterRedirectsS = event.urlAfterRedirects;              
+        //       console.log("event.urlAfterRedirects ", this.urlAfterRedirectsS);
+        //     }
+        //   })
 
         // GoogleAnalyticsService.loadGoogleAnalytics(this.googleAnalyticId);
         // this.router.events.subscribe(event => {
@@ -98,19 +133,32 @@ export class AppComponent implements OnInit {
 
   
 
-  private initGoogleAnalyticsPageView() {
-    this.getMerchantInfo(this.storeName).then((res)=>{
-        console.log("res", res)
-        this.googleAnalyticId = res['googleAnalyticId']
-        console.log("googleAnalyticId0 ", this.googleAnalyticId);
-        console.log("this.urlAfterRedirects ", this.urlAfterRedirectsS);
-        gtag('config', this.googleAnalyticId, {'page_path': this.urlAfterRedirectsS});
-        const script = document.createElement('script');
-        script.async = true;
-        script.src = 'https://www.googletagmanager.com/gtag/js?id=' + this.googleAnalyticId;
-        document.head.prepend(script);
-    });
-  }
+//   private initGoogleAnalyticsPageView() {
+//     this.getMerchantInfo(this.storeName).then((res)=>{
+//         console.log("res", res)
+//         this.googleAnalyticId = res['googleAnalyticId']
+//         console.log("googleAnalyticId0 ", this.googleAnalyticId);
+//         console.log("this.urlAfterRedirects ", this.urlAfterRedirectsS);
+//         gtag('config', this.googleAnalyticId, {'page_path': this.urlAfterRedirectsS});
+//         const script = document.createElement('script');
+//         script.async = true;
+//         script.src = 'https://www.googletagmanager.com/gtag/js?id=' + this.googleAnalyticId;
+//         document.head.prepend(script);
+//     });
+//   }
+
+  /** Add Google Analytics Script Dynamically */
+//   addGAScript() {
+//     const res = this.getMerchantInfo(this.storeName)
+//     this.googleAnalyticId = res['googleAnalyticId']
+
+//     let gtagScript: HTMLScriptElement = document.createElement('script');
+//     gtagScript.async = true;
+//     gtagScript.src = 'https://www.googletagmanager.com/gtag/js?id=' + this.googleAnalyticId;
+//     document.head.prepend(gtagScript);
+//     /** Disable automatic page view hit to fix duplicate page view count  **/
+//     gtag('config', this.googleAnalyticId, { send_page_view: false });
+// }
 
   async ngOnInit(){
 
@@ -153,51 +201,51 @@ export class AppComponent implements OnInit {
     })
   }
 
-  loadScript(googleAnalyticId, urlAfterRedirectsS) {
+//   loadScript(googleAnalyticId, urlAfterRedirectsS) {
 
-    /**
-     * First section
-     */
-     let node = document.createElement('script'); // creates the script tag
-     node.async = true; // makes script run asynchronously
-     node.src = 'https://www.googletagmanager.com/gtag/js?id='+ googleAnalyticId; // sets the source (insert url in between quotes)
+//     /**
+//      * First section
+//      */
+//      let node = document.createElement('script'); // creates the script tag
+//      node.async = true; // makes script run asynchronously
+//      node.src = 'https://www.googletagmanager.com/gtag/js?id='+ googleAnalyticId; // sets the source (insert url in between quotes)
  
-     document.getElementsByTagName('head')[0].appendChild(node);
+//      document.getElementsByTagName('head')[0].appendChild(node);
  
-     /**
-      * Second section
-      */
-     let node2 = document.createElement('script'); // creates the script tag
+//      /**
+//       * Second section
+//       */
+//      let node2 = document.createElement('script'); // creates the script tag
  
-     let content2 = `
-     window.dataLayer = window.dataLayer || [];
-     function gtag(){dataLayer.push(arguments);}
-     gtag('js', new Date());
+//      let content2 = `
+//      window.dataLayer = window.dataLayer || [];
+//      function gtag(){dataLayer.push(arguments);}
+//      gtag('js', new Date());
  
-     gtag('config', '${googleAnalyticId}', {'page_path': ${urlAfterRedirectsS}});`;
-     // and give it some content
-     const newContent2 = document.createTextNode(content2);
-     node2.appendChild(newContent2);
+//      gtag('config', '${googleAnalyticId}', {'page_path': ${urlAfterRedirectsS}});`;
+//      // and give it some content
+//      const newContent2 = document.createTextNode(content2);
+//      node2.appendChild(newContent2);
  
-     document.getElementsByTagName('head')[0].appendChild(node2);
+//      document.getElementsByTagName('head')[0].appendChild(node2);
  
-     /**
-      * Third section
-      */
-     let node3 = document.createElement('script'); // creates the script tag
+//      /**
+//       * Third section
+//       */
+//      let node3 = document.createElement('script'); // creates the script tag
  
-     let content3 = `Static.COOKIE_BANNER_CAPABLE = true;`;
-     // and give it some content
-     const newContent3 = document.createTextNode(content3);
-     node3.appendChild(newContent3);
+//      let content3 = `Static.COOKIE_BANNER_CAPABLE = true;`;
+//      // and give it some content
+//      const newContent3 = document.createTextNode(content3);
+//      node3.appendChild(newContent3);
  
-     document.getElementsByTagName('head')[0].appendChild(node3);
+//      document.getElementsByTagName('head')[0].appendChild(node3);
  
-     // append to head of document
+//      // append to head of document
 
-    //  console.log("googleAnalyticId ", googleAnalyticId);
-    //   console.log("event.urlAfterRedirectsAfter ", this.urlAfterRedirects);
-    //   gtag('config', googleAnalyticId, {'page_path': this.urlAfterRedirects});
-  }
+//     //  console.log("googleAnalyticId ", googleAnalyticId);
+//     //   console.log("event.urlAfterRedirectsAfter ", this.urlAfterRedirects);
+//     //   gtag('config', googleAnalyticId, {'page_path': this.urlAfterRedirects});
+//   }
 
 }
