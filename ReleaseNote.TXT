@@ -1,7 +1,16 @@
 Version 2.1.43-beta
 -------------------------
-Date:9-Dec-2021
+Date:13-Dec-2021
+Developer: Ahmad Miqdaad
+
+1. Fix checkout form
+
+Version 2.1.43-beta
+-------------------------
+Date:10-Dec-2021
 Developer: Wafi
+
+1. Fix Google Analytic
 
 Version 2.1.42-beta
 -------------------------
