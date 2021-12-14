@@ -146,6 +146,8 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
     counter = 10;
     tick = 1000;
 
+    disabledButton: boolean = false;
+
     config: CountdownConfig = {
         leftTime: 60,
         format: 'mm:ss',
@@ -345,7 +347,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
     }
 
     getDeliveryOption(storeID){
-
+        this.disabledButton = true;
         return new Promise(resolve => {
             this.apiService.getDeliveryOption(storeID).subscribe(async (res: any) => {
                 if (res.message){
@@ -353,6 +355,8 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
                 } else {
                     console.log('getDeliveryOption operation failed')
                 }
+
+                this.disabledButton = false;
             }, error => {
                 console.log(error)
             })
@@ -762,7 +766,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
             } else {
             }
         }, error => {
-            console.log(error)
+            Swal.fire("Payment failed!", "Error : <small style='color: red; font-style: italic;'> There's a problem with our COD provider, " + error.error.message + "</small>", "error")
         }) 
 
     }
@@ -814,7 +818,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
                 }
             } 
         }, error => {
-            Swal.fire("Payment failed!", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
+            Swal.fire("Payment failed!", "Error : <small style='color: red; font-style: italic;'> There's a problem with our payment provider, " + error.error.message + "</small>", "error")
         }) 
     }
 
@@ -993,7 +997,11 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
 
                 console.log("All field validated")
                 // alert('all field validated')
-                
+
+
+                if(this.paymentType == "COD"){
+                    this.displayGetPrice = false;
+                }
 
         } else {
 
@@ -1020,7 +1028,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
             this.apiService.getCustomerProfileByEmail(email,this.storeID).subscribe((res: any) => {
                 resolve(res.data.content[0])
             }, error => {
-                Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
+                Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'> There's a problem fetching your email profile, " + error.error.message + "</small>", "error")
             }) 
         });
     }
@@ -1030,7 +1038,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
             this.apiService.getCustomerProfileByMsisdn(msisdn,this.storeID).subscribe((res: any) => {
                 resolve(res.data.content[0])
             }, error => {
-                Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
+                Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'> There's a problem fetching your phonenumber profile, " + error.error.message + "</small>", "error")
             }) 
         });
     }
@@ -1042,7 +1050,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
                 resolve(res.data.content[0])
 
             }, error => {
-                Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
+                Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'> There's a problem fetching your id profile, " + error.error.message + "</small>", "error")
 
             }) 
             
@@ -1111,7 +1119,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
 
             }
         }, error => {
-            Swal.fire("Submit order failed!", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
+            Swal.fire("Submit order failed!", "Error : <small style='color: red; font-style: italic;'> There's a problem submitting the order, " + error.error.message + "</small>", "error")
         }) 
 
     }
@@ -1419,7 +1427,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
                     
                 }
             }, error => {
-                Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
+                Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>There's a problem calculating your delivery charges, " + error.error.message + "</small>", "error")
             }) 
             // console.log("result: "+ JSON.stringify(result))
         })
@@ -1444,7 +1452,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
                     
                 }
             }, error => {
-                Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>" + error.error.message + "</small>", "error")
+                Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>There's a problem calculating your discount charges, " + error.error.message + "</small>", "error")
             }) 
             // console.log("result: "+ JSON.stringify(result))
         })
