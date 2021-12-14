@@ -146,8 +146,6 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
     counter = 10;
     tick = 1000;
 
-    disabledButton: boolean = false;
-
     config: CountdownConfig = {
         leftTime: 60,
         format: 'mm:ss',
@@ -347,7 +345,6 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
     }
 
     getDeliveryOption(storeID){
-        this.disabledButton = true;
         return new Promise(resolve => {
             this.apiService.getDeliveryOption(storeID).subscribe(async (res: any) => {
                 if (res.message){
@@ -356,7 +353,6 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
                     console.log('getDeliveryOption operation failed')
                 }
 
-                this.disabledButton = false;
             }, error => {
                 console.log(error)
             })
@@ -955,7 +951,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
             // "\nthis.userCountries: " + this.userCountries)
 
             // alert('field not validated');
-
+            Swal.fire("Process failed!", "Error : <small style='color: red; font-style: italic;'>" + "All input field is needed" + "</small>", "error")
             this.displayGetPrice = true;
             this.allFieldValidated = false;
 
@@ -1338,6 +1334,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
     }
 
     postGetDelivery(){
+        this.visible = true;
         return new Promise(resolve => {
 
             let data = {
@@ -1366,6 +1363,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
                     resolve(res)
                     
                 }
+                this.visible = false;
             }, error => {
                 Swal.fire("Oops...", "Error : <small style='color: red; font-style: italic;'>There's a problem calculating your delivery charges, " + error.error.message + "</small>", "error")
             }) 
