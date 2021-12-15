@@ -1,4 +1,12 @@
-Version 2.1.43-beta
+Version 2.1.45-beta
+-------------------------
+Date:15-Dec-2021
+Developer: Ahmad Miqdaad
+
+1. Fix Get Price Button Spelling
+2. Fix missing storePickup from new order API
+
+Version 2.1.44-beta
 -------------------------
 Date:13-Dec-2021
 Developer: Ahmad Miqdaad
