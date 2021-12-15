@@ -334,7 +334,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
 
         // this.countGrandTotal()
 
-        // this.displayGetPrice = false
+        this.displayGetPrice = true
     }
 
     async countGrandTotal(){
