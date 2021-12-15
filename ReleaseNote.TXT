@@ -1,3 +1,10 @@
+Version 2.1.46-beta
+-------------------------
+Date:15-Dec-2021
+Developer: Ahmad Miqdaad
+
+1. Fix Google Analytic
+
 Version 2.1.45-beta
 -------------------------
 Date:15-Dec-2021
