@@ -61,7 +61,7 @@ export class AppComponent implements OnInit {
             // register google tag manager
             const script2 = document.createElement('script');
             script2.async = true;
-            script2.src = 'https://www.googletagmanager.com/gtag/js?id=UA-96184893-1';
+            script2.src = 'https://www.googletagmanager.com/gtag/js?id=' + this.googleAnalyticId;
             document.head.appendChild(script2);
 
 
@@ -71,7 +71,7 @@ export class AppComponent implements OnInit {
             window.dataLayer = window.dataLayer || [];
             function gtag() { dataLayer.push(arguments); }
             gtag('js', new Date());
-            gtag('config', 'UA-96184893-1');
+            gtag('config', '${this.googleAnalyticId}');
             `;
             document.head.appendChild(gaScript);
 
@@ -83,7 +83,7 @@ export class AppComponent implements OnInit {
                     console.log("event.urlAfterRedirects ", event.urlAfterRedirects);
                     // register google analytics
 
-                    gtag('config', 'UA-96184893-1', {'page_path': event.urlAfterRedirects});
+                    gtag('config', this.googleAnalyticId, {'page_path': event.urlAfterRedirects});
                     
                 }
     
