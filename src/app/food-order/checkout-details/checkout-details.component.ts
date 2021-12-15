@@ -561,6 +561,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
                 "phoneNumber": this.userMsisdn, 
                 "receiverName": this.userName, 
                 "state": this.userState, 
+                storePickup: this.isSelfPickup,
                 "zipcode": this.userPostcode
             }
         }
