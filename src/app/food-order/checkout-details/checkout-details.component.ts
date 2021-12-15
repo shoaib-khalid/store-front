@@ -332,12 +332,9 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
             // alert('here')
         }
 
-        this.countGrandTotal()
+        // this.countGrandTotal()
 
         // this.displayGetPrice = false
-
-        
-
     }
 
     async countGrandTotal(){
@@ -862,7 +859,8 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
             // this.deliveryFee = 0;
             // alert('customer undefined')
 
-            this.countGrandTotal()
+            // this.countGrandTotal()
+            this.displayGetPrice = true;
 
         }else{
 
@@ -876,7 +874,8 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
             this.userCities = customer['customerAddress'][0]['city']
             this.userState = customer['customerAddress'][0]['state']
 
-            this.countGrandTotal()
+            // this.countGrandTotal()
+            this.displayGetPrice = true;
         }
 
         
