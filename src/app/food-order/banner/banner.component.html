@@ -61,12 +61,12 @@
 </div>
 
 
-<ng-container *ngIf="storeDiscount.length">
+<ng-container *ngIf="(salesDiscount | json) !== '{}' || (deliveryDiscount | json) !== '{}'">
     <!-- Desktop  -->
     <div class="d-none d-sm-none d-md-block d-lg-block d-xl-block">
         <div class="container">
             <div class="row">
-                <ng-container *ngIf="(salesDiscount | keyvalue)?.length && (deliveryDiscount | keyvalue)?.length">
+                <ng-container *ngIf="(salesDiscount | json) !== '{}' && (deliveryDiscount | json) !== '{}'">
                     <div class="col-9" style="padding-left: unset; padding-right: unset;">
         
                         <div *ngIf="is_sales" id="carouselExampleCaptionsSales1" class="carousel slide" data-ride="carousel" data-interval="5000" style="padding: 5px;">
@@ -178,7 +178,7 @@
                 </ng-container>
 
                 <!-- If only sales discount exist  -->
-                <ng-container *ngIf="(salesDiscount | keyvalue)?.length && !(deliveryDiscount | keyvalue)?.length">
+                <ng-container *ngIf="(salesDiscount | json) !== '{}' && (deliveryDiscount | json) === '{}'">
 
                     <div class="col-9" style="padding-left: unset; padding-right: unset;">
         
@@ -243,7 +243,7 @@
 
                 
                 <!-- If only delivery discount exist  -->
-                <ng-container *ngIf="!(salesDiscount | keyvalue)?.length && (deliveryDiscount | keyvalue)?.length">
+                <ng-container *ngIf="(salesDiscount | json) === '{}' && (deliveryDiscount | json) !== '{}'">
 
                     <div class="col-9" style="padding-left: unset; padding-right: unset;">
             
@@ -315,7 +315,7 @@
         <div class="container">
             <div class="row">
                 <!-- If both salesDiscount & deliveryDiscount not empty -->
-                <ng-container *ngIf=" (salesDiscount | json) !== '{}' && (deliveryDiscount | json) !== '{}'">
+                <ng-container *ngIf="(salesDiscount | json) !== '{}' && (deliveryDiscount | json) !== '{}'">
                     <div class="col-12">
                         <div class="row">
                             <div class="col discount_type" 
