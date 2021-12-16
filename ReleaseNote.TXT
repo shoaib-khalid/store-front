@@ -1,3 +1,10 @@
+Version 2.1.47-beta
+-------------------------
+Date:15-Dec-2021
+Developer: Ahmad Miqdaad
+
+1. Fix Discount Banner on iOS
+
 Version 2.1.46-beta
 -------------------------
 Date:15-Dec-2021
