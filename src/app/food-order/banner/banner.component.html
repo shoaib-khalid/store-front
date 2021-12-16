@@ -61,8 +61,8 @@
 </div>
 
 
-<!-- Desktop  -->
-<ng-container *ngIf="(storeDiscount | keyvalue)?.length">
+<ng-container *ngIf="storeDiscount.length">
+    <!-- Desktop  -->
     <div class="d-none d-sm-none d-md-block d-lg-block d-xl-block">
         <div class="container">
             <div class="row">
@@ -310,12 +310,12 @@
         </div>
     </div>
     
-    
     <!-- Mobile  -->
     <div class="d-block d-sm-block d-md-none d-lg-none d-xl-none">
         <div class="container">
             <div class="row">
-                <ng-container *ngIf="(salesDiscount | keyvalue)?.length && (deliveryDiscount | keyvalue)?.length">
+                <!-- If both salesDiscount & deliveryDiscount not empty -->
+                <ng-container *ngIf=" (salesDiscount | json) !== '{}' && (deliveryDiscount | json) !== '{}'">
                     <div class="col-12">
                         <div class="row">
                             <div class="col discount_type" 
@@ -422,7 +422,8 @@
                     </div>
                 </ng-container>
 
-                <ng-container *ngIf="(salesDiscount | keyvalue)?.length && !(deliveryDiscount | keyvalue)?.length">
+                <!-- If salesDiscount not empty & deliveryDiscount is empty -->
+                <ng-container *ngIf="(salesDiscount | json) !== '{}' && (deliveryDiscount | json) === '{}'">
                     <div class="col-12">
                         <div class="row">
                             <div class="col discount_type" 
@@ -479,8 +480,8 @@
                     </div>
                 </ng-container>
 
-
-                <ng-container *ngIf="!(salesDiscount | keyvalue)?.length && (deliveryDiscount | keyvalue)?.length">
+                <!-- If both deliveryDiscount not empty & salesDiscount is empty -->
+                <ng-container *ngIf="(salesDiscount | json) === '{}' && (deliveryDiscount | json) !== '{}'">
                     <div class="col-12">
                         <div class="row">
                             <div class="col discount_type" 
