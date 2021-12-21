@@ -1,3 +1,10 @@
+Version 2.1.48-beta
+-------------------------
+Date:15-Dec-2021
+Developer: Ahmad Miqdaad
+
+1. Fix select provider
+
 Version 2.1.47-beta
 -------------------------
 Date:15-Dec-2021
