@@ -1153,6 +1153,10 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
 
         // this.providerListing.find(el => el.id === '45').foo;
         const found = this.providerListing.find(el => el.providerId === providerID);
+        
+        if (found) {
+            this.displayGetPrice = false;
+        }
 
         console.log("FOUND: ", found); 
 
@@ -1224,7 +1228,13 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
         if(this.deliveryOption == "SCHEDULED"){
     
             this.providerListing = delivery['data'];
-            this.showProvider = true;
+
+            if (this.providerListing) {
+                // why set to false ? they need to click select provider first
+                this.displayGetPrice = true;
+            }
+            
+            this.showProvider = true;   
 
             console.log('PROVIDER: ', this.providerListing)
         }else{
