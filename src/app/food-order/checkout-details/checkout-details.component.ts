@@ -1228,6 +1228,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
         if(this.deliveryOption == "SCHEDULED"){
     
             this.providerListing = delivery['data'];
+            var errorMessage = delivery['data'][0]['message'];
 
             if (this.providerListing) {
                 // why set to false ? they need to click select provider first
@@ -1267,15 +1268,6 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
             // console.log('total price : ' + this.totalPrice)
 
             if(isError && this.allFieldValidated == true && this.deliveryOption != 'SELF'){
-
-                if(errorMessage == "ERR_OUT_OF_SERVICE_AREA"){
-                    Swal.fire("Oops...", "Service Provider Message: Area out of service.")
-                } else if(errorMessage == "ERR_INVALID_PHONE_NUMBER"){
-                    Swal.fire("Oops...", "Service Provider Message: Invalid phonenumber")
-                } else {
-                    Swal.fire("Oops...", "Service Provider Message: " + errorMessage)
-                }
-
                 this.hasDeliveryFee = false;
                 this.displayGetPrice = true;
 
@@ -1291,6 +1283,17 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
 
             this.hasInitForm = true;
         }
+
+        if (errorMessage) {
+            if(errorMessage == "ERR_OUT_OF_SERVICE_AREA"){
+                Swal.fire("Oops...", "Service Provider Message: Area out of service.")
+            } else if(errorMessage == "ERR_INVALID_PHONE_NUMBER"){
+                Swal.fire("Oops...", "Service Provider Message: Invalid phonenumber")
+            } else {
+                Swal.fire("Oops...", "Service Provider Message: " + errorMessage)
+            }
+        }
+
 
         const discount = await this.getDiscount(this.cartID, this.deliveryFee)
         console.log("discount data ngoninit...", discount)
