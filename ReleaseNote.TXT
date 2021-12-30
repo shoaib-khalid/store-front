@@ -1,3 +1,10 @@
+Version 2.1.49-beta
+-------------------------
+Date:30-Dec-2021
+Developer: Ahmad Miqdaad
+
+1. Fix popup error from Delivery Service
+
 Version 2.1.48-beta
 -------------------------
 Date:15-Dec-2021
