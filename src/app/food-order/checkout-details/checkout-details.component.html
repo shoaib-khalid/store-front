@@ -205,9 +205,14 @@
                                         <p>Select your preferred delivery</p>
 
                                         <div class="row" *ngFor="let provider of providerListing | orderBy: providerName">
-                                            <div class="col-4 text-left">{{provider.providerName}}</div>
+                                            <div class="col-4 text-left">
+                                                <input onclick="return false;" [checked]="provider.providerId === providerId ? true : false" type="radio" id="provider.providerId" name="deliveryProvider" value="provider.providerId">
+                                                &nbsp;
+                                                <span>{{provider.providerName}}</span>
+                                            </div>
                                             <div class="col-4">
                                                 <img src="{{provider.providerImage}}" class="img-thumbnail" alt="..." style="height: 30px; width: 100px;">
+                                                <span></span>
                                             </div>
                                             <div class="col-4">
                                                 <!-- <div class="btn-group-toggle" data-toggle="buttons">
