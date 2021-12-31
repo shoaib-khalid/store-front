@@ -83,6 +83,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
     initOrderRes:any;
     hasDeliveryFee:boolean = false;
     deliveryRef:any;
+    hasDeliveryError: boolean = false;
 
     allFieldValidated:boolean = false;
 
@@ -1154,7 +1155,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
         // this.providerListing.find(el => el.id === '45').foo;
         const found = this.providerListing.find(el => el.providerId === providerID);
         
-        if (found) {
+        if (found && this.hasDeliveryError === false) {
             this.displayGetPrice = false;
         }
 
@@ -1285,6 +1286,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
         }
 
         if (errorMessage) {
+            this.hasDeliveryError = true;
             if(errorMessage == "ERR_OUT_OF_SERVICE_AREA"){
                 Swal.fire("Oops...", "Service Provider Message: Area out of service.")
             } else if(errorMessage == "ERR_INVALID_PHONE_NUMBER"){
@@ -1292,6 +1294,10 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
             } else {
                 Swal.fire("Oops...", "Service Provider Message: " + errorMessage)
             }
+            this.providerId = null;
+            this.deliveryFee = 0;
+        } else {
+            this.hasDeliveryError = false;
         }
 
 
