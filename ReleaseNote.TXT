@@ -1,3 +1,10 @@
+Version 2.1.50-beta
+-------------------------
+Date:30-Dec-2021
+Developer: Ahmad Miqdaad
+
+1. Fix Delivery Selection on Checkout
+
 Version 2.1.49-beta
 -------------------------
 Date:30-Dec-2021
