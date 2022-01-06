@@ -1,3 +1,11 @@
+Version 2.1.51-beta
+-------------------------
+Date:06-Jan-2021
+Developer: Wafi
+
+1. Fix no loading screen when clicked Confirm Order for COD
+2. Fix price on checkout to match the receipt price on new MP  
+
 Version 2.1.50-beta
 -------------------------
 Date:30-Dec-2021
