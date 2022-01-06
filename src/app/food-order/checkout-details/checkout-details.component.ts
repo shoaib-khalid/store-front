@@ -159,7 +159,6 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
     };
     subTotalDiscountMax = 0;
     deliveryDiscountMax = 0;
-    maxDiscount: any;
 
     // @ViewChild('cd', { static: false }) private countdown: CheckoutDetailsComponent;
 
@@ -539,6 +538,8 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
 
         }else{
             this.goCod()
+
+            this.visible = true;
         }
     }
     
@@ -1281,7 +1282,6 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
             if (this.providerListing) {
                 // why set to false ? they need to click select provider first
                 // this.displayGetPrice = true;
-                console.log("1");
                 
             }
             
@@ -1320,16 +1320,11 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
             if(isError && this.allFieldValidated == true && this.deliveryOption != 'SELF'){
                 this.hasDeliveryFee = false;
                 this.displayGetPrice = true;
-                console.log("2");
                 
             } else{
                 this.hasDeliveryFee = true;
 
-                
-
                 this.displayGetPrice = false;
-                console.log("3");
-                
             }
 
 
@@ -1383,7 +1378,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
         // deliveryDiscount
         //-----------------
         this.deliveryDiscount = discount['data']['deliveryDiscount']
-        
+
         //handle deliveryDiscountDescription
         if (discount['data']['deliveryDiscountDescription'] != null){
             
@@ -1496,9 +1491,6 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
                     // alert(this.displayGetPrice)
     
                     resolve(res)
-                    console.log("res", res);
-                    console.log("res 2", res.data.discountMaxAmount);
-                    this.maxDiscount = res.data.discountMaxAmount
                     
                     
                 }
