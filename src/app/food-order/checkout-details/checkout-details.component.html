@@ -236,8 +236,8 @@
                                     <div class="row">
                                         <div class="col">
                                             <div class="col text-left">
-                                                <span class="subtotal">SUB-TOTAL</span>
-                                                <span id="price" style="float: right; padding-right: 38px;">{{currencySymbol}} {{subTotal | number: '1.2-2'}}</span>
+                                                <span class="subtotal">SUBTOTAL</span>
+                                                <span id="price" style="float: right; padding-right: 18px;">{{currencySymbol}} {{subTotal | number: '1.2-2'}}</span>
                                                 <!-- <hr class="dotted"> -->
                                             </div>
                                         </div>
@@ -245,8 +245,12 @@
                                     <div class="row">
                                         <div class="col">
                                             <div class="col text-left">
-                                                <span class="subtotal">SUB-TOTAL DISCOUNT {{subTotalDiscountDesc}}</span>
-                                                <span id="price" style="float: right; padding-right: 38px;">{{currencySymbol}} {{subTotalDiscount | number: '1.2-2'}}</span>
+                                                <span class="subtotal">ORDER DISCOUNT</span>
+                                                <span class="font-medium pl-1 tracking-tight " style="font-size: 12px;" *ngIf="subTotalDiscountDesc">({{subTotalDiscountDesc}})</span>
+                                                <span class="pl-1 tracking-tight " style="font-size: 12px; font-weight: bold" *ngIf="subTotalDiscountMax != 0 && subTotalDiscount >= subTotalDiscountMax && subTotalDiscount != 0">
+                                                    Capped at {{currencySymbol}}{{subTotalDiscountMax}}
+                                                </span>
+                                                <span id="price" style="float: right; padding-right: 18px;">-{{currencySymbol}} {{subTotalDiscount | number: '1.2-2'}}</span>
                                                 <!-- <hr class="dotted"> -->
                                             </div>
                                         </div>
@@ -255,7 +259,7 @@
                                         <div class="col">
                                             <div class="col text-left">
                                                 <span class="subtotal">{{vertical_fees_txt}} ({{storeDeliveryPercentage}}%)</span>
-                                                <span id="price" style="float: right; padding-right: 38px;">{{currencySymbol}} {{totalServiceCharges | number: '1.2-2'}}</span>
+                                                <span id="price" style="float: right; padding-right: 18px;">{{currencySymbol}} {{totalServiceCharges | number: '1.2-2'}}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -264,7 +268,7 @@
                                         <div class="col">
                                             <div class="col text-left">
                                                 <span id="price" class="subtotal warning-text">DELIVERY CHARGES</span>
-                                                <span id="price" class="warning-text" style="float: right; padding-right: 38px;">{{currencySymbol}} {{deliveryFee | number: '1.2-2'}}</span>
+                                                <span id="price" class="warning-text" style="float: right; padding-right: 18px;">{{currencySymbol}} {{deliveryFee | number: '1.2-2'}}</span>
                                                 <!-- <hr class="dotted"> -->
                                             </div>
                                         </div>
@@ -272,17 +276,22 @@
                                     <div class="row">
                                         <div class="col">
                                             <div class="col text-left">
-                                                <span class="subtotal">DELIVERY CHARGES DISCOUNT {{deliveryDiscountDesc}}</span>
-                                                <span id="price" style="float: right; padding-right: 38px;">{{currencySymbol}} {{deliveryDiscount | number: '1.2-2'}}</span>
+                                                <span class="subtotal">DELIVERY DISCOUNT</span>
+                                                <span class="font-medium pl-1 tracking-tight " style="font-size: 12px;" *ngIf="deliveryDiscountDesc">({{deliveryDiscountDesc}})</span>
+                                                
                                                 <!-- <hr class="dotted"> -->
+                                                <span class=" pl-1 tracking-tight " style="font-size: 12px; font-weight: bold" *ngIf="deliveryDiscountMax != 0 && deliveryDiscount >= deliveryDiscountMax && deliveryDiscount != 0">
+                                                    Capped at {{currencySymbol}}{{deliveryDiscountMax}}
+                                                </span>
+                                                <span id="price" style="float: right; padding-right: 18px;">-{{currencySymbol}} {{deliveryDiscount | number: '1.2-2'}}</span>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col">
                                             <div class="col text-left text-success">
-                                                <span class="subtotal" id="price" style="font-size: 15px;">GRAND TOTAL</span>
-                                                <span id="price" style="float: right; padding-right: 38px; font-size: 15px;">{{currencySymbol}} {{totalPrice | number: '1.2-2'}}</span>
+                                                <span class="subtotal" id="price" style="font-size: 15px;">TOTAL</span>
+                                                <span id="price" style="float: right; padding-right: 18px; font-size: 16px;">{{currencySymbol}} {{totalPrice | number: '1.2-2'}}</span>
                                                 <!-- <hr class="dotted"> -->
                                             </div>
                                         </div>
@@ -364,8 +373,8 @@
                                         <div class="row">
                                             <div class="col">
                                                 <div class="col text-left">
-                                                    <span class="subtotal">SUB-TOTAL</span>
-                                                    <span id="price" style="float: right; padding-right: 38px;">{{currencySymbol}} {{subTotal | number: '1.2-2'}}</span>
+                                                    <span class="subtotal">SUBTOTAL</span>
+                                                    <span id="price" style="float: right; padding-right: 18px;">{{currencySymbol}} {{subTotal | number: '1.2-2'}}</span>
                                                     <!-- <hr class="dotted"> -->
                                                 </div>
                                             </div>
@@ -373,8 +382,12 @@
                                         <div class="row">
                                             <div class="col">
                                                 <div class="col text-left">
-                                                    <span class="subtotal">SUB-TOTAL DISCOUNT {{subTotalDiscountDesc}}</span>
-                                                    <span id="price" style="float: right; padding-right: 38px;">{{currencySymbol}} {{subTotalDiscount | number: '1.2-2'}}</span>
+                                                    <span class="subtotal">ORDER DISCOUNT</span>
+                                                    <span class="font-medium pl-1 tracking-tight" style="font-size: 12px;" *ngIf="subTotalDiscountDesc">({{subTotalDiscountDesc}})</span>
+                                                    <span class="pl-1 tracking-tight " style="font-size: 12px; font-weight: bold" *ngIf="subTotalDiscountMax != 0 && subTotalDiscount >= subTotalDiscountMax && subTotalDiscount != 0">
+                                                        Capped at {{currencySymbol}}{{subTotalDiscountMax}}
+                                                    </span>    
+                                                    <span id="price" style="float: right; padding-right: 18px;">-{{currencySymbol}} {{subTotalDiscount | number: '1.2-2'}}</span>
                                                     <!-- <hr class="dotted"> -->
                                                 </div>
                                             </div>
@@ -383,7 +396,7 @@
                                             <div class="col">
                                                 <div class="col text-left">
                                                     <span class="subtotal">{{vertical_fees_txt}} ({{storeDeliveryPercentage}}%)</span>
-                                                    <span id="price" style="float: right; padding-right: 38px;">{{currencySymbol}} {{totalServiceCharges | number: '1.2-2'}}</span>
+                                                    <span id="price" style="float: right; padding-right: 18px;">{{currencySymbol}} {{totalServiceCharges | number: '1.2-2'}}</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -391,7 +404,7 @@
                                             <div class="col">
                                                 <div class="col text-left">
                                                     <span id="price" class="subtotal warning-text">DELIVERY CHARGES</span>
-                                                    <span id="price" class="warning-text" style="float: right; padding-right: 38px;">{{currencySymbol}} {{deliveryFee | number: '1.2-2'}}</span>
+                                                    <span id="price" class="warning-text" style="float: right; padding-right: 18px;">{{currencySymbol}} {{deliveryFee | number: '1.2-2'}}</span>
                                                     
                                                 </div>
                                             </div>
@@ -399,8 +412,8 @@
                                         <div class="row">
                                             <div class="col">
                                                 <div class="col text-left text-success">
-                                                    <span class="subtotal" id="price" style="font-size: 15px;">GRAND TOTAL</span>
-                                                    <span id="price" style="float: right; padding-right: 38px; font-size: 15px;">{{currencySymbol}} {{totalPrice | number: '1.2-2'}}</span>
+                                                    <span class="subtotal" id="price" style="font-size: 15px;">TOTAL</span>
+                                                    <span id="price" style="float: right; padding-right: 18px; font-size: 16px;">{{currencySymbol}} {{totalPrice | number: '1.2-2'}}</span>
                                                     <!-- <hr class="dotted"> -->
                                                 </div>
                                             </div>

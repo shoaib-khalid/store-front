@@ -136,9 +136,9 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
     customer_id:any;
     vertical_fees_txt:string = "SERVICE CHARGES"
     subTotalDiscount: any = 0;
-    subTotalDiscountDesc: any = "0%";
+    subTotalDiscountDesc: any;
     deliveryDiscount: any = 0;
-    deliveryDiscountDesc: any = "0%";
+    deliveryDiscountDesc: any;
     queryValidate: boolean = false;
     hideOnInit:boolean = true;
 
@@ -157,6 +157,9 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
             .join('');
         },
     };
+    subTotalDiscountMax = 0;
+    deliveryDiscountMax = 0;
+    maxDiscount: any;
 
     // @ViewChild('cd', { static: false }) private countdown: CheckoutDetailsComponent;
 
@@ -937,7 +940,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
 
 
                 if(this.paymentType == "COD"){
-                    this.displayGetPrice = false;
+                    // this.displayGetPrice = false;
                 }
 
         } else {
@@ -1108,18 +1111,59 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
         }
 
         const discount = await this.getDiscount(this.cartID, this.deliveryFee)
+
         console.log("discount data ngoninit...", discount)
 
+         //------------------
+        // subTotalDiscount
+        //-----------------
         this.subTotalDiscount = discount['data']['subTotalDiscount']
-        this.subTotalDiscountDesc = '(' + discount['data']['subTotalDiscountDescription'] + ')'
+        //handle subTotalDiscountDescription
+        if (discount['data']['subTotalDiscountDescription'] != null){
+              
+            if (discount['data']['subTotalDiscountDescription'].includes("%") && discount['data']['subTotalDiscountDescription'].includes("-")){
+              this.subTotalDiscountDesc = discount['data']['subTotalDiscountDescription'].slice(1);
+            }
+            else if (discount['data']['subTotalDiscountDescription'].includes("-")){
+              this.subTotalDiscountDesc = discount['data']['subTotalDiscountDescription'].replace('-', this.currencySymbol)
+            }
+            else
+            this.subTotalDiscountDesc = this.currencySymbol.concat(discount['data']['subTotalDiscountDescription']) 
+            
+          }      
+
+        //if not null, pass value
+        if (discount['data'].discountMaxAmount !== null )
+            this.subTotalDiscountMax = discount['data'].discountMaxAmount
+
+        //------------------
+        // deliveryDiscount
+        //-----------------
         this.deliveryDiscount = discount['data']['deliveryDiscount']
-        this.deliveryDiscountDesc = '(' + discount['data']['deliveryDiscountDescription'] + ')'
+
+        //handle deliveryDiscountDescription
+        if (discount['data']['deliveryDiscountDescription'] != null){
+            
+            if (discount['data']['deliveryDiscountDescription'].includes("%") && discount['data']['deliveryDiscountDescription'].includes("-")){
+                this.deliveryDiscountDesc = discount['data']['deliveryDiscountDescription'].slice(1);
+            }
+            else if (discount['data']['deliveryDiscountDescription'].includes("-")){
+                this.deliveryDiscountDesc = discount['data']['deliveryDiscountDescription'].replace('-', this.currencySymbol)
+            }
+            else
+            this.deliveryDiscountDesc = this.currencySymbol.concat(discount['data']['deliveryDiscountDescription']) 
+        
+        }
+        //if not null, pass value
+        if (discount['data']['deliveryDiscountMaxAmount'] != null)
+            this.deliveryDiscountMax = discount['data']['deliveryDiscountMaxAmount']
+
 
         // Recalculate detail price after fetch discount 
 
-        if(discount['data']['subTotalDiscountDescription'] == null){
-            this.subTotalDiscountDesc = "0%"
-        }
+        // if(discount['data']['subTotalDiscountDescription'] == null){
+        //     this.subTotalDiscountDesc = "0%"
+        // }
 
         if(this.subTotalDiscount > this.subTotal){
             this.subTotalDiscount = this.subTotal;
@@ -1129,19 +1173,20 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
 
         // alert(this.subTotal + " | " + this.subTotalDiscount)
 
-        if(discount['data']['deliveryDiscountDescription'] == null){
-            this.deliveryDiscountDesc = "0%"
-        }
+        // if(discount['data']['deliveryDiscountDescription'] == null){
+        //     this.deliveryDiscountDesc = "0%"
+        // }
 
         if(this.deliveryDiscount > this.deliveryFee){
             this.deliveryDiscount = this.deliveryFee;
         }
         var newdeliveryFee = this.deliveryFee - this.deliveryDiscount
-
+        
+        
         this.totalServiceCharges = (this.storeDeliveryPercentage == 0) ? this.storeDeliveryPercentage : ((this.storeDeliveryPercentage/100) * newsubTotal);
-
+        
         this.totalPrice = newsubTotal + newdeliveryFee + this.totalServiceCharges
-
+        
         // alert(newsubTotal + " | " + newdeliveryFee + " | " + this.totalServiceCharges + " | " + this.totalPrice)
 
         if(this.totalPrice < 0){
@@ -1176,6 +1221,8 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
             this.hasDeliveryFee = true;
             this.displayGetPrice = false;   
         }
+
+        this.getDeliveryFee()
     }
 
     // resetTimer(){
@@ -1233,7 +1280,9 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
 
             if (this.providerListing) {
                 // why set to false ? they need to click select provider first
-                this.displayGetPrice = true;
+                // this.displayGetPrice = true;
+                console.log("1");
+                
             }
             
             this.showProvider = true;   
@@ -1271,14 +1320,16 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
             if(isError && this.allFieldValidated == true && this.deliveryOption != 'SELF'){
                 this.hasDeliveryFee = false;
                 this.displayGetPrice = true;
-
+                console.log("2");
+                
             } else{
                 this.hasDeliveryFee = true;
 
                 
 
                 this.displayGetPrice = false;
-
+                console.log("3");
+                
             }
 
 
@@ -1306,28 +1357,66 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
 
         // alert('DISCOUNT RESP: ' + JSON.stringify(discount))
 
+        //------------------
+        // subTotalDiscount
+        //-----------------
         this.subTotalDiscount = discount['data']['subTotalDiscount']
-        this.subTotalDiscountDesc = '(' + discount['data']['subTotalDiscountDescription'] + ')'
+        //handle subTotalDiscountDescription
+        if (discount['data']['subTotalDiscountDescription'] != null){
+              
+            if (discount['data']['subTotalDiscountDescription'].includes("%") && discount['data']['subTotalDiscountDescription'].includes("-")){
+              this.subTotalDiscountDesc = discount['data']['subTotalDiscountDescription'].slice(1);
+            }
+            else if (discount['data']['subTotalDiscountDescription'].includes("-")){
+              this.subTotalDiscountDesc = discount['data']['subTotalDiscountDescription'].replace('-', this.currencySymbol)
+            }
+            else
+            this.subTotalDiscountDesc = this.currencySymbol.concat(discount['data']['subTotalDiscountDescription']) 
+            
+          }      
+
+        //if not null, pass value
+        if (discount['data']['discountMaxAmount'] !== null)
+            this.subTotalDiscountMax = discount['data']['discountMaxAmount']
+
+        //------------------
+        // deliveryDiscount
+        //-----------------
         this.deliveryDiscount = discount['data']['deliveryDiscount']
-        this.deliveryDiscountDesc = '(' + discount['data']['deliveryDiscountDescription'] + ')'
+        
+        //handle deliveryDiscountDescription
+        if (discount['data']['deliveryDiscountDescription'] != null){
+            
+            if (discount['data']['deliveryDiscountDescription'].includes("%") && discount['data']['deliveryDiscountDescription'].includes("-")){
+                this.deliveryDiscountDesc = discount['data']['deliveryDiscountDescription'].slice(1);
+            }
+            else if (discount['data']['deliveryDiscountDescription'].includes("-")){
+                this.deliveryDiscountDesc = discount['data']['deliveryDiscountDescription'].replace('-', this.currencySymbol)
+            }
+            else
+            this.deliveryDiscountDesc = this.currencySymbol.concat(discount['data']['deliveryDiscountDescription']) 
+        
+        }
+        //if not null, pass value
+        if (discount['data']['deliveryDiscountMaxAmount'] != null)
+            this.deliveryDiscountMax = discount['data']['deliveryDiscountMaxAmount']
 
         // Recalculate detail price after fetch discount 
 
-        if(discount['data']['subTotalDiscountDescription'] == null){
-            this.subTotalDiscountDesc = "0%"
-        }
+        // if(discount['data']['subTotalDiscountDescription'] == null){
+        //     this.subTotalDiscountDesc = "0"
+        // }
 
         if(this.subTotalDiscount > this.subTotal){
             this.subTotalDiscount = this.subTotal;
         }
 
         var newsubTotal = this.subTotal - this.subTotalDiscount
-
         // alert(this.subTotal + " | " + this.subTotalDiscount)
 
-        if(discount['data']['deliveryDiscountDescription'] == null){
-            this.deliveryDiscountDesc = "0%"
-        }
+        // if(discount['data']['deliveryDiscountDescription'] == null){
+        //     this.deliveryDiscountDesc = "0%"
+        // }
 
         if(this.deliveryDiscount > this.deliveryFee){
             this.deliveryDiscount = this.deliveryFee;
@@ -1336,10 +1425,11 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
         // alert(this.deliveryFee)
 
         var newdeliveryFee = this.deliveryFee - this.deliveryDiscount
-
+        
         this.totalServiceCharges = (this.storeDeliveryPercentage == 0) ? this.storeDeliveryPercentage : ((this.storeDeliveryPercentage/100) * newsubTotal);
-
+        
         this.totalPrice = newsubTotal + newdeliveryFee + this.totalServiceCharges
+        
 
         // alert(newsubTotal + " | " + newdeliveryFee + " | " + this.totalServiceCharges + " | " + this.totalPrice)
 
@@ -1348,7 +1438,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
         }
 
         // reset timer 
-        document.getElementById("restart").click();
+        // document.getElementById("restart").click();
     
     }
 
@@ -1394,7 +1484,7 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
         return new Promise(resolve => {
     
             // console.log("data: "+ JSON.stringify(data));
-            this.apiService.getDiscount(cartId, deliveryCharge).subscribe(async (res: any) => {
+            this.apiService.getDiscount(cartId, deliveryCharge).subscribe((res: any) => {
     
                 if (res.message) {
 
@@ -1406,6 +1496,10 @@ export class CheckoutDetailsComponent implements OnInit, AfterViewInit, OnDestro
                     // alert(this.displayGetPrice)
     
                     resolve(res)
+                    console.log("res", res);
+                    console.log("res 2", res.data.discountMaxAmount);
+                    this.maxDiscount = res.data.discountMaxAmount
+                    
                     
                 }
             }, error => {
