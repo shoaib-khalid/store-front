@@ -542,8 +542,16 @@ export class ProductDetailsComponent implements OnInit {
     }
 
     goToBack(){
-        var catId = localStorage.getItem("category_id")
-        this.route.navigate(['catalogue/'+catId]);
+        var catId = localStorage.getItem("category_id");
+
+        //the local storage keep null in string
+        if(catId !== 'null'){
+            this.route.navigate(['catalogue/'+catId]);   
+        }else{
+
+            this.route.navigate(['catalogue/'+'all'])
+        }
+      
     }
 
     onChangeVariant(id, type, productID){     

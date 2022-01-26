@@ -189,7 +189,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
 
         console.log('Catalogue Base URL: ' + this.currBaseURL)
 
-        if(this.localURL != null){
+        if(this.localURL != null){            
             // use this for localhost
             // let defaultStore = "a6df650a-3792-4dc8-b3de-92508357276b"
             let defaultStore = "217cc14c-fbf0-4af7-b927-9328458a61d0"
@@ -215,6 +215,7 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
             console.log('Location: Staging')
         }else{
             console.log('Catalogue Location: Prod')
+
             var host = this.currBaseURL
             var subdomain = host.split('.')[0]
 
@@ -232,7 +233,12 @@ export class CatalogueComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.storeID = params['storeId'];
                 this.catId = params['catId'];
 
-                localStorage.setItem('category_id', this.catId)
+                if (params['catId']==='all'){  
+                   this.getAllProduct();  
+                }
+                else{
+                    localStorage.setItem('category_id', this.catId)
+                }
 
                 // this.activatedRoute.params.subscribe(params => {
         //     let date = params['store_id'];

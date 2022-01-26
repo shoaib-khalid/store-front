@@ -276,7 +276,7 @@ export class ApiService {
         
 // Endpoint: http://localhost:7071/stores/storeId/products?sortByCol=price&sortingOrder=DESC
 
-        if(categoryId != null){
+        if(categoryId != null && categoryId !=='null'){
             if(sortId == 1){
                 // cheapest
                 var url =
