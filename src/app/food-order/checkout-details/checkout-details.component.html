@@ -158,7 +158,7 @@
                                 <div class="row">
                                     <div class="col-lg-6 col-md-6 col-xs-12 col-sm-12">
                                         <select name="userState" id="state" [(ngModel)]="userState" [(value)]="userState" (change)="inputChanged()" (input)="inputChanged()" autocomplete="disabled" required>
-                                            <option selected="true" disabled="" value="">Choose States</option>
+                                            <option [ngValue]="null" selected disabled hidden>States</option>
                                             <option *ngFor="let mState of mStates" [value]="mState.name">
                                                 {{mState.name}}
                                             </option>
